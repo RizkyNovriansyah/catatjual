@@ -1,0 +1,17 @@
+<!-- aplikasi_roti/templates/aplikasi_roti/daftar_bahan_baku.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Bahan Baku</title>
+</head>
+<body>
+    <h1>Daftar Bahan Baku</h1>
+    <ul>
+        {% for bahan in bahan_baku %}
+            <li>{{ bahan.nama }} - Harga: {{ bahan.harga_per_unit }} - Stok: {{ bahan.stok }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

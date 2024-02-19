@@ -1,0 +1,17 @@
+<!-- aplikasi_roti/templates/aplikasi_roti/tambah_roti.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Roti Baru</title>
+</head>
+<body>
+    <h1>Tambah Roti Baru</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Simpan</button>
+    </form>
+</body>
+</html>
