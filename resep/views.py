@@ -22,11 +22,11 @@ def tambah_roti(request):
             return redirect('daftar_roti')
     else:
         form = RotiForm()
-    return render(request, 'tambah_roti.html', {'form': form})
+    return render(request, 'resep/tambah_roti.html', {'form': form})
 
 def daftar_roti(request):
     roti = Roti.objects.all()
-    return render(request, 'daftar_roti.html', {'roti': roti})
+    return render(request, 'resep/daftar_roti.html', {'roti': roti})
 
 def tambah_penjualan(request):
     if request.method == 'POST':
@@ -36,11 +36,11 @@ def tambah_penjualan(request):
             return redirect('daftar_penjualan')
     else:
         form = PenjualanForm()
-    return render(request, 'tambah_penjualan.html', {'form': form})
+    return render(request, 'resep/tambah_penjualan.html', {'form': form})
 
 def daftar_penjualan(request):
     penjualan = Penjualan.objects.all()
-    return render(request, 'daftar_penjualan.html', {'penjualan': penjualan})
+    return render(request, 'resep/daftar_penjualan.html', {'penjualan': penjualan})
 
 def tambah_bahan_baku(request):
     if request.method == 'POST':
@@ -50,8 +50,8 @@ def tambah_bahan_baku(request):
             return redirect('daftar_bahan_baku')
     else:
         form = BahanBakuForm()
-    return render(request, 'tambah_bahan_baku.html', {'form': form})
+    return render(request, 'resep/tambah_bahan_baku.html', {'form': form})
 
 def daftar_bahan_baku(request):
     bahan_baku = BahanBaku.objects.all()
-    return render(request, 'daftar_bahan_baku.html', {'bahan_baku': bahan_baku})
+    return render(request, 'resep/daftar_bahan_baku.html', {'bahan_baku': bahan_baku})

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+        <section class="section">
+            <div class="section-header">
+                <h1>Tambah Roti Baru</h1>
+            </div>
+            <div class="section-body">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Table 1</h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit">Simpan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock content %}
