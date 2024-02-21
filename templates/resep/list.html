@@ -1,0 +1,29 @@
+<!-- base -->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>List</h1>
+    <table>
+        <tr>
+            <th>name</th>
+            <th>status</th>
+            <th>pembayaran</th>
+            <th>tanggal_pengantaran</th>
+            <th>aksi</th>
+        </tr>
+        {% for pesanan in pesanans %}
+        <tr>
+            <td>{{pesanan.nama}}</td>
+            <td>{{pesanan.status}}</td>
+            <td>{{pesanan.pembayaran}}</td>
+            <td>{{pesanan.tanggal_pengantaran}}</td>
+            <td>
+                <a href="{% url 'catat_detail' pesanan.id %}">Detil</a>
+                <a href="{% url 'catat_update' pesanan.id %}">Ubah</a>
+                <a href="{% url 'catat_delete' pesanan.id %}">Hapus</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!-- base -->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Form</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        Nama :
+        <input type="text" name="nama" placeholder="Name" value="{{nama}}" ><br>
+
+        Alamat Penerima :
+        <textarea name="alamat_penerima" placeholder="Alamat Penerima">{{alamat_penerima}}</textarea><br>
+
+        No HP :
+        <input type="text" name="no_hp" placeholder="No HP" value="{{no_hp}}" ><br>
+
+        Pembayaran DP : 
+        <input type="number" name="pembayaran_dp" placeholder="Pembayaran DP" value="{{pembayaran_dp}}" ><br>
+
+        Pembayaran Sisa :
+        <input type="number" name="pembayaran_sisa" placeholder="Pembayaran Sisa" value="{{pembayaran_sisa}}" ><br>
+
+        Total Harga :
+        <input type="number" name="total_harga" placeholder="Total Harga" value="{{total_harga}}" ><br>
+        
+        Status : 
+        <select name="status">
+            <option value="draft" {% if status == "draft" %}selected{% endif %}>Draft</option>
+            <option value="dp" {% if status == "dp" %}selected{% endif %} >DP</option>
+            <option value="diproses" {% if status == "diproses" %}selected{% endif %}>Diproses</option>
+            <option value="dikirim" {% if status == "dikirim" %}selected{% endif %}>Dikirim</option>
+            <option value="selesai" {% if status == "selesai" %}selected{% endif %}>Selesai</option>
+            <option value="batal" {% if status == "batal" %}selected{% endif %}>Batal</option>
+        </select>
+        <br>
+
+        Pembayaran :
+        <select name="pembayaran">
+            <option value="belum bayar" {% if pembayaran == "belum bayar" %}selected{% endif %}>Belum Bayar</option>
+            <option value="dp" {% if pembayaran == "dp" %}selected{% endif %}>Sudah Bayar</option>
+            <option value="lunas" {% if pembayaran == "lunas" %}selected{% endif %}>Lunas</option>
+        </select>
+        <br>
+        
+        Tanggal Pengantaran :
+        <input type="date" name="tanggal_pengantaran" placeholder="Tanggal Pengantaran" value="{{tanggal_pengantaran}}" ><br>
+
+
+        <input type="submit" value="Submit"><br>
+    </form>
+{% endblock %}
