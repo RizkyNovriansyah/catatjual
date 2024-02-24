@@ -1,0 +1,17 @@
+<!-- resep_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>resep List</title>
+</head>
+<body>
+    <h1>resep List</h1>
+    <ul>
+        {% for resep in resep %}
+            <li><a href="{% url 'resep_detail' resep.pk %}">{{ resep.nama }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'resep_create' %}">Create New resep</a>
+</body>
+</html>

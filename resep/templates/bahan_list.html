@@ -1,0 +1,17 @@
+<!-- bahan_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bahan List</title>
+</head>
+<body>
+    <h1>bahan List</h1>
+    <ul>
+        {% for bahan in bahans %}
+            <li><a href="{% url 'bahan_detail' bahan.pk %}">{{ bahan.nama }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'bahan_create' %}">Create New bahan</a>
+</body>
+</html>
