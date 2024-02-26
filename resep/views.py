@@ -1,57 +1,50 @@
+# views.py
 from django.shortcuts import render, redirect
-from .models import Roti, Penjualan, BahanBaku, KomposisiRoti
-from .forms import RotiForm, PenjualanForm, BahanBakuForm
+from .models import Resep, Bahan
+from .forms import ResepForm, BahanForm
+from django.db.models import Sum
 
-# Create your views here.
 def index(request):
     pesanans = []
     return render(request, 'index.html', locals())
 
-def tambah_roti(request):
-    if request.method == 'POST':
-        form = RotiForm(request.POST)
-        if form.is_valid():
-            roti = form.save()
-            bahan_baku_data = form.cleaned_data['bahan_baku']
-            for bahan in bahan_baku_data:
-                jumlah_key = f'jumlah_{bahan.id}'
-                jumlah = request.POST.get(jumlah_key)
-                if jumlah:
-                    komposisi = KomposisiRoti(roti=roti, bahan_baku=bahan, jumlah=jumlah)
-                    komposisi.save()
-            return redirect('daftar_roti')
-    else:
-        form = RotiForm()
-    return render(request, 'resep/tambah_roti.html', {'form': form})
+# BAHAN ROTI
+def bahan_list(request):
+    bahans = Bahan.objects.all()
+    return render(request, 'resep/bahan_list.html', {'bahans': bahans})
 
-def daftar_roti(request):
-    roti = Roti.objects.all()
-    return render(request, 'resep/daftar_roti.html', {'roti': roti})
-
-def tambah_penjualan(request):
+def bahan_create(request):
     if request.method == 'POST':
-        form = PenjualanForm(request.POST)
+        form = BahanForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('daftar_penjualan')
+            return redirect('bahan_list')
     else:
-        form = PenjualanForm()
-    return render(request, 'resep/tambah_penjualan.html', {'form': form})
+        form = BahanForm()
+    return render(request, 'resep/bahan_form.html', {'form': form})
 
-def daftar_penjualan(request):
-    penjualan = Penjualan.objects.all()
-    return render(request, 'resep/daftar_penjualan.html', {'penjualan': penjualan})
+def bahan_detail(request, pk):
+    bahan = Bahan.objects.get(pk=pk)
+    return render(request, 'resep/bahan_detail.html', {'bahan': bahan})
 
-def tambah_bahan_baku(request):
+# RESEP ROTI
+def resep_list(request):
+    categories = Resep.objects.all()
+    return render(request, 'resep/resep_list.html', {'categories': categories})
+
+
+def resep_create(request):
     if request.method == 'POST':
-        form = BahanBakuForm(request.POST)
+        form = ResepForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('daftar_bahan_baku')
+            return redirect('bahan_create')
     else:
-        form = BahanBakuForm()
-    return render(request, 'resep/tambah_bahan_baku.html', {'form': form})
+        form = ResepForm()
+    return render(request, 'resep/resep_form.html', {'form': form})
 
-def daftar_bahan_baku(request):
-    bahan_baku = BahanBaku.objects.all()
-    return render(request, 'resep/daftar_bahan_baku.html', {'bahan_baku': bahan_baku})
+def resep_detail(request, pk):
+    resep = Resep.objects.get(pk=pk)
+    total_price = resep.bahan_set.aggregate(total_price=Sum('price'))['total_price'] or 0
+    return render(request, 'resep/resep_detail.html', {'resep': resep, 'total_price': total_price})
+

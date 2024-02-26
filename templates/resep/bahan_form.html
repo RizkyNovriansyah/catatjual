@@ -2,7 +2,7 @@
 {% block content %}
         <section class="section">
             <div class="section-header">
-                <h1>Daftar Bahan Baku</h1>
+                <h1>Tambah Bahan Baku Baru</h1>
             </div>
             <div class="section-body">
                 <div class="row">
@@ -13,11 +13,11 @@
                                 <h5>Table 1</h5>
                             </div>
                             <div class="card-body">
-                                <ul>
-                                    {% for bahan in bahan_baku %}
-                                        <li>{{ bahan.nama }} - Harga: {{ bahan.harga_per_unit }} - Stok: {{ bahan.stok }}</li>
-                                    {% endfor %}
-                                </ul>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit">Save</button>
+                                </form>
                             </div>
                         </div>
                     </div>

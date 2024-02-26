@@ -1,19 +1,13 @@
 # forms.py
 from django import forms
-from .models import Roti, Penjualan, BahanBaku, KomposisiRoti
+from .models import Resep, Bahan
 
-class RotiForm(forms.ModelForm):
-    bahan_baku = forms.ModelMultipleChoiceField(queryset=BahanBaku.objects.all(), widget=forms.CheckboxSelectMultiple)
+class ResepForm(forms.ModelForm):
     class Meta:
-        model = Roti
-        fields = '__all__'
+        model = Resep
+        fields = ['nama']
 
-class PenjualanForm(forms.ModelForm):
+class BahanForm(forms.ModelForm):
     class Meta:
-        model = Penjualan
-        fields = ['roti', 'jumlah', 'harga_jual']
-
-class BahanBakuForm(forms.ModelForm):
-    class Meta:
-        model = BahanBaku
-        fields = '__all__'
+        model = Bahan
+        fields = ['nama', 'harga']

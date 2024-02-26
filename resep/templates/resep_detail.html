@@ -1,0 +1,19 @@
+<!-- resep_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>resep Detail</title>
+</head>
+<body>
+    <h1>resep Detail</h1>
+    <p>nama: {{ resep.nama }}</p>
+    <p>Total Price of bahans: ${{ total_price }}</p>
+    <ul>
+        {% for bahan in resep.bahan_set.all %}
+            <li>{{ bahan.nama }} - ${{ bahan.price }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'resep_list' %}">Back to resep List</a>
+</body>
+</html>
