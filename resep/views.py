@@ -1,7 +1,7 @@
 # views.py
 from django.shortcuts import render, redirect
-from .models import Resep, Bahan
-from .forms import ResepForm, BahanForm
+from .models import Resep, MasterBahan
+from .forms import ResepForm, MasterBahanForm
 from django.db.models import Sum
 
 def index(request):
@@ -10,27 +10,27 @@ def index(request):
 
 # BAHAN ROTI
 def bahan_list(request):
-    bahans = Bahan.objects.all()
+    bahans = MasterBahan.objects.all()
     return render(request, 'resep/bahan_list.html', {'bahans': bahans})
 
 def bahan_create(request):
     if request.method == 'POST':
-        form = BahanForm(request.POST)
+        form = MasterBahanForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('bahan_list')
     else:
-        form = BahanForm()
+        form = MasterBahanForm()
     return render(request, 'resep/bahan_form.html', {'form': form})
 
 def bahan_detail(request, pk):
-    bahan = Bahan.objects.get(pk=pk)
+    bahan = MasterBahan.objects.get(pk=pk)
     return render(request, 'resep/bahan_detail.html', {'bahan': bahan})
 
 # RESEP ROTI
 def resep_list(request):
-    categories = Resep.objects.all()
-    return render(request, 'resep/resep_list.html', {'categories': categories})
+    resep = Resep.objects.all()
+    return render(request, 'resep/resep_list.html', {'resep': resep})
 
 
 def resep_create(request):
@@ -45,6 +45,4 @@ def resep_create(request):
 
 def resep_detail(request, pk):
     resep = Resep.objects.get(pk=pk)
-    total_price = resep.bahan_set.aggregate(total_price=Sum('price'))['total_price'] or 0
-    return render(request, 'resep/resep_detail.html', {'resep': resep, 'total_price': total_price})
-
+    return render(request, 'resep/resep_detail.html', {'resep_list': [resep]})

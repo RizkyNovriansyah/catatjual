@@ -9,5 +9,5 @@ class ResepForm(forms.ModelForm):
 
 class MasterBahanForm(forms.ModelForm):
     class Meta:
-        model = Bahan
-        fields = ['nama', 'harga']
+        model = MasterBahan
+        fields = '__all__'

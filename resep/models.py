@@ -8,7 +8,7 @@ class Pesanan(models.Model):
     
     
 class ListPesanan(models.Model):
-    Pesanan = models.ForeignKey(Pesanan)
+    Pesanan = models.ForeignKey(Pesanan, on_delete=models.CASCADE, related_name='Pesanan')
     BarangJadi = models.CharField(max_length=100, blank=True, null=True)
     jumlah_barang_jadi = models.IntegerField(blank=True, null=True, default=0)    
 
@@ -21,18 +21,17 @@ class BarangJadi(models.Model):
 class Resep(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
-    Barang_jadi = models.ForeignKey(BarangJadi)
+    # Barang_jadi = models.ForeignKey(BarangJadi, on_delete=models.CASCADE, related_name='Barang_jadi')
+    
     master_bahan = models.CharField(max_length=100, blank=True, null=True)
     
     def __str__(self):
         return self.nama
 
-    
-    
 class MasterBahan(models.Model):
     kode_bahan = models.CharField(max_length=100,blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
-    resep = models.ManyToManyField(Resep)
+    resep = models.ManyToManyField(Resep, related_name="resep", blank=True)
     total = models.CharField(max_length=100, blank=True, null=True)
     qty_keseluruhan = models.IntegerField(blank=True, null=True, default=0)
     qty_terkecil = models.IntegerField(blank=True, null=True, default=0)

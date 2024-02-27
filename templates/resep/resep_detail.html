@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="section">
+        <div class="section-header">
+            <h1>Daftar Roti</h1>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Table 1</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                {% for item in resep_list %}
+                                    <li>nama        : {{ item.nama }}</li>
+                                    <li>resep       : {{ item.resep }}</li>
+                                    <li>total       : {{ item.total }}</li>
+                                    <li>qty_terkeci : {{ item.qty_terkecil }}</li>
+                                    <li>harga       : {{ item.harga }}</li>
+                                    <li>harga_jual  : {{ item.harga_jual }}</li>
+                                    <li>harga_kg    : {{ item.harga_kg }}</li>
+                                    <li>harga_gram  : {{ item.harga_gram }}</li>
+                                    <li>created_dat : {{ item.created_date }}</li>
+                                    <li>updated_dat : {{ item.updated_date }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

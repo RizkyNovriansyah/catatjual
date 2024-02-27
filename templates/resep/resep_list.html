@@ -14,14 +14,13 @@
                             </div>
                             <div class="card-body">
                                 <ul>
-                                    {% for roti in roti %}
-                                        <li>Nama : {{ roti.nama }} - Bahan Baku : {{ roti.bahan_baku }} - Harga Jual : {{ roti.harga_jual }}</li>
+                                    {% for resep in resep %}
+                                      <li><a href="{% url 'resep_detail' resep.pk %}">{{ resep.nama }}</a></li>
+
                                     {% endfor %}
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                </div>
             </div>
         </section>
     </div>
