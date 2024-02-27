@@ -9,20 +9,21 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h5>Table 1</h5>
+                            <h5>{{barang_jadi.nama}}</h5>
                         </div>
                         <div class="card-body">
+                            Master Bahan
                             <ul>
-                                {% for item in resep %}
-                                    <li>nama resep: {{ item.nama }}</li>
-                                    <li>kode barang resep: {{ item.kode_barang }}</li>
-                                    <li>Daftar Bahan:
+                                {% for item in reseps %}
+                                    <li>nama resep: {{ item.master_bahan.nama }}</li>
+                                    {% comment %} <li>kode barang resep: {{ item.master_bahan.kode_barang }}</li> {% endcomment %}
+                                    {% comment %} <li>Daftar Bahan:
                                         <ul>
                                             {% for bahan in item.resep.all %}
                                                 <li>{{ bahan.nama }} - {{ bahan.kode_bahan }}</li>
                                             {% endfor %}
                                         </ul>
-                                    </li>
+                                    </li> {% endcomment %}
                                 {% endfor %}
                             </ul>
                         </div>

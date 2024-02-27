@@ -14,8 +14,9 @@
                             </div>
                             <div class="card-body">
                                 <ul>
-                                    {% for resep in resep %}
-                                      <li><a href="{% url 'resep_detail' resep.pk %}">{{ resep.nama }}</a></li>
+                                    {% for barang in barang_jadi %}
+                                      {% comment %} <li><a href="">{{ resep.nama }}</a></li> {% endcomment %}
+                                      <li><a href="{% url 'resep_detail' barang.pk %}">{{ barang.nama }}</a> hpp : {{ barang.hpp }}</li>
 
                                     {% endfor %}
                                 </ul>

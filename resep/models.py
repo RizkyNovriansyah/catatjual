@@ -19,12 +19,15 @@ class BarangJadi(models.Model):
     hpp = models.IntegerField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.nama
+
 class MasterBahan(models.Model):
     kode_bahan = models.CharField(max_length=100,blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
     total = models.CharField(max_length=100, blank=True, null=True)
-    qty_keseluruhan = models.IntegerField(blank=True, null=True, default=0)
-    qty_terkecil = models.IntegerField(blank=True, null=True, default=0)
+    qty_keseluruhan = models.IntegerField(blank=True, null=True, default=0) # adalah .... , ....
+    qty_terkecil = models.IntegerField(blank=True, null=True, default=0) # adalah .... , ....
     harga = models.IntegerField(blank=True, null=True, default=0)
     harga_jual = models.IntegerField(blank=True, null=True, default=0)
     harga_kg = models.IntegerField(blank=True, null=True, default=0)    #harga_perkg
@@ -54,6 +57,6 @@ class Resep(models.Model):
     jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
     is_deleted = models.BooleanField(default=False)
     
-    def __str__(self):
-        return self.nama
+    # def __str__(self):
+    #     return self.nama
  
