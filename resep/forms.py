@@ -6,12 +6,12 @@ from decimal import Decimal
 class ResepForm(forms.ModelForm):
     class Meta:
         model = Resep
-        fields = ['nama']
+        fields = '__all__'
 
 class MasterBahanForm(forms.ModelForm):
     class Meta:
         model = MasterBahan
-        fields = ['kode_bahan', 'nama', 'resep', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
+        fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
 
     def save(self, commit=True):
         instance = super().save(commit=False)
