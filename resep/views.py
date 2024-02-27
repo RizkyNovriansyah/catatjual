@@ -45,4 +45,15 @@ def resep_create(request):
 
 def resep_detail(request, pk):
     resep = Resep.objects.get(pk=pk)
-    return render(request, 'resep/resep_detail.html', {'resep_list': [resep]})
+    # Ambil bahan yang terhubung dengan resep tertentu
+    bahan = resep.resep.all()
+    return render(request, 'resep/resep_detail.html', {'resep': [resep], 'resep_all': resep, 'bahan': bahan})
+
+def resep_detail(request, pk):
+    resep = Resep.objects.get(pk=pk)
+    bahan = resep.resep.all()
+    return render(request, 'resep/resep_detail.html', {'resep': [resep], 'resep_all': resep, 'bahan': bahan})
+
+# def resep_detail(request, pk):
+#     resep = Resep.objects.get(pk=pk)
+#     return render(request, 'resep/resep_detail.html', {'resep': resep})
