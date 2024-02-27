@@ -3,3 +3,4 @@ pillow==10.2.0
 django-crispy-forms
 crispy-bootstrap4
 psycopg2-binary
+django-extensions==3.2.3
