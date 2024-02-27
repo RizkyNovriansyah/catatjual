@@ -1,13 +1,13 @@
 # forms.py
 from django import forms
-from .models import Resep, Bahan
+from .models import Resep, MasterBahan
 
 class ResepForm(forms.ModelForm):
     class Meta:
         model = Resep
         fields = ['nama']
 
-class BahanForm(forms.ModelForm):
+class MasterBahanForm(forms.ModelForm):
     class Meta:
         model = Bahan
         fields = ['nama', 'harga']
