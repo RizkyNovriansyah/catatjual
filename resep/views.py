@@ -15,13 +15,22 @@ def bahan_list(request):
 
 def bahan_create(request):
     if request.method == 'POST':
+        # get tes
+        # tes = request.POST.get('tes')
+        # print('tes:', tes)
+        # MasterBahan.objects.create(
+        #     name=request.POST.get('name'),
+        #     total=request.POST.get('total'),
+        #     qty_keseluruhan=request.POST.get('qty_keseluruhan'),
+        #     qty_terkecil=request.POST.get('qty_terkecil'),
+        # )
         form = MasterBahanForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('bahan_list')
     else:
         form = MasterBahanForm()
-    return render(request, 'resep/bahan_form.html', {'form': form})
+    return render(request, 'resep/bahan_form.html', locals())
 
 def bahan_detail(request, pk):
     bahan = MasterBahan.objects.get(pk=pk)
