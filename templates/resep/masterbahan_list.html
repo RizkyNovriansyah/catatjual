@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <section class="section">
+        <div class="section-header">
+            <h1>Daftar Bahan Baku</h1>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Table 1</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Kode Bahan</th>
+                                        <th>Nama Bahan</th>
+                                        <th>Total</th>
+                                        <th>qty_keseluruhan</th>
+                                        <th>qty_terkecil</th>
+                                        <th>harga</th>
+                                        <th>harga_jual</th>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for bahan in bahans %}
+                                    <tr>
+                                        <td>{{ bahan.kode_bahan }}</td>
+                                        <td><a href="{% url 'bahan_detail' pk=bahan.pk %}">{{ bahan.nama }}</a></td>
+                                        <td>{{ bahan.total }}</td>
+                                        <td>{{ bahan.qty_keseluruhan }} Kg</td>
+                                        <td>{{ bahan.qty_terkecil }} Gram</td>
+                                        <td>Rp.{{ bahan.harga }}</td>
+                                        <td>Rp.{{ bahan.harga_jual }}</td>
+                                        <td>
+                                            <a href="{% url 'bahan_update' pk=bahan.pk %}" class="btn btn-sm btn-primary mr-2">Update</a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'bahan_delete' pk=bahan.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                        </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock content %}

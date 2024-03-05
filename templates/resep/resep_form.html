@@ -13,20 +13,20 @@
                                 <h5>Table 1</h5>
                             </div>
                             <div class="card-body">
-                                <form method="post">
+                                <form method="post" >
                                     {% csrf_token %}
                                     {% comment %} {{ form.as_p }} {% endcomment %}
                                     nama:
-                                    <input name = "nama" type="text">
+                                    <input class="form-control" name = "nama" type="text">
                                     <br>
 
                                     Kode Barang:
-                                    <input name = "kode_barang" type="text">
+                                    <input class="form-control" name = "kode_barang" type="text">
                                     <br>
                                     
 
                                     harga jual:
-                                    <input name = "harga_jual" type="number">
+                                    <input class="form-control" name = "harga_jual" type="number">
                                     <br>
 
                                     Menggunakan Bahan : <br>
@@ -54,18 +54,13 @@
                                             
                                         }
                                     </script>
-                                    {% comment %} <select id="select_bahan">
-                                        {% for bahan in bahans %}
-                                            <option value="{{ bahan.id }}_{{bahan.nama}}">{{ bahan.nama }}</option>
-                                        {% endfor %}
-                                    </select> {% endcomment %}
-                                    {% comment %} <div onclick="add_bahan(document.getElementById('select_bahan').value)">Tambah</div> {% endcomment %}
+                                    
                                     {% for bahan in bahans %}
-                                        <input type="checkbox" id="bahan-{{bahan.id}}" onclick="add_bahan({{ bahan.id }})" name="bahans" value="{{ bahan.id }}">
+                                        <input class="form-control" type="checkbox" id="bahan-{{bahan.id}}" onclick="add_bahan({{ bahan.id }})" name="bahans" value="{{ bahan.id }}">
                                         {{ bahan.nama }}
 
-                                        <input name="bahans_id" value="{{ bahan.id }}" placeholder="jumlah" type="hidden">
-                                        <input type="int" name="bahans_jumlah" value="" placeholder="jumlah">
+                                        <input class="form-control" name="bahans_id" value="{{ bahan.id }}" placeholder="jumlah" type="hidden">
+                                        <input class="form-control" type="int" name="bahans_jumlah" value="" placeholder="jumlah">
                                         <br>
                                     {% endfor %}
                                     <br>
