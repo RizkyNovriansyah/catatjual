@@ -1,41 +1,51 @@
 # views.py
-from django.shortcuts import render, redirect
 from .models import Resep, MasterBahan, BarangJadi
 from .forms import ResepForm, MasterBahanForm
 from django.db.models import Sum
 
-def index(request):
-    pesanans = []
-    return render(request, 'index.html', locals())
+from django.shortcuts import render, redirect
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.urls import reverse_lazy
 
-# BAHAN ROTI
-def bahan_list(request):
-    bahans = MasterBahan.objects.all()
-    return render(request, 'resep/bahan_list.html', {'bahans': bahans})
 
-def bahan_create(request):
-    if request.method == 'POST':
-        # get tes
-        # tes = request.POST.get('tes')
-        # print('tes:', tes)
-        # MasterBahan.objects.create(
-        #     name=request.POST.get('name'),
-        #     total=request.POST.get('total'),
-        #     qty_keseluruhan=request.POST.get('qty_keseluruhan'),
-        #     qty_terkecil=request.POST.get('qty_terkecil'),
-        # )
-        form = MasterBahanForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('bahan_list')
-    else:
-        form = MasterBahanForm()
-    return render(request, 'resep/bahan_form.html', locals())
-
-def bahan_detail(request, pk):
-    bahan = MasterBahan.objects.get(pk=pk)
-    return render(request, 'resep/bahan_detail.html', {'bahan': bahan})
-
+class BahanList(ListView):
+    model = MasterBahan
+    template_name = 'resep/masterbahan_list.html'
+    context_object_name = 'bahans'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total'] = MasterBahan.objects.aggregate(Sum('total'))['total__sum']
+        
+        
+        return context
+    
+class BahanCreate(CreateView):
+    model = MasterBahan
+    fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
+    success_url = reverse_lazy('bahan_list')
+    
+    def form_valid(self, form):
+        return super(BahanCreate, self).form_valid(form)
+    
+class BahanUpdate(UpdateView):
+    model = MasterBahan
+    fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
+    success_url = reverse_lazy('bahan_list')
+    
+class BahanDelete(DeleteView):
+    model = MasterBahan
+    context_object_name = 'bahan'
+    success_url = reverse_lazy('bahan_list')
+    
+class BahanDetail(DetailView):
+    model = MasterBahan
+    template_name = 'resep/masterbahan_detail.html'
+    context_object_name = 'bahan'
+    
+    
 # RESEP ROTI
 def resep_list(request):
     # resep = Resep.objects.all()

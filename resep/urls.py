@@ -6,9 +6,13 @@ urlpatterns = [
     path('', views.resep_list, name='resep_list'),
     path('<int:pk>/', views.resep_detail, name='resep_detail'),
     path('create/', views.resep_create, name='resep_create'),
-    path('bahans/', views.bahan_list, name='bahan_list'),
-    path('bahans/<int:pk>/', views.bahan_detail, name='bahan_detail'),
-    path('bahans/create/', views.bahan_create, name='bahan_create'),
+    
+    path('bahans/', views.BahanList.as_view(), name='bahan_list'),
+    path('bahans/<int:pk>/', views.BahanDetail.as_view(), name='bahan_detail'),
+    path('bahans/create/', views.BahanCreate.as_view(), name='bahan_create'),
+    path('bahans/<int:pk>/update/', views.BahanUpdate.as_view(), name='bahan_update'),
+    path('bahans/<int:pk>/delete/', views.BahanDelete.as_view(), name='bahan_delete'),
+
 
     # path('tambah_roti/', views.tambah_roti, name='tambah_roti'),
     # path('daftar_roti/', views.daftar_roti, name='daftar_roti'),

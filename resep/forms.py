@@ -36,10 +36,7 @@ class MasterBahanForm(forms.ModelForm):
         instance = super().save(commit=False)
         harga = instance.harga
         total = instance.total
-
-        # if harga and total:
-        #     harga_kg = Decimal(harga) / Decimal(total)
-        #     instance.harga_kg = harga_kg
+        
 
         if commit:
             instance.save()
