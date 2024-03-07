@@ -1,30 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-    <section class="section">
-        <div class="section-header">
-            <h1>Daftar Roti</h1>
-        </div>
+<section class="section">
+    <div class="section-header">
+        <h1>Detail Bahan</h1>
+    </div>
         <div class="section-body">
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
+                            <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
+                        </div>
+                        <div class="card-header">
                             <h5>{{barang_jadi.nama}}</h5>
                         </div>
                         <div class="card-body">
-                            Master Bahan
-                            <ul>
-                                {% for item in reseps %}
-                                    <li>nama resep: {{ item.master_bahan.nama }}</li>
-                                    {% comment %} <li>kode barang resep: {{ item.master_bahan.kode_barang }}</li> {% endcomment %}
-                                    {% comment %} <li>Daftar Bahan:
-                                        <ul>
-                                            {% for bahan in item.resep.all %}
-                                                <li>{{ bahan.nama }} - {{ bahan.kode_bahan }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li> {% endcomment %}
-                                {% endfor %}
+                            
+                            <p><strong>Kode Barang:</strong> {{barang_jadi.kode_barang}}</p>
+                            <p><strong>Harga Jual:</strong> Rp.{{barang_jadi.harga_jual}}</p>
+                            <p><strong>HPP:</strong> Rp.{{barang_jadi.hpp}}</p>
+
                             </ul>
                         </div>
                     </div>
@@ -32,4 +27,5 @@
             </div>
         </div>
     </section>
+
 {% endblock content %}

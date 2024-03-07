@@ -1,23 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
     <section class="section">
         <div class="section-header">
             <h1>Tambah Bahan Baku Baru</h1>
         </div>
         <div class="section-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header">
-                            <h5>Table 1</h5>
-                        </div>
                         <div class="card-body">
-                            <form method="post">
+                            <form method="post" class="form">
                                 {% csrf_token %}
-                                {{ form.as_p }}
-                            <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Kode Bahan Gula002</label>
+                                    {{ form.kode_bahan }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_nama">Nama Gula</label>
+                                    {{ form.nama }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_total">Total </label>
+                                    {{ form.total }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_qty_keseluruhan">Quantity Keseluruhan 100 kg</label>
+                                    {{ form.qty_keseluruhan }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_qty_terkecil">Quantity Terkecil 1000</label>
+                                    {{ form.qty_terkecil }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_harga">Harga 985000</label>
+                                    {{ form.harga }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_harga_jual">Harga Jual 1000000</label>
+                                    {{ form.harga_jual }}
+                                </div>
+
+                                <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>
                         </div>
                     </div>
@@ -25,5 +49,4 @@
             </div>
         </div>
     </section>
-</div>
 {% endblock content %}

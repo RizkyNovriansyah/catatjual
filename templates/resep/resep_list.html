@@ -1,26 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
+
     <section class="section">
         <div class="section-header">
-            <h1>Daftar Roti</h1>
+            <h1>Daftar barang Baku</h1>
         </div>
-        
         <div class="section-body">
-            <div class="row">
+           
                 <div class="col-md-6">
                     <div class="card">
-                        <div class="card-header">
-                            <h5>Table 1</h5>
-                        </div>
-                            <div class="card-body">
-                                <ul>
-                                    {% for barang in barang_jadi %}
-                                        <li><a href="{% url 'resep_detail' barang.pk %}">{{ barang.nama }}</a> hpp : {{ barang.hpp }}</li>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>nama</th>
+                                        <th>kode_barang</th>
+                                        <th>harga_jual</th>
+                                        <th>hpp</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for barang in barang_jadis %}
+                                    <tr>
+                                        <td><a href="{% url 'resep_detail' pk=barang.pk %}">{{ barang.nama }}</a></td>
+                                        <td>{{ barang.kode_barang }}</td>
+                                        <td>{{ barang.harga_jual }}</td>
+                                        <td>Rp.{{ barang.hpp }}</td>
+                                        <td>
+                                            <a href="{% url 'resep_delete' pk=barang.pk %}" class="btn btn-sm btn-danger mr-2">Delete</a>
+                                        </td>
+                                    </tr>
                                     {% endfor %}
-                                </ul>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </section>
-            </div>
+                </div>
+        </div>
+    </section>
+
 {% endblock content %}
