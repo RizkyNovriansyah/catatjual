@@ -16,6 +16,7 @@ class BarangJadi(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
     harga_jual = models.IntegerField(blank=True, null=True)
+    daftar_bahan = models.CharField(max_length=100, blank=True, null=True)
     hpp = models.IntegerField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
 
