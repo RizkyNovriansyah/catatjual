@@ -9,14 +9,6 @@ class ResepForm(forms.ModelForm):
         fields = '__all__'
 
 
-class SelectBahanForm(forms.ModelForm):
-    nama = forms.ModelChoiceField(queryset=MasterBahan.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-
-    class Meta:
-        model = MasterBahan
-        fields = ('nama',)
-
-
 class MasterBahanForm(forms.ModelForm):
     class Meta:
         model = MasterBahan

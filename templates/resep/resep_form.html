@@ -4,21 +4,25 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
         $(document).ready(function() {
-            $('#bahans').change(function() {
-                var selectedBahans = $(this).val();
-                $('.jumlah-bahan').remove(); // Menghapus input jumlah bahan sebelumnya
-                
-                // Menambahkan input jumlah bahan untuk setiap bahan yang dipilih
-                selectedBahans.forEach(function(bahanId) {
-                    var namaBahan = $('#bahans option[value="' + bahanId + '"]').text();
-                    var inputJumlah = '<div class="form-group jumlah-bahan">' +
-                                        '<label for="bahans_jumlah_' + bahanId + '">Jumlah ' + namaBahan + ':</label>' +
-                                        '<input class="form-control" name="bahans_jumlah_' + bahanId + '" type="number">' +
-                                    '</div>';
-                    $('#jumlah-bahan-container').append(inputJumlah);
-                });
-            });
+    $('input[type="checkbox"]').change(function() { // Memperbarui pemantauan perubahan pada checkbox
+        var selectedBahans = []; // Menginisialisasi array untuk menyimpan bahan yang dipilih
+        $('input[type="checkbox"]:checked').each(function() { // Mengambil semua checkbox yang dicentang
+            selectedBahans.push($(this).val()); // Menambahkan nilai checkbox yang dicentang ke dalam array
         });
+        $('.jumlah-bahan').remove(); // Menghapus input jumlah bahan sebelumnya
+        
+        // Menambahkan input jumlah bahan untuk setiap bahan yang dipilih
+        selectedBahans.forEach(function(bahanId) {
+            var namaBahan = $('#bahan_' + bahanId).next('label').text(); // Mengambil teks label yang sesuai dengan checkbox yang dipilih
+            var inputJumlah = '<div class="form-group jumlah-bahan">' +
+                                '<label for="bahans_jumlah_' + bahanId + '">Jumlah ' + namaBahan + ':</label>' +
+                                '<input class="form-control" name="bahans_jumlah_' + bahanId + '" type="number">' +
+                              '</div>';
+            $('#jumlah-bahan-container').append(inputJumlah);
+        });
+    });
+});
+
         </script>
 
         <section class="section">
@@ -44,18 +48,27 @@
                                         <br>
                                         Harga Jual:
                                         <input class="form-control" name = "harga_jual" type="number">
-                                        
                                         <br>
-                                        <label for="bahans">Bahan yang Digunakan:</label>
-                                        <select name="bahans" id="bahans" class="form-control" multiple>
-                                            {% for bahan in bahans %}
+
+                                        <!-- dibawah adalah select multiple -->
+                                        <!-- <br>
+                                            <select name="bahans" id="bahans" class="form-control" multiple>
+                                                {% for bahan in bahans %}
                                                 <option value="{{ bahan.id }}">{{ bahan.nama }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        
+                                                {% endfor %}
+                                            </select>    
+                                        <br> -->
+                                            
+                                            
+                                        <label for="bahans">Bahan yang Digunakan:</label>
+                                        {% for bahan in bahans %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="bahan_{{ bahan.id }}" name="bahans[]" value="{{ bahan.id }}">
+                                            <label class="form-check-label" for="bahan_{{ bahan.id }}">{{ bahan.nama }}</label>
+                                        </div>
+                                        {% endfor %}
                                         <br>
                                         <div id="jumlah-bahan-container"></div>
-                                        
                                         <button type="submit">Simpan</button>
                                     </form>
 
