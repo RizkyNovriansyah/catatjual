@@ -28,7 +28,7 @@
 
       {% include 'includes/header.html' %}
       {% include 'includes/sidebar.html' %}
-      <div class="main-content" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+      <div class="main-content">
         {% block content %}
         {% endblock content %}
       </div>
