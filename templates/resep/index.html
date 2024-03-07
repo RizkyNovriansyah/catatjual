@@ -1,0 +1,21 @@
+<div id="bahan-form">
+    {% include 'includes/form.html' %}
+
+    <button type="button" class="btn btn-success me-3"  
+        hx-get="{% url 'index_create' %}"
+        hx-target="#bahan-form"
+        hx-swap="beforeend">
+        + Add Bahan
+    </button>
+
+    <button type="button" class="btn btn-success" id="submit-all">
+            Submit All
+    </button>
+</div>
+     
+<ul id="index-list">
+{% for d in data %}
+    {% include 'includes/view_index.html' %}
+{% endfor %}
+</ul>
+

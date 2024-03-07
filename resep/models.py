@@ -48,15 +48,11 @@ class MasterBahan(models.Model):
         return timezone.localtime(self.updated_date)
 
 class Resep(models.Model):
-    # nama = models.CharField(max_length=100, blank=True, null=True)
-    # kode_barang = models.CharField(max_length=100, blank=True, null=True)
-    # Barang_jadi = models.ForeignKey(BarangJadi, on_delete=models.CASCADE, related_name='Barang_jadi')
-    # master_bahan = models.CharField(max_length=100, blank=True, null=True)
     master_bahan = models.ForeignKey(MasterBahan,blank=True, null=True, on_delete=models.CASCADE, related_name='MasterBahan')
     barang_jadi = models.ForeignKey(BarangJadi,blank=True, null=True, on_delete=models.CASCADE, related_name='BarangJadi')
     jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
     is_deleted = models.BooleanField(default=False)
     
-    # def __str__(self):
-    #     return self.nama
+    def __str__(self):
+        return self.nama
  

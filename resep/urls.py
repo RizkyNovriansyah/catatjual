@@ -12,6 +12,9 @@ urlpatterns = [
     path('bahans/create/', views.BahanCreate.as_view(), name='bahan_create'),
     path('bahans/<int:pk>/update/', views.BahanUpdate.as_view(), name='bahan_update'),
     path('bahans/<int:pk>/delete/', views.BahanDelete.as_view(), name='bahan_delete'),
+    
+    path('ow/', views.index, name='index'),
+    path('ow/create', views.index_create, name='index_create'),
 
 
     # path('tambah_roti/', views.tambah_roti, name='tambah_roti'),

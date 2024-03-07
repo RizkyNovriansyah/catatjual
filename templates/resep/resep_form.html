@@ -15,7 +15,6 @@
                             <div class="card-body">
                                 <form method="post" >
                                     {% csrf_token %}
-                                    {% comment %} {{ form.as_p }} {% endcomment %}
                                     nama:
                                     <input class="form-control" name = "nama" type="text">
                                     <br>
@@ -28,45 +27,6 @@
                                     harga jual:
                                     <input class="form-control" name = "harga_jual" type="number">
                                     <br>
-
-                                    Menggunakan Bahan : <br>
-                                    <script>
-                                        function add_bahan(name) {
-                                            var bahan = name.split("_")[1];
-                                            var id = name.split("_")[0];
-                                            console.log(bahan);
-
-                                            var display_bahan = document.getElementById("display-bahan");
-
-                                            var p = document.createElement("p");
-                                            p.innerHTML = bahan;
-                                            // add input jumlah
-                                            var input = document.createElement("input");
-                                            input.type = "number";
-                                            input.name = "bahans_jumlah";
-                                            input.placeholder = "jumlah";
-                                            input.value = 0;
-                                            input.setAttribute("id", "bahan-" + id);
-                                            input.setAttribute("value", id);
-                                            p.appendChild(input);
-                                            
-                                            display_bahan.appendChild(p);
-                                            
-                                        }
-                                    </script>
-                                    
-                                    {% for bahan in bahans %}
-                                        <input class="form-control" type="checkbox" id="bahan-{{bahan.id}}" onclick="add_bahan({{ bahan.id }})" name="bahans" value="{{ bahan.id }}">
-                                        {{ bahan.nama }}
-
-                                        <input class="form-control" name="bahans_id" value="{{ bahan.id }}" placeholder="jumlah" type="hidden">
-                                        <input class="form-control" type="int" name="bahans_jumlah" value="" placeholder="jumlah">
-                                        <br>
-                                    {% endfor %}
-                                    <br>
-
-                                    <div id="display-bahan">
-                                    </div>
 
                                     <button type="submit">Simpan</button>
                                     

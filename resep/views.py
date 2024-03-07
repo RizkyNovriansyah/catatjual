@@ -1,6 +1,6 @@
 # views.py
 from .models import Resep, MasterBahan, BarangJadi
-from .forms import ResepForm, MasterBahanForm
+from .forms import SelectBahanForm, ResepForm, MasterBahanForm
 from django.db.models import Sum
 
 from django.shortcuts import render, redirect
@@ -58,7 +58,6 @@ def resep_list(request):
 def resep_create(request):
     bahans = MasterBahan.objects.filter(is_deleted=False)
     
-
     if request.method == 'POST':
         # get bahans array 
         nama = request.POST.get('nama')
@@ -115,11 +114,33 @@ def resep_detail(request, pk):
     
     return render(request, 'resep/resep_detail.html', locals())
 
-# def resep_detail(request, pk):
-#     resep = Resep.objects.get(pk=pk)
-#     bahan = resep.resep.all()
-#     return render(request, 'resep/resep_detail.html', {'resep': [resep], 'resep_all': resep, 'bahan': bahan})
+def index(request):
+    context = {'form': SelectBahanForm(), 'data': MasterBahan.objects.all()}
+    return render(request, 'resep/index.html', context)
 
-# def resep_detail(request, pk):
-#     resep = Resep.objects.get(pk=pk)
-#     return render(request, 'resep/resep_detail.html', {'resep': resep})
+def index_create(request):
+    context = {'form': SelectBahanForm()}
+    if request.method == 'POST':
+        form = SelectBahanForm(request.POST or None)
+        if form.is_valid():
+            index = form.save()
+            context = {'index': index}
+            return render(request, 'includes/view_index.html', context)
+    return render(request, 'includes/form.html', context)
+
+# def index(request):
+#     data = MasterBahan.objects.all()
+#     form = SelectBahanForm(request.POST or None)
+#     context = {'form': form, 'data': data}
+#     return render(request, 'resep/index.html', context)
+
+# def index_create(request):
+#     context = {'form': SelectBahanForm()}
+#     if request.method == 'POST':
+#         form = SelectBahanForm(request.POST)
+#         if form.is_valid():
+#             index = form.save()
+#             context = {'index': index}
+#             return redirect('view_index', context)
+#     else:
+#         return redirect('index')

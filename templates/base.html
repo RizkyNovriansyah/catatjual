@@ -28,7 +28,7 @@
 
       {% include 'includes/header.html' %}
       {% include 'includes/sidebar.html' %}
-      <div class="main-content">
+      <div class="main-content" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         {% block content %}
         {% endblock content %}
       </div>
@@ -49,6 +49,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="{% static 'assets/js/stisla.js' %}"></script>
 
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
 
   <!-- Template JS File -->
   <script src="{% static 'assets/js/scripts.js' %}"></script>

@@ -1,0 +1,15 @@
+<form  hx-post="{% url 'index_create' %}" 
+      hx-target='#index-list' 
+      hx-swap="beforeend" 
+      hx-trigger="click from:#submit-all" 
+      hx-on="htmx:afterRequest: this.remove()">
+  <div class="row">
+    <div class="col-4 col-md-3">
+      <label for="{{ form.nama.id_for_label }}">{{ form.nama.label }}</label>
+      {{ form.nama }}
+    </div>
+    <div class="col-3 align-self-end">
+      <button type="button" class="btn btn-danger" hx-on="click: this.closest('form').remove()">Hapus</button>
+    </div>
+  </div>
+</form>

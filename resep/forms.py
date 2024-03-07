@@ -8,6 +8,15 @@ class ResepForm(forms.ModelForm):
         model = Resep
         fields = '__all__'
 
+
+class SelectBahanForm(forms.ModelForm):
+    nama = forms.ModelChoiceField(queryset=MasterBahan.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = MasterBahan
+        fields = ('nama',)
+
+
 class MasterBahanForm(forms.ModelForm):
     class Meta:
         model = MasterBahan
@@ -34,10 +43,6 @@ class MasterBahanForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        harga = instance.harga
-        total = instance.total
-        
-
         if commit:
             instance.save()
         return instance
