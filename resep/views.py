@@ -40,11 +40,32 @@ class BahanList(ListView):
     template_name = 'resep/masterbahan_list.html'
     context_object_name = 'bahans'
 
-class BahanDetail(DetailView):
+class BahanCreate(CreateView):
     model = MasterBahan
-    template_name = 'resep/masterbahan_detail.html'
-    context_object_name = 'bahan'
+    form_class = MasterBahanForm
+    success_url = reverse_lazy('bahan_list')
+    
+    def form_valid(self, form):
+        harga = form.cleaned_data['harga']
+        quantity = form.cleaned_data['qty_keseluruhan']
+        quantity_terkecil = form.cleaned_data['qty_terkecil']
+        
+        if quantity != 0:
+            harga_kg = harga / quantity
+        else:
+            harga_kg = 0
+        
+        if quantity_terkecil != 0:
+            harga_gram = harga_kg / quantity_terkecil
+        else:
+            harga_gram = 0
+        
+        form.instance.harga_kg = harga_kg
+        form.instance.harga_gram = harga_gram
+        
+        return super(BahanCreate, self).form_valid(form)
 
+    
 class BahanUpdate(UpdateView):
     model = MasterBahan
     fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
@@ -55,7 +76,27 @@ class BahanDelete(DeleteView):
     context_object_name = 'bahan'
     success_url = reverse_lazy('bahan_list')
     
+class BahanDetail(DetailView):
+    model = MasterBahan
+    template_name = 'resep/masterbahan_detail.html'
+    context_object_name = 'bahan'
+    
+class ResepList(ListView):
+    model = BarangJadi
+    template_name = 'resep/resep_list.html'
+    context_object_name = 'barang_jadis'
+    
+class ResepUpdate(UpdateView):
+    model = BarangJadi
+    fields = ['nama', 'harga_jual', 'hpp']
+    success_url = reverse_lazy('resep_list')
 
+class ResepDelete(DeleteView):
+    model = BarangJadi
+    context_object_name = 'barang_jadi'
+    success_url = reverse_lazy('resep_list')
+
+# Di dalam views.py
 
 #Resep
 class ResepCreate(FormView):
