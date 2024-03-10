@@ -61,10 +61,6 @@ class ResepList(ListView):
     template_name = 'resep/resep_list.html'
     context_object_name = 'barang_jadis'
     
-# def resep_list(request):
-#     barang_jadi = BarangJadi.objects.all()
-#     return render(request, 'resep/resep_list.html', locals())
-    
 class ResepUpdate(UpdateView):
     model = BarangJadi
     fields = ['nama', 'harga_jual', 'hpp']
@@ -74,8 +70,6 @@ class ResepDelete(DeleteView):
     model = BarangJadi
     context_object_name = 'barang_jadi'
     success_url = reverse_lazy('resep_list')
-
-# Di dalam views.py
 
 def resep_create(request):
     bahans = MasterBahan.objects.filter(is_deleted=False)
@@ -121,16 +115,3 @@ class ResepDetail(DetailView):
     template_name = 'resep/resep_detail.html'
     context_object_name = 'barang_jadi' 
 
-def index(request):
-    context = {'form': SelectBahanForm(), 'data': MasterBahan.objects.all()}
-    return render(request, 'resep/index.html', context)
-
-def index_create(request):
-    context = {'form': SelectBahanForm()}
-    if request.method == 'POST':
-        form = SelectBahanForm(request.POST or None)
-        if form.is_valid():
-            index = form.save()
-            context = {'index': index}
-            return render(request, 'includes/view_index.html', context)
-    return render(request, 'includes/form.html', context)

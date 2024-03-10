@@ -12,6 +12,6 @@ urlpatterns = [
     path('bahans/', views.BahanList.as_view(), name='bahan_list'),
     path('bahans/<int:pk>/', views.BahanDetail.as_view(), name='bahan_detail'),
     path('bahans/create/', views.BahanCreate.as_view(), name='bahan_create'),
-    path('bahans/<int:pk>/update/', views.BahanUpdate.as_view(), name='bahan_update'),
-    path('bahans/<int:pk>/delete/', views.BahanDelete.as_view(), name='bahan_delete'),
+    path('bahans/update/<int:pk>/', views.BahanUpdate.as_view(), name='bahan_update'),
+    path('bahans/delete/<int:pk>/', views.BahanDelete.as_view(), name='bahan_delete'),
 ]
