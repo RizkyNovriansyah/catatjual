@@ -56,14 +56,14 @@ class BahanDetail(DetailView):
     template_name = 'resep/masterbahan_detail.html'
     context_object_name = 'bahan'
     
-# class ResepList(ListView):
-#     model = BarangJadi
-#     template_name = 'resep/resep_list.html'
-#     context_object_name = 'barang_jadis'
+class ResepList(ListView):
+    model = BarangJadi
+    template_name = 'resep/resep_list.html'
+    context_object_name = 'barang_jadis'
     
-def resep_list(request):
-    barang_jadi = BarangJadi.objects.all()
-    return render(request, 'resep/resep_list.html', locals())
+# def resep_list(request):
+#     barang_jadi = BarangJadi.objects.all()
+#     return render(request, 'resep/resep_list.html', locals())
     
 class ResepUpdate(UpdateView):
     model = BarangJadi
@@ -85,8 +85,6 @@ def resep_create(request):
         kode_barang = request.POST.get('kode_barang')
         harga_jual = request.POST.get('harga_jual')
         bahan_digunakan = request.POST.getlist('bahans') # yang kepake
-        bahans_id = request.POST.getlist('bahans_id')
-        bahans_jumlah = request.POST.getlist('bahans_jumlah_')
         
         barang_jadi = BarangJadi.objects.create(
             nama=nama,
@@ -101,9 +99,7 @@ def resep_create(request):
             bahan_jumlah = request.POST.get(bahan_jumlah_key)
             if bahan_jumlah:
                 bahan = MasterBahan.objects.get(id=bahan_id)
-                print('bahan: ', bahan)
                 harga_per_bahan = bahan.qty_terkecil
-                print('harga_per_bahan: ', harga_per_bahan)
                 total_hpp += int(harga_per_bahan) * int(bahan_jumlah)
                 print('total_hpp: ', total_hpp)
                 Resep.objects.create(
