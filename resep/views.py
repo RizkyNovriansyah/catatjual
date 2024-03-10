@@ -1,6 +1,6 @@
 # views.py
 from .models import Resep, MasterBahan, BarangJadi
-from .forms import MasterBahanForm, SelectBahanForm, ResepForm
+from .forms import MasterBahanForm, ResepForm
 from django.db.models import Sum
 
 from django.shortcuts import render, redirect
@@ -9,7 +9,32 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 
-
+#Bahan
+class BahanCreate(CreateView):
+    model = MasterBahan
+    form_class = MasterBahanForm
+    success_url = reverse_lazy('bahan_list')
+    
+    def form_valid(self, form):
+        harga = form.cleaned_data['harga']
+        quantity = form.cleaned_data['qty_keseluruhan']
+        quantity_terkecil = form.cleaned_data['qty_terkecil']
+        
+        if quantity != 0:
+            harga_kg = harga / quantity
+        else:
+            harga_kg = 0
+        
+        if quantity_terkecil != 0:
+            harga_gram = harga_kg / quantity_terkecil
+        else:
+            harga_gram = 0
+        
+        form.instance.harga_kg = harga_kg
+        form.instance.harga_gram = harga_gram
+        
+        return super(BahanCreate, self).form_valid(form)
+    
 class BahanList(ListView):
     model = MasterBahan
     template_name = 'resep/masterbahan_list.html'
@@ -113,5 +138,5 @@ def resep_create(request):
 class ResepDetail(DetailView):
     model = BarangJadi
     template_name = 'resep/resep_detail.html'
-    context_object_name = 'barang_jadi' 
+    context_object_name = 'barang_jadi'    
 
