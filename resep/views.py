@@ -56,10 +56,14 @@ class BahanDetail(DetailView):
     template_name = 'resep/masterbahan_detail.html'
     context_object_name = 'bahan'
     
-class ResepList(ListView):
-    model = BarangJadi
-    template_name = 'resep/resep_list.html'
-    context_object_name = 'barang_jadis'
+# class ResepList(ListView):
+#     model = BarangJadi
+#     template_name = 'resep/resep_list.html'
+#     context_object_name = 'barang_jadis'
+    
+def resep_list(request):
+    barang_jadi = BarangJadi.objects.all()
+    return render(request, 'resep/resep_list.html', locals())
     
 class ResepUpdate(UpdateView):
     model = BarangJadi
