@@ -3,6 +3,7 @@ from .models import Resep, MasterBahan, BarangJadi
 from .forms import MasterBahanForm, ResepForm
 from django.db.models import Sum
 
+import json  
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -103,24 +104,33 @@ def resep_create(request):
         nama = request.POST.get('nama')
         kode_barang = request.POST.get('kode_barang')
         harga_jual = request.POST.get('harga_jual')
-        bahan_digunakan = request.POST.getlist('bahans') # yang kepake
+        bahan_ids = request.POST.getlist('bahans')
+        
+        bahan_jumlah_key = 'bahans_jumlah_' + bahan_ids[0]
+        bahan_jumlah = request.POST.get(bahan_jumlah_key) 
+        
+        daftar_nama_bahan = {}
+        for bahan_id in bahan_ids:
+            bahan = MasterBahan.objects.get(id=int(bahan_id))
+            bahan_jumlah_digunakan = int(request.POST.get('bahans_jumlah_' + bahan_id))
+            daftar_nama_bahan[bahan.nama] = bahan_jumlah_digunakan
+
         
         barang_jadi = BarangJadi.objects.create(
             nama=nama,
             harga_jual=harga_jual,
             kode_barang=kode_barang,
-            daftar_bahan=bahan_digunakan
+            daftar_bahan=daftar_nama_bahan
         )
         
         total_hpp = 0
-        for bahan_id in bahan_digunakan:
+        for bahan_id in bahan_ids:
             bahan_jumlah_key = 'bahans_jumlah_' + bahan_id
             bahan_jumlah = request.POST.get(bahan_jumlah_key)
             if bahan_jumlah:
                 bahan = MasterBahan.objects.get(id=bahan_id)
                 harga_per_bahan = bahan.qty_terkecil
                 total_hpp += int(harga_per_bahan) * int(bahan_jumlah)
-                print('total_hpp: ', total_hpp)
                 Resep.objects.create(
                     master_bahan=bahan,
                     barang_jadi=barang_jadi,

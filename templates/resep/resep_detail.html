@@ -2,30 +2,32 @@
 {% block content %}
 <section class="section">
     <div class="section-header">
-        <h1>Detail Bahan</h1>
+        <h1>Detail Resep</h1>
     </div>
-        <div class="section-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
-                        </div>
-                        <div class="card-header">
-                            <h5>{{barang_jadi.nama}}</h5>
-                        </div>
-                        <div class="card-body">
-                            
-                            <p><strong>Kode Barang:</strong> {{barang_jadi.kode_barang}}</p>
-                            <p><strong>Harga Jual:</strong> Rp.{{barang_jadi.harga_jual}}</p>
-                            <p><strong>HPP:</strong> Rp.{{barang_jadi.hpp}}</p>
-
-                            </ul>
-                        </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <a href="{% url 'resep_list' %}" class="btn btn-primary">Kembali ke Daftar Resep</a>
+                    </div>
+                    <div class="card-header">
+                        <h5>{{ barang_jadi.nama }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Kode Barang:</strong> {{ barang_jadi.kode_barang }}</p>
+                        <p><strong>Harga Jual:</strong> Rp.{{ barang_jadi.harga_jual }}</p>
+                        <p><strong>HPP:</strong> Rp.{{ barang_jadi.hpp }}</p>
+                        <p><strong>Daftar Bahan:</strong></p>
+                        <ul>
+                            {% for bahan, jumlah in barang_jadi.daftar_bahan.items %}
+                                <li>{{ bahan }} : {{ jumlah }} Kg</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
+    </div>
+</section>
 {% endblock content %}

@@ -1,82 +1,63 @@
 {% extends "base.html" %}
 {% block content %}
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
+<div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
         $(document).ready(function() {
-    $('input[type="checkbox"]').change(function() { // Memperbarui pemantauan perubahan pada checkbox
-        var selectedBahans = []; // Menginisialisasi array untuk menyimpan bahan yang dipilih
-        $('input[type="checkbox"]:checked').each(function() { // Mengambil semua checkbox yang dicentang
-            selectedBahans.push($(this).val()); // Menambahkan nilai checkbox yang dicentang ke dalam array
+            $('input[type="checkbox"]').change(function() { 
+                var selectedBahans = [];
+                $('input[type="checkbox"]:checked').each(function() { 
+                    selectedBahans.push($(this).val()); 
+                });
+                $('.jumlah-bahan').remove();
+                selectedBahans.forEach(function(bahanId) {
+                    var namaBahan = $('#bahan_' + bahanId).next('label').text(); 
+                    var inputJumlah = '<div class="form-group jumlah-bahan">' +
+                                        '<label for="bahans_jumlah_' + bahanId + '">Jumlah ' + namaBahan + ':</label>' +
+                                        '<input class="form-control" name="bahans_jumlah_' + bahanId + '" type="number">' +
+                                      '</div>';
+                    $('#jumlah-bahan-container').append(inputJumlah);
+                });
+            });
         });
-        $('.jumlah-bahan').remove(); // Menghapus input jumlah bahan sebelumnya
-        
-        // Menambahkan input jumlah bahan untuk setiap bahan yang dipilih
-        selectedBahans.forEach(function(bahanId) {
-            var namaBahan = $('#bahan_' + bahanId).next('label').text(); // Mengambil teks label yang sesuai dengan checkbox yang dipilih
-            var inputJumlah = '<div class="form-group jumlah-bahan">' +
-                                '<label for="bahans_jumlah_' + bahanId + '">Jumlah ' + namaBahan + ':</label>' +
-                                '<input class="form-control" name="bahans_jumlah_' + bahanId + '" type="number">' +
-                              '</div>';
-            $('#jumlah-bahan-container').append(inputJumlah);
-        });
-    });
-});
+    </script>
 
-        </script>
-
-        <section class="section">
-            <div class="section-header">
-                <h1>Tambah Roti Baru</h1>
-            </div>
-            <div class="section-body">
-                <div class="row">
-
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-
-                                    <form method="post" >
-                                        {% csrf_token %}
-                                        Nama:
-                                        <input class="form-control" name = "nama" type="text">
-                                        
-                                        <br>
-                                        Kode Barang:
-                                        <input class="form-control" name = "kode_barang" type="text">
-                                        
-                                        <br>
-                                        Harga Jual:
-                                        <input class="form-control" name = "harga_jual" type="number">
-                                        <br>
-
-                                        <!-- dibawah adalah select multiple -->
-                                        <!-- <br>
-                                            <select name="bahans" id="bahans" class="form-control" multiple>
-                                                {% for bahan in bahans %}
-                                                <option value="{{ bahan.id }}">{{ bahan.nama }}</option>
-                                                {% endfor %}
-                                            </select>    
-                                        <br> -->
-                                            
-                                            
-                                        <label for="bahans">Bahan yang Digunakan:</label>
-                                        {% for bahan in bahans %}
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="bahan_{{ bahan.id }}" name="bahans[]" value="{{ bahan.id }}">
-                                            <label class="form-check-label" for="bahan_{{ bahan.id }}">{{ bahan.nama }}</label>
-                                        </div>
-                                        {% endfor %}
-                                        <br>
-                                        <div id="jumlah-bahan-container"></div>
-                                        <button type="submit">Simpan</button>
-                                    </form>
-
-                            </div>
+    <section class="section">
+        <div class="section-header">
+            <h1>Tambah Roti Baru</h1>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                Nama:
+                                <input class="form-control" name="nama" type="text">
+                                <br>
+                                Kode Barang:
+                                <input class="form-control" name="kode_barang" type="text">
+                                <br>
+                                Harga Jual:
+                                <input class="form-control" name="harga_jual" type="number">
+                                <br>
+                                <label for="bahans">Bahan yang Digunakan:</label>
+                                {% for bahan in bahans %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="bahan_{{ bahan.id }}" name="bahans" value="{{ bahan.id }}">
+                                    <label class="form-check-label" for="bahan_{{ bahan.id }}">{{ bahan.nama }}</label>
+                                </div>
+                                {% endfor %}
+                                <br>
+                                <div id="jumlah-bahan-container"></div>
+                                <button type="submit">Simpan</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 {% endblock content %}

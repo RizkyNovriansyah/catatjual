@@ -1,5 +1,6 @@
 # models.py
 from django.utils import timezone
+
 from django.db import models
 
 class Pesanan(models.Model):
@@ -16,7 +17,9 @@ class BarangJadi(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
     harga_jual = models.IntegerField(blank=True, null=True)
-    daftar_bahan = models.CharField(max_length=100, blank=True, null=True)
+    # daftar_bahan = models.CharField(max_length=100, blank=True, null=True)
+    # daftar_bahan = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    daftar_bahan = models.JSONField(blank=True, null=True)
     hpp = models.IntegerField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -55,5 +58,5 @@ class Resep(models.Model):
     is_deleted = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.nama
+        return f"{self.master_bahan.nama} - {self.barang_jadi.nama}"
  
