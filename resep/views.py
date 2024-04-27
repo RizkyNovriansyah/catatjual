@@ -105,16 +105,17 @@ def resep_create(request):
         kode_barang = request.POST.get('kode_barang')
         harga_jual = request.POST.get('harga_jual')
         bahan_ids = request.POST.getlist('bahans')
-        
+        kode_bahans = [MasterBahan.objects.get(id=int(bahan_id)).kode for bahan_id in bahan_ids]
+
         bahan_jumlah_key = 'bahans_jumlah_' + bahan_ids[0]
         bahan_jumlah = request.POST.get(bahan_jumlah_key) 
         
         daftar_nama_bahan = {}
-        for bahan_id in bahan_ids:
+        print('daftar_nama_bahan: ', daftar_nama_bahan)
+        for bahan_id, kode_bahan in zip(bahan_ids, kode_bahans):
             bahan = MasterBahan.objects.get(id=int(bahan_id))
             bahan_jumlah_digunakan = int(request.POST.get('bahans_jumlah_' + bahan_id))
-            daftar_nama_bahan[bahan.nama] = bahan_jumlah_digunakan
-
+            daftar_nama_bahan[bahan.nama] = {'jumlah': bahan_jumlah_digunakan, 'kode': kode_bahan}
         
         barang_jadi = BarangJadi.objects.create(
             nama=nama,
