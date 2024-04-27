@@ -30,8 +30,8 @@ class MasterBahan(models.Model):
     kode_bahan = models.CharField(max_length=100,blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
     total = models.CharField(max_length=100, blank=True, null=True)
-    qty_keseluruhan = models.IntegerField(blank=True, null=True, default=0) # adalah .... , ....
-    qty_terkecil = models.IntegerField(blank=True, null=True, default=0) # adalah .... , ....
+    qty_keseluruhan = models.IntegerField(blank=True, null=True, default=0) # adalah .... , .... 100 kg
+    qty_terkecil = models.IntegerField(blank=True, null=True, default=0) # adalah .... , .... 1000
     harga = models.IntegerField(blank=True, null=True, default=0)
     harga_jual = models.IntegerField(blank=True, null=True, default=0)
     harga_kg = models.IntegerField(blank=True, null=True, default=0)    #harga_perkg

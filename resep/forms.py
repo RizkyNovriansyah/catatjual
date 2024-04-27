@@ -25,13 +25,13 @@ class MasterBahanForm(forms.ModelForm):
         self.fields['harga_jual'].label = 'harga_jual'
 
         # add css in nama
-        self.fields['kode_bahan'].widget.attrs.update({'class':'form-control'})
-        self.fields['nama'].widget.attrs.update({'class':'form-control'})
-        self.fields['total'].widget.attrs.update({'class':'form-control'})
-        self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control'})
-        self.fields['qty_terkecil'].widget.attrs.update({'class':'form-control'})
-        self.fields['harga'].widget.attrs.update({'class':'form-control'})
-        self.fields['harga_jual'].widget.attrs.update({'class':'form-control'})
+        self.fields['kode_bahan'].widget.attrs.update({'class':'form-control','placeholder':"GG000"})
+        self.fields['nama'].widget.attrs.update({'class':'form-control','placeholder':"Gula"})
+        self.fields['total'].widget.attrs.update({'class':'form-control','placeholder':"total"})
+        self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control','placeholder':"10000"})
+        self.fields['qty_terkecil'].widget.attrs.update({'class':'form-control','placeholder':"100"})
+        self.fields['harga'].widget.attrs.update({'class':'form-control','placeholder':"500000",'onkeyup':'cek_harga_perkeseluruhan()'})
+        self.fields['harga_jual'].widget.attrs.update({'class':'form-control','placeholder':""})
 
     def save(self, commit=True):
         instance = super().save(commit=False)

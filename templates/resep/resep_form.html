@@ -31,7 +31,7 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <form method="post">
+                            {% comment %} <form method="post">
                                 {% csrf_token %}
                                 Nama:
                                 <input class="form-control" name="nama" type="text">
@@ -52,9 +52,75 @@
                                 <br>
                                 <div id="jumlah-bahan-container"></div>
                                 <button type="submit">Simpan</button>
-                            </form>
+                            </form> {% endcomment %}
+                            <select name="bahans" id="bahans" class="form-control">
+                                {% for bahan in bahans %}
+                                    <option value="{{ bahan.id }}">{{ bahan.nama }}</option>
+                                {% endfor %}
+                            </select>
+                            <script>
+                                function add_bahan(){
+                                    var e = document.getElementById("bahans");
+                                    var value = e.value;
+                                    // buat get data bahan pake api, @regi
+
+                                    console.log(value)
+                                    var text = e.options[e.selectedIndex].text;
+                                    
+                                    let html = "<div class='card'>"+
+                                        "<div class='card-body'>"+
+                                        "Nama:<b>"+text+"</b>"+
+                                        "<br>"+
+                                        "Kode Barang:"+
+                                        "<br>"+
+                                        "Harga Jual:"+
+                                        "<br>"+
+                                        "Jumlah Satuan Pakai:"+
+                                        "<input class='form-control' name='jumlah_satuan[]' type='number'>"+
+                                        "<input class='form-control' name='id_bahan[]' type='number'>"+
+                                        "<br>"+
+                                        "<div id='jumlah-bahan-container'></div>"+
+                                        "</div>"+
+                                    "</div>";
+                                    
+                                    document.getElementById("data_card").innerHTML += html
+                                    
+                                }
+
+                            </script>
+                            <button onclick="add_bahan()">Tambah Bahan</button>
                         </div>
                     </div>
+                </div>
+
+                <div class="col-md-6">
+                    <form method="post" >
+                        {% csrf_token %}
+                        <button type="submit">Simpan</button>
+                        <div class="card">
+                            <div class="card-body">
+                                Nama:
+                                
+                                <br>
+                                Kode Barang:
+                                
+                                <br>
+                                Harga Jual:
+                                
+                                <br>
+                                Jumlah Satuan Pakai:
+                                <input class="form-control" name="jumlah_satuan[]" type="number">
+                                <input class="form-control" name="id_bahan[]" type="number">
+                                <br>
+                                <div id="jumlah-bahan-container"></div>
+                            </div>
+                        </div>
+
+                        <div id="data_card">
+
+                        </div>
+                        
+                    </form>
                 </div>
             </div>
         </div>

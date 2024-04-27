@@ -12,32 +12,58 @@
                             <form method="post" class="form">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <label for="id_kode_bahan">Kode Bahan Gula002</label>
+                                    <label for="id_kode_bahan">Kode Bahan</label>
                                     {{ form.kode_bahan }}
                                 </div>
                                 <div class="form-group">
-                                    <label for="id_nama">Nama Gula</label>
+                                    <label for="id_nama">Nama</label>
                                     {{ form.nama }}
                                 </div>
-                                <div class="form-group">
+                                {% comment %} <div class="form-group">
                                     <label for="id_total">Total </label>
                                     {{ form.total }}
-                                </div>
+                                </div> {% endcomment %}
+                                <script>
+                                    {% comment %} id_qty_keseluruhan {% endcomment %}
+                                    {% comment %} id_harga {% endcomment %}
+                                    function cek_harga_perkeseluruhan(){
+                                            
+                                        let get_value_id_harga = document.getElementById('id_harga').value
+                                        let get_value_id_qty_keseluruhan = document.getElementById('id_qty_keseluruhan').value
+
+                                        console.log("get_value_id_harga",get_value_id_harga)
+                                        console.log("get_value_id_qty_keseluruhan",get_value_id_qty_keseluruhan)
+                                        let total = get_value_id_harga/ get_value_id_qty_keseluruhan
+                                        document.getElementById('cek_harga_perkeseluruhan').textContent = "Rp."+total
+                                    }
+
+
+                                </script>
                                 <div class="form-group">
-                                    <label for="id_qty_keseluruhan">Quantity Keseluruhan 100 kg</label>
+                                    <label for="id_qty_keseluruhan">Quantity Keseluruhan (Total Berat dalam 'satuan')</label>
                                     {{ form.qty_keseluruhan }}
                                 </div>
                                 <div class="form-group">
-                                    <label for="id_qty_terkecil">Quantity Terkecil 1000</label>
+                                    <label for="id_qty_terkecil">Quantity Terkecil ('satuan' terkecil)</label>
                                     {{ form.qty_terkecil }}
                                 </div>
                                 <div class="form-group">
-                                    <label for="id_harga">Harga 985000</label>
+                                    <label for="id_harga">Harga (Harga Beli disuplier)</label>
                                     {{ form.harga }}
                                 </div>
-                                <div class="form-group">
+                                {% comment %} <div class="form-group">
                                     <label for="id_harga_jual">Harga Jual 1000000</label>
                                     {{ form.harga_jual }}
+                                </div> {% endcomment %}
+
+                                <div class="form-group">
+                                    <label for="id_harga">Harga Beli dibagi perkg/satuan keseluruhan</label>
+                                    <span id="cek_harga_perkeseluruhan"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_harga">Harga satuan</label>
+                                    
                                 </div>
 
                                 <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>

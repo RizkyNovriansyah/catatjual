@@ -61,6 +61,24 @@
   <!-- <script src="{% static 'assets/js/page/bootstrap.modal.js' %}"></script> -->
   <!-- <script src="{% static 'assets/js/jquery.js' %}"></script> -->
   <!-- <script src="{% static 'assets/js/bootstrap.min.js' %}"></script> -->
+  <script>
+    {% comment %} id_qty_keseluruhan {% endcomment %}
+    {% comment %} id_harga {% endcomment %}
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        function cek_harga_perkeseluruhan(){
+        
+            let get_value_id_harga = $("id_harga").value()
+            let get_value_id_qty_keseluruhan = $("id_qty_keseluruhan").value()
+
+            console.log("get_value_id_harga",get_value_id_harga)
+        }
+    });
+    
+    
+
+
+  </script>
 </body>
 
 </html>
