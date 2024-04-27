@@ -1,32 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('input[type="checkbox"]').change(function() { 
-                var selectedBahans = [];
-                $('input[type="checkbox"]:checked').each(function() { 
-                    selectedBahans.push($(this).val()); 
-                });
-                $('.jumlah-bahan').remove();
-                selectedBahans.forEach(function(bahanId) {
-                    var namaBahan = $('#bahan_' + bahanId).next('label').text(); 
-                    var inputJumlah = '<div class="form-group jumlah-bahan">' +
-                                        '<label for="bahans_jumlah_' + bahanId + '">Jumlah ' + namaBahan + ':</label>' +
-                                        '<input class="form-control" name="bahans_jumlah_' + bahanId + '" type="number">' +
-                                      '</div>';
-                    $('#jumlah-bahan-container-' + bahanId).append(inputJumlah);
-                });
-            });
-
-            $(document).on('click', '.hapus-bahan', function() {
-                $(this).closest('.card').remove();
-            });
-        });
-
-                                
-
         function add_bahan() {
             var e = document.getElementById("bahans");
             var value = e.value;
@@ -35,40 +10,40 @@
         
             var html =
                 "<div class='card'>" +
-                "<div class='card-body'>" +
-                "Nama:<b>" + nama_bahan + "</b>" +
-                "<br>" +
-                "Kode Barang: <b>" + kode_bahan + "</b>" +
-                "<br>" +
-                "Harga Jual:" + //Bagaimana cara hitungnya?
-                "<br>" +
-                "Jumlah Satuan Pakai:" +
-                "<input class='form-control' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>" +
-                "<input class='form-control' name='id_bahan[]' type='number' value='" + value + "'>" +
-                "<br>" +
-                "<div id='jumlah-bahan-container-" + value + "'></div>" +
-                "<button class='btn btn-danger hapus-bahan'>Hapus Bahan</button>" +
-                "</div>" +
+                    "<div class='card-body'>" +
+                        "Nama:<b>" + nama_bahan + "</b>" +
+                        "<br>" +
+                        "Kode Barang: <b>" + kode_bahan + "</b>" +
+                        "<br>" +
+                        "Harga Jual:" + //Bagaimana cara hitungnya?
+                        "<br>" +
+                        "Jumlah Satuan Pakai:" +
+                        "<input class='form-control' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>" +
+                        "<input class='form-control' name='id_bahan[]' type='number' value='" + value + "'>" +
+                        "<br>" +
+                        "<div id='jumlah-bahan-container-" + value + "'></div>" +
+                        "<button class='btn btn-danger hapus-bahan'>Hapus Bahan</button>" +
+                    "</div>" +
                 "</div>";
-        
+            console.log(html)
             // Tambahkan elemen baru setelah elemen terakhir dengan insertAdjacentHTML
             document.getElementById("data_card").insertAdjacentHTML('beforeend', html);
+        
         }
         
-        
-            
-
     </script>
 
     <section class="section">
         <div class="section-header">
             <h1>Tambah Roti Baru</h1>
         </div>
+
         <div class="section-body">
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
+                            Daftar Bahan:
                             <select name="bahans" id="bahans" class="form-control">
                                 {% for bahan in bahans %}
                                 <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
@@ -79,17 +54,23 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6" id="data_card">
-                    <form method="post" >
-                        {% csrf_token %}
-                            <button type="submit">Simpan</button>
-                    </form>
-                </div>
+                <div class="col-md-6">
+                <form method="post" action="{% url 'resep_create' %}">
+                    {% csrf_token %}
+                    <div id="data_card">
+                            <button class='btn btn-warning' type="submit">Simpan</button>
+                            <br>
+                            Nama: <input class="form-control" name="nama_roti" type="text" placeholder='Masukan Nama Roti'>
+                            <br>
+                            Kode Resep: <input class="form-control" name="kode_barang" type="text" placeholder='Masukan kode barang'>
+                            <br>
+                    </div>
+                    </div>
+                </form>
     
                 </div>
             </div>
         </div>
     </section>
-    </div>
+</div>
 {% endblock content %}

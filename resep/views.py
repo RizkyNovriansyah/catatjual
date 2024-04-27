@@ -97,57 +97,48 @@ class ResepDelete(DeleteView):
     context_object_name = 'barang_jadi'
     success_url = reverse_lazy('resep_list')
 
-def resep_create(request):
-    bahans = MasterBahan.objects.filter(is_deleted=False)
-
-    if request.method == 'POST':
-        nama = request.POST.get('nama')
-        kode_barang = request.POST.get('kode_barang')
-        harga_jual = request.POST.get('harga_jual')
-        bahan_ids = request.POST.getlist('bahans')
-        kode_bahans = [MasterBahan.objects.get(id=int(bahan_id)).kode for bahan_id in bahan_ids]
-
-        bahan_jumlah_key = 'bahans_jumlah_' + bahan_ids[0]
-        bahan_jumlah = request.POST.get(bahan_jumlah_key) 
-        
-        daftar_nama_bahan = {}
-        print('daftar_nama_bahan: ', daftar_nama_bahan)
-        for bahan_id, kode_bahan in zip(bahan_ids, kode_bahans):
-            bahan = MasterBahan.objects.get(id=int(bahan_id))
-            bahan_jumlah_digunakan = int(request.POST.get('bahans_jumlah_' + bahan_id))
-            daftar_nama_bahan[bahan.nama] = {'jumlah': bahan_jumlah_digunakan, 'kode': kode_bahan}
-        
-        barang_jadi = BarangJadi.objects.create(
-            nama=nama,
-            harga_jual=harga_jual,
-            kode_barang=kode_barang,
-            daftar_bahan=daftar_nama_bahan
-        )
-        
-        total_hpp = 0
-        for bahan_id in bahan_ids:
-            bahan_jumlah_key = 'bahans_jumlah_' + bahan_id
-            bahan_jumlah = request.POST.get(bahan_jumlah_key)
-            if bahan_jumlah:
-                bahan = MasterBahan.objects.get(id=bahan_id)
-                harga_per_bahan = bahan.qty_terkecil
-                total_hpp += int(harga_per_bahan) * int(bahan_jumlah)
-                Resep.objects.create(
-                    master_bahan=bahan,
-                    barang_jadi=barang_jadi,
-                    jumlah_pemakaian=bahan_jumlah
-                )
-
-        barang_jadi.hpp = total_hpp
-        barang_jadi.save()
-        return redirect('resep_list')
-
-    context = {'bahans': bahans}
-    return render(request, 'resep/resep_form.html', context)
-
-
 class ResepDetail(DetailView):
     model = BarangJadi
     template_name = 'resep/resep_detail.html'
     context_object_name = 'barang_jadi'    
+
+def resep_create(request):
+    bahans = MasterBahan.objects.filter(is_deleted=False)
+    form = ResepForm(request.POST or None)
+
+    if request.method == 'POST':
+        form = ResepForm(request.POST)
+        if form.is_valid():
+            nama_roti = request.POST.get('nama_roti')
+            kode_barang = request.POST.get('kode_barang')
+            
+            id_bahan_list = request.POST.getlist('id_bahan[]')
+            jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
+
+            daftar_bahan = []
+            for i in range(len(jumlah_satuan_list)):
+                bahan_id = id_bahan_list[i]
+                bahan_obj = MasterBahan.objects.get(id=bahan_id)
+                bahan = {
+                    'id_bahan': bahan_id,
+                    'nama_bahan': bahan_obj.nama,
+                    'kode_bahan': bahan_obj.kode_bahan,
+                    'harga_jual': bahan_obj.harga_jual,
+                    'jumlah_satuan': jumlah_satuan_list[i]
+                }
+                daftar_bahan.append(bahan)
+
+            daftar_bahan_json = json.dumps(daftar_bahan)
+
+            # Simpan ke database
+            barang_jadi = BarangJadi.objects.create(
+                nama=nama_roti,
+                kode_barang=kode_barang,
+                daftar_bahan=daftar_bahan_json
+            )
+
+            return redirect('bahan_list')
+
+    context = {'bahans': bahans, 'form': form}
+    return render(request, 'resep/resep_form.html', context)
 
