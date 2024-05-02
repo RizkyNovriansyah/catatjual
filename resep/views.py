@@ -23,13 +23,11 @@ class BahanCreate(CreateView):
         
         if quantity != 0:
             harga_kg = harga / quantity
-        else:
-            harga_kg = 0
-        
-        if quantity_terkecil != 0:
             harga_gram = harga_kg / quantity_terkecil
         else:
+            harga_kg = 0
             harga_gram = 0
+        
         
         form.instance.harga_kg = harga_kg
         form.instance.harga_gram = harga_gram
@@ -76,7 +74,7 @@ class BahanDelete(DeleteView):
     model = MasterBahan
     context_object_name = 'bahan'
     success_url = reverse_lazy('bahan_list')
-    
+
 class BahanDetail(DetailView):
     model = MasterBahan
     template_name = 'resep/masterbahan_detail.html'
@@ -136,20 +134,22 @@ def resep_create(request):
             # Mengambil data dari form
             nama_roti = request.POST.get('nama_roti')
             kode_barang = request.POST.get('kode_barang')
+            harga_jual = request.POST.get('harga_jual')
+            hpp = request.POST.get('hpp')
             
             # Mengambil daftar id bahan dan jumlah satuan dari form
             id_bahan_list = request.POST.getlist('id_bahan[]')
+            print('id_bahan_list: ', id_bahan_list)
             jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
+            print('jumlah_satuan_list: ', jumlah_satuan_list)
 
             # Membuat daftar bahan yang akan disimpan dalam bentuk JSON
             daftar_bahan = []
-            total_hpp = 0
-            for i in range(len(jumlah_satuan_list)):
+            for i in range(len(id_bahan_list)):
                 # Mengambil objek bahan dari database berdasarkan id
                 bahan_id = id_bahan_list[i]
                 bahan_obj = MasterBahan.objects.get(id=bahan_id)
-                hpp = jumlah_satuan_list[i] * bahan_obj.harga_gram
-                total_hpp += int(hpp)
+                print('bahan_obj: ', bahan_obj)
                 
                 # Membuat dictionary untuk setiap bahan
                 bahan = {
@@ -158,7 +158,6 @@ def resep_create(request):
                     'kode_bahan': bahan_obj.kode_bahan,
                     'harga_jual': bahan_obj.harga_jual,
                     'jumlah_satuan': jumlah_satuan_list[i],
-                    'hpp' : hpp,
                     
                 }
                 daftar_bahan.append(bahan)
@@ -170,8 +169,9 @@ def resep_create(request):
             barang_jadi = BarangJadi.objects.create(
                 nama=nama_roti,
                 kode_barang=kode_barang,
+                harga_jual=harga_jual,
                 daftar_bahan=daftar_bahan_json,
-                hpp = total_hpp,
+                hpp=hpp,
             )
             
 
