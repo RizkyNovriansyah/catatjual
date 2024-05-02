@@ -3,27 +3,32 @@
 <div>
     <script>
         function get_data_bahan(id) {
-            var url = 'http://0.0.0.0:8001/resep/cek_bahan/' + id + '/';
-            // Using fetch to get data
+            var url = 'http://localhost:8001/resep/cek_bahan/' + id + '/';
+            // Menggunakan fetch untuk mengambil data
             return fetch(url)
                 .then(function(response) {
-                    // Parse response as JSON
+                    // Mengubah respons menjadi JSON
                     return response.json();
                 })
                 .then(function(bahan) {
-                    // Ensure bahan object has correct structure
+                    // Memastikan objek bahan memiliki struktur yang benar
                     let satuan = "gram";
                     let harga_persatuan = bahan['harga_gram'];
-                    // Return an object containing relevant data
+
+                    var e = document.getElementById("bahans");
+                    var value = e.value;
+                    var nama_bahan = e.options[e.selectedIndex].text;
+                    // Mengembalikan objek yang berisi data relevan
+                    console.log(url)
                     return {
-                        nama_bahan: bahan.nama_bahan,
+                        nama_bahan: nama_bahan,
                         kode_bahan: bahan.kode_bahan,
                         satuan: satuan,
                         harga_persatuan: harga_persatuan
                     };
                 })
                 .catch(function(err) {
-                    console.log('Fetch Error :-S', err);
+                    console.log('Kesalahan Fetch :-S', err);
                 });
         }
 
@@ -37,21 +42,21 @@
             var nama_bahan = e.options[e.selectedIndex].text;
             var kode_bahan = e.options[e.selectedIndex].getAttribute('data-kode');
         
-            // Call get_data_bahan and handle the returned Promise
+            // Panggil get_data_bahan dan tangani Promise yang dikembalikan
             get_data_bahan(value)
                 .then(function(bahanData) {
                     var html =
                         "<div class='card' id='data_bahan"+value+"'>" +
                         "<div class='card-body'>" +
-                        "Nama:<b>" + bahanData.nama_bahan + "</b>" +
+                        "Nama:<b>" + (bahanData.nama_bahan || '') + "</b>" +
                         "<br>" +
-                        "Kode Barang: <b>" + bahanData.kode_bahan + "</b>" +
+                        "Kode Barang: <b>" + (bahanData.kode_bahan || '') + "</b>" +
                         "<br>" +
-                        "Satuan: <b>" + bahanData.satuan + "</b>" +
+                        "Satuan: <b>" + (bahanData.satuan || '') + "</b>" +
                         "<br>" +
-                        "Harga perSatuan: <b>" + bahanData.harga_persatuan + "</b>" +
+                        "Harga perSatuan: <b>" + (bahanData.harga_persatuan || '') + "</b>" +
                         "<br>" +
-                        "Harga Jual:" + // You need to calculate this value
+                        "Harga Jual:" + // Anda perlu menghitung nilai ini
                         "<br>" +
                         "Jumlah Satuan Pakai:" +
                         "<input class='form-control' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>" +
@@ -61,7 +66,7 @@
                         "<div class='btn btn-danger hapus-bahan' id='hapus-bahan-" + value + "' onclick='remove_bahan(" + value + ")'>Hapus Bahan</div>" +
                         "</div>" +
                         "</div>";
-                    // Append the HTML to the specified element
+                    // Sisipkan HTML ke elemen yang ditentukan
                     document.getElementById("data_card").insertAdjacentHTML('beforeend', html);
                 });
         }
