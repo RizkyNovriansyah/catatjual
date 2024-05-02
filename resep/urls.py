@@ -14,4 +14,8 @@ urlpatterns = [
     path('bahans/create/', views.BahanCreate.as_view(), name='bahan_create'),
     path('bahans/update/<int:pk>/', views.BahanUpdate.as_view(), name='bahan_update'),
     path('bahans/delete/<int:pk>/', views.BahanDelete.as_view(), name='bahan_delete'),
+
+    # cek bahan, by id
+    path('cek_bahan/<int:id>/', views.cek_bahan, name='cek_bahan'),
+
 ]

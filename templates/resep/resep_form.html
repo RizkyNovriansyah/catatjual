@@ -2,34 +2,70 @@
 {% block content %}
 <div>
     <script>
+        function get_data_bahan(id) {
+            var url = 'http://0.0.0.0:8001/resep/cek_bahan/' + id + '/';
+            // Using fetch to get data
+            return fetch(url)
+                .then(function(response) {
+                    // Parse response as JSON
+                    return response.json();
+                })
+                .then(function(bahan) {
+                    // Ensure bahan object has correct structure
+                    let satuan = "gram";
+                    let harga_persatuan = bahan['harga_gram'];
+                    // Return an object containing relevant data
+                    return {
+                        nama_bahan: bahan.nama_bahan,
+                        kode_bahan: bahan.kode_bahan,
+                        satuan: satuan,
+                        harga_persatuan: harga_persatuan
+                    };
+                })
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+        }
+
+        function remove_bahan(id) {
+            document.getElementById("data_bahan"+id).remove();
+        }
+        
         function add_bahan() {
             var e = document.getElementById("bahans");
             var value = e.value;
             var nama_bahan = e.options[e.selectedIndex].text;
             var kode_bahan = e.options[e.selectedIndex].getAttribute('data-kode');
         
-            var html =
-                "<div class='card'>" +
-                    "<div class='card-body'>" +
-                        "Nama:<b>" + nama_bahan + "</b>" +
+            // Call get_data_bahan and handle the returned Promise
+            get_data_bahan(value)
+                .then(function(bahanData) {
+                    var html =
+                        "<div class='card' id='data_bahan"+value+"'>" +
+                        "<div class='card-body'>" +
+                        "Nama:<b>" + bahanData.nama_bahan + "</b>" +
                         "<br>" +
-                        "Kode Barang: <b>" + kode_bahan + "</b>" +
+                        "Kode Barang: <b>" + bahanData.kode_bahan + "</b>" +
                         "<br>" +
-                        "Harga Jual:" + //Bagaimana cara hitungnya?
+                        "Satuan: <b>" + bahanData.satuan + "</b>" +
+                        "<br>" +
+                        "Harga perSatuan: <b>" + bahanData.harga_persatuan + "</b>" +
+                        "<br>" +
+                        "Harga Jual:" + // You need to calculate this value
                         "<br>" +
                         "Jumlah Satuan Pakai:" +
                         "<input class='form-control' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>" +
                         "<input class='form-control' name='id_bahan[]' type='number' value='" + value + "'>" +
                         "<br>" +
                         "<div id='jumlah-bahan-container-" + value + "'></div>" +
-                        "<button class='btn btn-danger hapus-bahan'>Hapus Bahan</button>" +
-                    "</div>" +
-                "</div>";
-            console.log(html)
-            // Tambahkan elemen baru setelah elemen terakhir dengan insertAdjacentHTML
-            document.getElementById("data_card").insertAdjacentHTML('beforeend', html);
-        
+                        "<div class='btn btn-danger hapus-bahan' id='hapus-bahan-" + value + "' onclick='remove_bahan(" + value + ")'>Hapus Bahan</div>" +
+                        "</div>" +
+                        "</div>";
+                    // Append the HTML to the specified element
+                    document.getElementById("data_card").insertAdjacentHTML('beforeend', html);
+                });
         }
+        
         
     </script>
 

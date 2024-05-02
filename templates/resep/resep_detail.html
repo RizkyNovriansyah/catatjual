@@ -20,8 +20,8 @@
                         <p><strong>HPP:</strong> Rp.{{ barang_jadi.hpp }}</p>
                         <p><strong>Daftar Bahan:</strong></p>
                         <ul>
-                            {% for bahan, jumlah in barang_jadi.daftar_bahan.items %}
-                                <li>{{ bahan }} : {{ jumlah }} Kg</li>
+                            {% for key, value in daftar_bahan_dict %}
+                                <li>{{ key }}: {{ value }}</li>
                             {% endfor %}
                         </ul>
                     </div>

@@ -16,7 +16,7 @@ class ListPesanan(models.Model):
 class BarangJadi(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
-    harga_jual = models.IntegerField(blank=True, null=True)
+    harga_jual = models.IntegerField(blank=True, null=True)     #tambahkan input ini ke tambah roti baru tidak boleh kurang dari modal
     # daftar_bahan = models.CharField(max_length=100, blank=True, null=True)
     # daftar_bahan = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     daftar_bahan = models.JSONField(blank=True, null=True)
