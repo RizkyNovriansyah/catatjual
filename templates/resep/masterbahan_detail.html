@@ -1,5 +1,36 @@
 {% extends "base.html" %}
+{% load humanize %}
+
 {% block content %}
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .container p {
+            margin: 0;
+        }
+
+        .container p strong {
+            display: inline-block;
+            width: 150px; /* Sesuaikan ukuran kolom */
+        }
+
+        /* Untuk merapikan tampilan */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+
     <section class="section">
         <div class="section-header">
             <h1>Detail Bahan</h1>
@@ -15,16 +46,21 @@
                             <h5>{{ bahan.nama }}</h5>
                         </div>                        
                         <div class="card-body">
-                            <p><strong>Kode Bahan:</strong> {{ bahan.kode_bahan }}</p>
-                            <p><strong>Total:</strong> {{ bahan.total }}</p>
-                            <p><strong>Qty Keseluruhan:</strong> {{ bahan.qty_keseluruhan }}Kg</p>
-                            <p><strong>Qty Terkecil:</strong> {{ bahan.qty_terkecil }}gram</p>
-                            <p><strong>Harga:</strong> {{ bahan.harga }}</p>
-                            <p><strong>Harga Jual: Rp.</strong> {{ bahan.harga_jual }}</p>
-                            <p><strong>Harga per Kg: Rp.</strong> {{ bahan.harga_kg }}</p>
-                            <p><strong>Harga per Gram: Rp.</strong> {{ bahan.harga_gram }}</p>
-                            <p><strong>Dibuat pada:</strong> {{ bahan.created_date }}</p>
-                            <p><strong>Diperbarui pada:</strong> {{ bahan.updated_date }}</p>
+                            <div class="container">
+                                <div>
+                                    <p><strong>Kode Bahan</strong>: {{ bahan.kode_bahan }}</p>
+                                    <p><strong>Total</strong>: {{ bahan.total }}</p>
+                                    <p><strong>Qty Keseluruhan</strong>: {{ bahan.qty_keseluruhan }} Kg</p>
+                                    <p><strong>Qty Terkecil</strong>: {{ bahan.qty_terkecil }} Gram</p>
+                                    <p><strong>Harga</strong>: Rp.{{ bahan.harga|intcomma }}</p>
+                               
+                                    <p><strong>Harga Jual</strong>:  Rp.{{ bahan.harga_jual|intcomma }}</p>
+                                    <p><strong>Harga per Kg</strong>:  Rp.{{ bahan.harga_kg|intcomma }}</p>
+                                    <p><strong>Harga per Gram</strong>: Rp.{{ bahan.harga_gram|intcomma }}</p>
+                                    <p><strong>Dibuat pada</strong>: {{ bahan.created_date|naturaltime }}</p>
+                                    <p><strong>Diperbarui pada</strong>: {{ bahan.updated_date|naturaltime }}</p>
+                                </div>
+                            </div>
 
                         </div>
                     </div>

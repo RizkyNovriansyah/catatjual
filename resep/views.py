@@ -103,7 +103,7 @@ class ResepDetail(DetailView):
     # get daftar bahan
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+        selisih = self.object.harga_jual - self.object.hpp
         id_bahan = self.object.id
         resep = Resep.objects.filter(barang_jadi__id=id_bahan)
         
@@ -121,6 +121,7 @@ class ResepDetail(DetailView):
             
         # return bahans and context
         context['bahans'] = bahans
+        context['selisih'] = selisih
         return context
         
 
