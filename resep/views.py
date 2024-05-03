@@ -128,7 +128,6 @@ def resep_create(request):
 
     # Jika request method adalah POST (form telah disubmit)
     if request.method == 'POST':
-        form = ResepForm(request.POST)
         # Memeriksa apakah form valid
         if form.is_valid():
             # Mengambil data dari form
@@ -139,9 +138,7 @@ def resep_create(request):
             
             # Mengambil daftar id bahan dan jumlah satuan dari form
             id_bahan_list = request.POST.getlist('id_bahan[]')
-            print('id_bahan_list: ', id_bahan_list)
             jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
-            print('jumlah_satuan_list: ', jumlah_satuan_list)
 
             # Membuat daftar bahan yang akan disimpan dalam bentuk JSON
             daftar_bahan = []
@@ -158,7 +155,6 @@ def resep_create(request):
                     'kode_bahan': bahan_obj.kode_bahan,
                     'harga_jual': bahan_obj.harga_jual,
                     'jumlah_satuan': jumlah_satuan_list[i],
-                    
                 }
                 daftar_bahan.append(bahan)
 
