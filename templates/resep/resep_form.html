@@ -108,7 +108,7 @@
 
     <section class="section">
         <div class="section-header">
-            <h1>Tambah Roti Baru</h1>
+            <h1>Tambah Resep Baru</h1>
         </div>
     </section>
 
@@ -131,7 +131,7 @@
                                 <br> HPP :
                                 <input id="hpp" class="form-control" name="hpp" type="text" readonly>
                                 <br>
-                                Daftar Bahan:
+                                List Bahan:
                                 <select name="bahan_list[]" id="bahans" class="form-control">
                                     {% for bahan in bahans %}
                                     <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
