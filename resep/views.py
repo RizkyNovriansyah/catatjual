@@ -98,7 +98,31 @@ class ResepDelete(DeleteView):
 class ResepDetail(DetailView):
     model = BarangJadi
     template_name = 'resep/resep_detail.html'
-    context_object_name = 'barang_jadi'    
+    context_object_name = 'barang_jadi'   
+    
+    # get daftar bahan
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        id_bahan = self.object.id
+        resep = Resep.objects.filter(barang_jadi__id=id_bahan)
+        
+        bahans = []
+        for bahan in resep:
+            nama = bahan.master_bahan.nama
+            jumlah = bahan.jumlah_pemakaian
+            total_hpp_single_bahan = bahan.master_bahan.harga_gram * jumlah
+            bahans.append({'nama' : nama, 
+                           'jumlah' : jumlah,
+                           'kode_bahan' : bahan.master_bahan.kode_bahan,
+                           'harga_gram': bahan.master_bahan.harga_gram,
+                           'total_hpp_single_bahan' : total_hpp_single_bahan,
+                           })
+            
+        # return bahans and context
+        context['bahans'] = bahans
+        return context
+        
 
 # JsonResponse
 from django.http import JsonResponse
@@ -138,52 +162,54 @@ def resep_create(request):
             
             # Mengambil daftar id bahan dan jumlah satuan dari form
             id_bahan_list = request.POST.getlist('id_bahan[]')
+            print('id_bahan_list: ', id_bahan_list)
             jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
-
+            print('jumlah_satuan_list: ', jumlah_satuan_list)
+            
+            # Simpan data resep ke dalam database
+            barang_jadi = BarangJadi.objects.create(
+                nama=nama_roti,
+                kode_barang=kode_barang,
+                harga_jual=harga_jual,
+                hpp=hpp,
+            )
+            
             # Membuat daftar bahan yang akan disimpan dalam bentuk JSON
             daftar_bahan = []
             for i in range(len(id_bahan_list)):
                 # Mengambil objek bahan dari database berdasarkan id
                 bahan_id = id_bahan_list[i]
+                print('bahan_id for: ', bahan_id)
                 bahan_obj = MasterBahan.objects.get(id=bahan_id)
-                print('bahan_obj: ', bahan_obj)
+                print('bahan_obj for: ', bahan_obj)
                 
                 # Membuat dictionary untuk setiap bahan
                 bahan = {
                     'id_bahan': bahan_id,
                     'nama_bahan': bahan_obj.nama,
                     'kode_bahan': bahan_obj.kode_bahan,
-                    'harga_jual': bahan_obj.harga_jual,
+                    'harga_jual': harga_jual,
                     'jumlah_satuan': jumlah_satuan_list[i],
                 }
                 daftar_bahan.append(bahan)
-
+                
+                resep_create = Resep.objects.create(
+                    master_bahan = bahan_obj,
+                    barang_jadi  = barang_jadi, 
+                    jumlah_pemakaian = jumlah_satuan_list[i],
+                )
             # Mengubah daftar bahan menjadi format JSON
+            # daftar_bahan_json = json.loads(barang_jadi.daftar_bahan)
             daftar_bahan_json = json.dumps(daftar_bahan)
-
-            # Simpan data resep ke dalam database
-            barang_jadi = BarangJadi.objects.create(
-                nama=nama_roti,
-                kode_barang=kode_barang,
-                harga_jual=harga_jual,
-                daftar_bahan=daftar_bahan_json,
-                hpp=hpp,
-            )
+            daftar_bahan_obj = json.loads(daftar_bahan_json)
+            barang_jadi.daftar_bahan = daftar_bahan_json
+            barang_jadi.save()
+            print('daftar_bahan: ', daftar_bahan)
             
 
-            # Assuming barang_jadi.daftar_bahan is a string representing JSON
-            daftar_bahan_dict = json.loads(barang_jadi.daftar_bahan)
-            print('daftar_bahan_dict: ', daftar_bahan_dict)
-            # get_bahan = daftar_bahan_dict[0]  # Mengakses elemen pertama dalam list
-            # nama_bahan = get_bahan['nama_bahan']
-            # print('Nama bahan pada elemen pertama:', )  # Output: tepung
-            # print('Nama bahan pada elemen pertama:', nama_bahan['jumlah_satuan'])  # Output: tepung
-            
-
-      
             # Redirect ke halaman daftar bahan
             return redirect('resep_detail', pk=barang_jadi.id)
 
     # Mengirimkan data bahan dan form ke template
     context = {'bahans': bahans, 'form': form}
-    return render(request, 'resep/resep_form.html', context)
+    return render(request, 'resep/resep_form.html', locals())
