@@ -46,23 +46,20 @@
                                 <div class="column">
                                     <h6>Resep</h6>
                                     <h6>Kode Resep</h6>
-                                    <h6>Harga Jual</h6>
-                                    <h6>Harga Pokok Penjualan</h6>
-                                    <h6>Harga Jual - HPP</h6>
+                                    <h6>Harga Jual Per 1 Roti</h6>
+                                    <h6>Total HPP Keseluruhan</h6>
                                 </div>
                                 <div class="column smaller">
                                     <h6>:</h6>
                                     <h6>:</h6>
                                     <h6>:</h6>
                                     <h6>:</h6>
-                                    <h6>=</h6>
                                 </div>
                                 <div class="column-te">
                                     <h6>{{ barang_jadi.nama }}</h6>
                                     <h6>{{ barang_jadi.kode_barang }}</h6>
                                     <h6>Rp.{{ barang_jadi.harga_jual|intcomma }}</h6>
                                     <h6>Rp.{{ barang_jadi.hpp|intcomma }}</h6>
-                                    <h6>Rp.{{ selisih|intcomma }}</h6>
                                 </div>
                             </div>  
                         </tbody>
