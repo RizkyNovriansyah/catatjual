@@ -1,6 +1,7 @@
 # views.py
 import json
 
+from django.db.models.query import QuerySet
 from django.views import View  
 from ..models import Resep, MasterBahan, BarangJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
@@ -21,6 +22,14 @@ class ResepList(ListView):
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadis'
     
+    def get_queryset(self):
+        return BarangJadi.objects.filter(master_roti=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+        
+        
+            
 # Kelas untuk menghapus data resep.
 class ResepDelete(DeleteView):
     # Menentukan model yang akan dihapus.
@@ -151,6 +160,7 @@ def resep_create(request):
             barang_jadi.daftar_bahan = daftar_bahan_json
             barang_jadi.save()
             print('daftar_bahan: ', daftar_bahan)
+            print('daftar_bahan3: ', daftar_bahan)
             
             # Redirect ke halaman detail resep
             return redirect('resep_detail', pk=barang_jadi.id)

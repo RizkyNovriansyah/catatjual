@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+<style>
+    .table-container {
+        display: flex;
+        justify-content: space-between;
+        width: 40%;
+    }
+    
+    .column {
+        flex: 1;
+        text-align: left;
+    }
+    .column-te {
+        flex: 1;
+        text-align: left;
+        width: 50%;
+    }
+    
+    .smaller {
+        margin-right: -180px;
+    }
+    
+    
+</style>
+<section class="section">
+    <div class="section-header">
+        <h1>Detail Resep</h1>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <a href="{% url 'master_resep_list' %}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> Kembali ke List Resep
+                        </a>
+                        <button onclick="window.location.href='{% url 'master_resep_update' pk=barang_jadi.pk %}'" class="btn btn-sm btn-warning mr-2">Update</button>
+
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive"><table class="table"><tbody>
+                            <div class="table-container">
+                                <div class="column">
+                                    <h6>Resep</h6>
+                                    <h6>Kode Resep</h6>
+                                    <h6>Harga Jual Per 1 Roti</h6>
+                                    <h6>Total HPP Keseluruhan</h6>
+                                </div>
+                                <div class="column smaller">
+                                    <h6>:</h6>
+                                    <h6>:</h6>
+                                    <h6>:</h6>
+                                    <h6>:</h6>
+                                </div>
+                                <div class="column-te">
+                                    <h6>{{ barang_jadi.nama }}</h6>
+                                    <h6>{{ barang_jadi.kode_barang }}</h6>
+                                    <h6>Rp.{{ barang_jadi.harga_jual|intcomma }}</h6>
+                                    <h6>Rp.{{ barang_jadi.hpp|intcomma }}</h6>
+                                </div>
+                            </div>  
+                        </tbody>
+                        
+                            
+                        </div>
+                        <br>
+
+                        <h2>Bahan yang digunakan </h2>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nama Bahan</th>
+                                        <th>Kode Bahan</th>
+                                        <th>Jumlah Pemakaian</th>
+                                        <th>Harga per Gram</th>
+                                        <th>Total HPP per Bahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for bahan in bahans %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ bahan.nama }}</td>
+                                            <td>{{ bahan.kode_bahan }}</td>
+                                            <td>{{ bahan.jumlah }} Gram</td>
+                                            <td>Rp.{{ bahan.harga_gram|intcomma }} </td>
+                                            <td>Rp.{{ bahan.total_hpp_single_bahan|intcomma }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

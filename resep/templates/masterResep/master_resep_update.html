@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <script>
+            function get_data_bahan(id) {
+                var url = 'http://localhost:8001/resep/cek_bahan/' + id + '/';
+                // Menggunakan fetch untuk mengambil data
+                return fetch(url)
+                    .then(function(response) {
+                        // Mengubah respons menjadi JSON
+                        return response.json();
+                    })
+                    .then(function(bahan) {
+                        // Memastikan objek bahan memiliki struktur yang benar
+                        let satuan = "gram";
+                        let harga_persatuan = bahan['harga_gram'];
+
+                        var e = document.getElementById("bahans");
+                        var value = e.value;
+                        var nama_bahan = e.options[e.selectedIndex].text;
+                        // Mengembalikan objek yang berisi data relevan
+                        console.log(url)
+                        return {
+                            nama_bahan: nama_bahan,
+                            kode_bahan: bahan.kode_bahan,
+                            satuan: satuan,
+                            harga_persatuan: harga_persatuan
+                        };
+                    })
+                    .catch(function(err) {
+                        console.log('Kesalahan Fetch :-S', err);
+                    });
+            }
+
+            function remove_bahan(id) {
+                document.getElementById("data_bahan"+id).remove();
+                cekhpp();
+            }
+            
+
+            function cekhpp(){
+                var ele = document.getElementsByClassName('bahan_added');
+                let all_bahan = []
+                let hpp_sum = 0;
+                for (var i=0; i< ele.length; i++ ) {
+                    let id_current = ele[i].id
+                    let kode_bahan = id_current.split('#')[1]
+                    let e = document.getElementById(id_current);
+                    let value = e.value;
+                    let hargapersatuan = e.getAttribute('data-hargapersatuan')
+                    let hpp_satuan = value * hargapersatuan
+                    all_bahan.push({
+                        'id' : id_current,
+                        'value' : value,
+                        'hargapersatuan' : hargapersatuan,
+                        'hpp' : hpp_satuan
+                    })
+                    hpp_sum += hpp_satuan
+                    
+                    console.log(kode_bahan)
+                    let hpp_satuan_span = document.getElementById('hpp_satuan#' + kode_bahan);
+                    hpp_satuan_span.innerText = hpp_satuan;
+                    
+                }
+
+                console.log(all_bahan)
+                let hpp = document.getElementById('hpp');
+                hpp.value = hpp_sum
+                console.log('Nilai hppeee:', hpp_sum);
+            }
+            
+            function add_bahan() {
+                var e = document.getElementById("bahans");
+                var value = e.value;
+                var nama_bahan = e.options[e.selectedIndex].text;
+                var kode_bahan = e.options[e.selectedIndex].getAttribute('data-kode');
+                // Panggil get_data_bahan dan tangani Promise yang dikembalikan
+   
+                // Panggil get_data_bahan dan tangani Promise yang dikembalikan
+                get_data_bahan(value)
+                    .then(function(bahanData) {
+                        var html =
+                            "<div class='card' id='data_bahan"+value+"'>" +
+                            "<div class='card-body'>" +
+                            "Nama:<b>" + (bahanData.nama_bahan || '') + "</b>" +
+                            "<br>" +
+                            "Kode Barang: <b>" + (bahanData.kode_bahan || '') + "</b>" +
+                            "<br>" +
+                            "Satuan: <b>" + (bahanData.satuan || '') + "</b>" +
+                            "<br>" +
+                            "Harga perSatuan: <b> " + (bahanData.harga_persatuan || '') + "</b>" +
+                            "<br>" +
+                            "Harga Jual:" + // Anda perlu menghitung nilai ini
+                            "<span id='hpp_satuan#"+bahanData.kode_bahan+"'></span><br>" +
+                            "Jumlah Satuan Pakai:" +
+                            "<input id='bahan_added#"+bahanData.kode_bahan+"' onkeyup='cekhpp()' class='form-control bahan_added' data-hargapersatuan='"+bahanData.harga_persatuan+"' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>" +
+                            "<input class='form-control' style='visibility: hidden' name='id_bahan[]' type='number' value='" + value + "'>" +
+                            "<br>" +
+                            "<div id='jumlah-bahan-container-" + value + "'></div>" +
+                            "<div class='btn btn-danger hapus-bahan' id='hapus-bahan-" + value + "' onclick='remove_bahan(" + value + ")'>Hapus Bahan</div>" +
+                            "</div>" +
+                            "</div>";
+                        // Sisipkan HTML ke elemen yang ditentukan
+
+
+                        document.getElementById("data_card").insertAdjacentHTML('beforeend', html);
+                    });
+            }
+        </script>
+
+    <section class="section">
+        <div class="section-header">
+            <h1>Tambah Resep Baru</h1>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-body">
+            <form method="post" action="{% url 'master_resep_update' pk=barang_jadi.pk %}">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                                {% csrf_token %}
+                                <button class='btn btn-primary' type="submit">Simpan Resep</button>
+                                <br>
+                                <br> Nama:
+                                <input class="form-control" name="nama_roti" type="text" value="{{ form.instance.nama }}" placeholder='Masukan Nama Roti'>
+                                <br> Kode Resep:
+                                <input class="form-control" name="kode_barang" type="text" value="{{ form.instance.kode_barang }}" placeholder='Masukan kode barang'>
+                                <br> Harga Jual:
+                                <input class="form-control" name="harga_jual" type="text" value="{{ form.instance.harga_jual }}" placeholder='Masukan Harga'>
+                                <br> HPP :
+                                <input id="hpp" class="form-control" name="hpp" type="text" value="{{ form.instance.hpp }}" readonly>
+                                <br>
+                                Tambah Bahan Baru:
+                                <select name="bahan_list[]" id="bahans" class="form-control">
+                                    {% for bahan in bahans %}
+                                    <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
+                                    {% endfor %}
+                                </select>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                        {% csrf_token %}
+                        <div id="data_card">
+                            <div id="data_card">
+                                {% for resep in daftar_resep %}
+                                    <div class='card' id='data_bahan{{ resep.master_bahan.id }}'>
+                                        <div class='card-body'>
+                                            Nama:<b>{{ resep.master_bahan.nama }}</b><br>
+                                            Kode Barang: <b>{{ resep.master_bahan.kode_bahan }}</b><br>
+                                            Satuan: <b>gram</b><br>
+                                            Harga perSatuan: <b>{{ resep.master_bahan.harga_gram }}</b><br>
+                                            Harga Jual: <span id='hpp_satuan#{{ resep.master_bahan.kode_bahan }}'></span><br>
+                                            Jumlah Satuan Pakai: <input id='bahan_added#{{ resep.master_bahan.kode_bahan }}' onkeyup='cekhpp()' class='form-control bahan_added' data-hargapersatuan='{{ resep.master_bahan.harga_gram }}' name='jumlah_satuan[]' type='number' value='{{ resep.jumlah_pemakaian }}' placeholder='Masukkan Jumlah Satuan Pakai'><input class='form-control' style='visibility: hidden' name='id_bahan[]' type='number' value='{{ resep.master_bahan.id }}'><br>
+                                            <div id='jumlah-bahan-container-{{ resep.master_bahan.id }}'></div>
+                                            <div class='btn btn-danger hapus-bahan' id='hapus-bahan-{{ resep.master_bahan.id }}' onclick='remove_bahan({{ resep.master_bahan.id }})'>Hapus Bahan</div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <button onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>Tambah Bahan</button>
+        </div>
+    </section>
+{% endblock content %}
