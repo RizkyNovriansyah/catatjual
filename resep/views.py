@@ -1,14 +1,16 @@
 # views.py
-from .models import Resep, MasterBahan, BarangJadi
-from .forms import MasterBahanForm, ResepForm
-from django.db.models import Sum
+import json
 
-import json  
+from django.views import View  
+from .models import Resep, MasterBahan, BarangJadi
+from .forms import BarangJadiForm, MasterBahanForm, ResepForm
+# JsonResponse untuk merespons data dalam format JSON
+from django.urls import reverse_lazy
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.urls import reverse_lazy
 
 #Bahan
 class BahanCreate(CreateView):
@@ -90,15 +92,6 @@ class ResepList(ListView):
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadis'
     
-# Kelas untuk mengupdate data resep.
-class ResepUpdate(UpdateView):
-    # Menentukan model yang akan diupdate.
-    model = BarangJadi
-    # Menentukan fields yang bisa diubah pada proses update.
-    fields = ['nama', 'harga_jual', 'hpp']
-    # Menentukan URL yang akan diarahkan setelah proses update berhasil.
-    success_url = reverse_lazy('resep_list')
-
 # Kelas untuk menghapus data resep.
 class ResepDelete(DeleteView):
     # Menentukan model yang akan dihapus.
@@ -146,9 +139,6 @@ class ResepDetail(DetailView):
         context['selisih'] = selisih
         return context
 
-# JsonResponse untuk merespons data dalam format JSON
-from django.http import JsonResponse
-
 # Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
 def cek_bahan(request, id):
     # Mengambil objek bahan dari database berdasarkan id
@@ -190,9 +180,7 @@ def resep_create(request):
             
             # Mengambil daftar id bahan dan jumlah satuan dari form
             id_bahan_list = request.POST.getlist('id_bahan[]')
-            print('id_bahan_list: ', id_bahan_list)
             jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
-            print('jumlah_satuan_list: ', jumlah_satuan_list)
             
             # Simpan data resep ke dalam database
             barang_jadi = BarangJadi.objects.create(
@@ -241,3 +229,56 @@ def resep_create(request):
     # Mengirimkan data bahan dan form ke template
     context = {'bahans': bahans, 'form': form}
     return render(request, 'resep/resep_form.html', locals())
+
+
+class ResepUpdateView(UpdateView):
+    model = BarangJadi
+    form_class = BarangJadiForm
+    template_name = 'resep/resep_update.html'
+    success_url = '/'
+    context_object_name = 'barang_jadi'
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        barang_jadi = self.object
+        print('barang_jadi: ', barang_jadi)
+        
+        daftar_resep = Resep.objects.filter(barang_jadi=barang_jadi)
+        print('daftar_resep: ', daftar_resep)
+        context['daftar_resep'] = daftar_resep
+        context['bahans'] = MasterBahan.objects.filter(is_deleted=False)
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        nama_roti = self.request.POST.get('nama_roti')
+        kode_barang = form.cleaned_data.get('kode_barang')
+        harga_jual = form.cleaned_data.get('harga_jual')
+        hpp = form.cleaned_data.get('hpp')
+        
+        # Update data barang jadi
+        self.object.nama = nama_roti
+        self.object.kode_barang = kode_barang
+        self.object.harga_jual = harga_jual
+        self.object.hpp = hpp
+        self.object.save()
+
+        # Delete existing resep
+        Resep.objects.filter(barang_jadi=self.object).delete()
+
+        # Simpan data resep ke dalam database
+        for i in range(len(self.request.POST.getlist('id_bahan[]'))):
+            bahan_id = self.request.POST.getlist('id_bahan[]')[i]
+            bahan_obj = MasterBahan.objects.get(id=bahan_id)
+            jumlah_pemakaian = self.request.POST.getlist('jumlah_satuan[]')[i]
+            Resep.objects.create(
+                master_bahan=bahan_obj,
+                barang_jadi=self.object,
+                jumlah_pemakaian=jumlah_pemakaian,
+            )
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('resep_detail', kwargs={'pk': self.object.id})

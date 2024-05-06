@@ -36,7 +36,9 @@
                         <a href="{% url 'resep_list' %}" class="btn btn-primary">
                             <i class="fas fa-arrow-left"></i> Kembali ke List Resep
                         </a>
-                        
+                        <button onclick="window.location.href='{% url 'resep_update' pk=barang_jadi.pk %}'" class="btn btn-sm btn-warning mr-2">Update</button>
+
+
                     </div>
                     <div class="card-body">
                         <div class="table-responsive"><table class="table"><tbody>

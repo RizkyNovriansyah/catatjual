@@ -32,6 +32,7 @@
                                         <td>Rp.{{ barang.harga_jual|intcomma }}</td>
                                         <td>Rp.{{ barang.hpp |intcomma }}</td>
                                         <td>
+                                            <a href="{% url 'resep_update' pk=barang.pk %}" class="btn btn-sm btn-warning mr-2">Update</a> <!-- Perubahan: "Delete" menjadi "Hapus" -->
                                             <a href="{% url 'resep_delete' pk=barang.pk %}" class="btn btn-sm btn-danger mr-2">Hapus</a> <!-- Perubahan: "Delete" menjadi "Hapus" -->
                                         </td>
                                     </tr>

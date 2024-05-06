@@ -1,13 +1,19 @@
 # forms.py
 from django import forms
-from .models import Resep, MasterBahan
+from .models import BarangJadi, Resep, MasterBahan
 from decimal import Decimal
 
 class ResepForm(forms.ModelForm):
     class Meta:
         model = Resep
-        fields = '__all__'
+        fields = ['master_bahan',
+                    'barang_jadi',
+                    'jumlah_pemakaian',]
 
+class BarangJadiForm(forms.ModelForm):
+    class Meta:
+        model = BarangJadi
+        fields = ['nama', 'kode_barang', 'hpp', 'harga_jual']
 
 class MasterBahanForm(forms.ModelForm):
     class Meta:
