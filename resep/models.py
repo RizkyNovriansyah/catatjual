@@ -20,6 +20,7 @@ class BarangJadi(models.Model):
     daftar_bahan = models.JSONField(blank=True, null=True)
     hpp = models.IntegerField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
+    master_roti = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nama
