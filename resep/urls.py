@@ -24,4 +24,5 @@ urlpatterns = [
 
     # cek bahan, by id
     path('cek_bahan/<int:id>/', cek_bahan, name='cek_bahan'),
+    path('cek_master/<int:id>/', cek_master, name='cek_master'),
 ]

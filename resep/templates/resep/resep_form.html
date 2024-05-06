@@ -105,6 +105,63 @@
                         document.getElementById("data_card").insertAdjacentHTML('beforeend', html);
                     });
             }
+
+            function get_data_master(id) {
+                var url = 'http://localhost:8001/resep/cek_master/' + id + '/';
+                // Menggunakan fetch untuk mengambil data
+                return fetch(url)
+                    .then(function(response) {
+                        // Mengubah respons menjadi JSON
+                        return response.json();
+                    })
+                    .then(function(master) {
+                        // Memastikan objek master memiliki struktur yang benar
+            
+                        var e = document.getElementById("masters");
+                        var value = e.value;
+                        var nama_master = e.options[e.selectedIndex].text;
+            
+                        // Mengembalikan objek yang berisi data relevan
+                        return {
+                            nama: nama_master,
+                            kode_master: master.kode_barang // tambahkan kode_master dari respons server
+                        };
+                    })
+                    .catch(function(err) {
+                        console.log('Kesalahan Fetch :-S', err);
+                    });
+            }
+            
+
+            function remove_master(id) {
+                document.getElementById("data_master"+id).remove();
+            }
+            
+            function add_master() {
+                var e = document.getElementById("masters");
+                var value = e.value;
+                var nama_master = e.options[e.selectedIndex].text;
+                var kode_master = e.options[e.selectedIndex].dataset.kode; // Mengambil kode_barang dari dataset
+            
+                // Panggil get_data_master dan tangani Promise yang dikembalikan
+                get_data_master(value)
+                    .then(function(masterData) {
+                        var html =
+                            "<div class='card' id='data_master"+value+"'>" +
+                            "<div class='card-body'>" +
+                            "Nama:<b>" + (masterData.nama || '') + "</b>" + // Menggunakan masterData.nama
+                            "<br>" +
+                            "Kode:<b>" + (kode_master || '') + "</b>" + // Menggunakan kode_master dari dataset
+                            "<br>" +
+                            "<div id='jumlah-master-container-" + value + "'></div>" +
+                            "<div class='btn btn-danger hapus-master' id='hapus-master-" + value + "' onclick='remove_master(" + value + ")'>Hapus master</div>" +
+                            "</div>" +
+                            "</div>";
+                        // Sisipkan HTML ke elemen yang ditentukan
+                        document.getElementById("data_card").insertAdjacentHTML('beforeend', html);
+                    });
+            }
+            
         </script>
 
     <section class="section">
@@ -138,6 +195,13 @@
                                     <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
                                     {% endfor %}
                                 </select>
+                                <br>
+                                Master Bahan:
+                                <select name="master_list[]" id="masters" class="form-control">
+                                    {% for master in masters %}
+                                    <option value="{{ master.id }}" data-kode="{{ master.kode_barang }}"> {{ master.nama }}</option>
+                                    {% endfor %}
+                                </select>
                             
                         </div>
                     </div>
@@ -155,6 +219,7 @@
                 </div>
             </form>
             <button onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>Tambah Bahan</button>
+            <button onclick="add_master()" style="margin-top: 25px" class='btn btn-info'>Tambah Master</button>
         </div>
     </section>
 {% endblock content %}

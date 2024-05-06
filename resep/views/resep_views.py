@@ -98,10 +98,30 @@ def cek_bahan(request, id):
     # Mengirimkan response dalam format JSON
     return JsonResponse(result)
 
+
+def cek_master(request, id):
+    # Mengambil objek bahan dari database berdasarkan id
+    bahan = BarangJadi.objects.get(id=id, master_roti=True)
+    print('bahan: ', bahan)
+    # Menyiapkan data bahan dalam format JSON
+    result = {
+        'nama' : bahan.nama,
+        'kode_master' : bahan.kode_barang, # Perbaiki ini menjadi kode_barang
+        'harga_jual' : bahan.harga_jual,
+        'daftar_bahan' : bahan.daftar_bahan,
+        'hpp' : bahan.hpp,
+        'is_deleted' : bahan.is_deleted,
+        'master_roti' : bahan.master_roti,
+    }
+    # Mengirimkan response dalam format JSON
+    return JsonResponse(result)
+
+
 # Fungsi untuk membuat resep baru
 def resep_create(request):
     # Mengambil semua bahan yang belum dihapus dari database
     bahans = MasterBahan.objects.filter(is_deleted=False)
+    masters = BarangJadi.objects.filter(master_roti=True)
     
     # Membuat form untuk input resep
     form = ResepForm(request.POST or None)
