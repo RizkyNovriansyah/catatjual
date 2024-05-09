@@ -2,6 +2,7 @@ from django.urls import path
 from .views.bahan_views import *
 from .views.resep_views import *
 from .views.master_resep import *
+from .views.utils_views import *
 
 urlpatterns = [
     path('resep/', ResepList.as_view(), name='resep_list'),
@@ -25,4 +26,5 @@ urlpatterns = [
     # cek bahan, by id
     path('cek_bahan/<int:id>/', cek_bahan, name='cek_bahan'),
     path('cek_master/<int:id>/', cek_master, name='cek_master'),
+    path('error/', ErrorPageView.as_view(), name='error_page'),
 ]
