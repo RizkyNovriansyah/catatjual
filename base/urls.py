@@ -21,4 +21,5 @@ urlpatterns = [
     
     path('', include('catat.urls')),
     path('resep/', include('resep.urls')),
+    path('pesan/', include('pesan.urls')),
 ]
