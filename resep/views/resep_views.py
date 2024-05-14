@@ -153,11 +153,11 @@ def resep_create(request):
             for i in range(len(id_bahan_list)):
                 # Mengambil objek bahan dari database berdasarkan id
                 bahan_id = id_bahan_list[i]
-                print('bahan_id for: ', bahan_id)
                 bahan_obj = MasterBahan.objects.get(id=bahan_id)
-                print('bahan_obj for: ', bahan_obj)
                 
                 # Membuat dictionary untuk setiap bahan
+                
+                """ Mekanisme Kurang bersih
                 bahan = {
                     'id_bahan': bahan_id,
                     'nama_bahan': bahan_obj.nama,
@@ -166,22 +166,19 @@ def resep_create(request):
                     'jumlah_satuan': jumlah_satuan_list[i],
                 }
                 daftar_bahan.append(bahan)
-                
+                """
                 # Simpan data resep ke dalam database
                 resep_create = Resep.objects.create(
                     master_bahan = bahan_obj,
                     barang_jadi  = barang_jadi, 
                     jumlah_pemakaian = jumlah_satuan_list[i],
                 )
-            
-            # Mengubah daftar bahan menjadi format JSON
+                
+            """ Mekanisme Kurang bersih 
             daftar_bahan_json = json.dumps(daftar_bahan)
-            # Menyimpan daftar bahan dalam bentuk JSON ke dalam objek barang_jadi
             barang_jadi.daftar_bahan = daftar_bahan_json
             barang_jadi.save()
-            print('daftar_bahan: ', daftar_bahan)
-            print('daftar_bahan3: ', daftar_bahan)
-            
+            """
             # Redirect ke halaman detail resep
             return redirect('resep_detail', pk=barang_jadi.id)
 

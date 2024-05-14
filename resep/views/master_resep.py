@@ -100,17 +100,14 @@ def cek_bahan(request, id):
 def master_resep_create(request):
     # Mengambil semua bahan yang belum dihapus dari database
     bahans = MasterBahan.objects.filter(is_deleted=False)
-    print("MASUK SINI C")
     # Membuat form untuk input resep
     form = ResepForm(request.POST or None)
 
     # Jika request method adalah POST (form telah disubmit)
     if request.method == 'POST':
         # Memeriksa apakah form valid
-        print("MASUK SINI b")
         
         if form.is_valid():
-            print("MASUK SINI d")
             
             # Mengambil data dari form
             nama_roti = request.POST.get('nama_roti')
@@ -142,6 +139,7 @@ def master_resep_create(request):
                 bahan_obj = MasterBahan.objects.get(id=bahan_id)
                 
                 # Membuat dictionary untuk setiap bahan
+                """ Mekanisme Kotor
                 bahan = {
                     'id_bahan': bahan_id,
                     'nama_bahan': bahan_obj.nama,
@@ -150,6 +148,7 @@ def master_resep_create(request):
                     'jumlah_satuan': jumlah_satuan_list[i],                    
                 }
                 daftar_bahan.append(bahan)
+                """
                 
                 # Simpan data resep ke dalam database
                 resep_create = Resep.objects.create(
@@ -158,14 +157,13 @@ def master_resep_create(request):
                     jumlah_pemakaian = jumlah_satuan_list[i],
                 )
             
-            # Mengubah daftar bahan menjadi format JSON
-            daftar_bahan_json = json.dumps(daftar_bahan)
             # Menyimpan daftar bahan dalam bentuk JSON ke dalam objek barang_jadi
+            """ Mekanisme Kotor   
+            daftar_bahan_json = json.dumps(daftar_bahan)
             barang_jadi.daftar_bahan = daftar_bahan_json
             barang_jadi.save()
-            print('daftar_bahan: ', daftar_bahan)
-            print('daftar_bahan:2 ', daftar_bahan)
-            
+            """
+          
             # Redirect ke halaman detail resep
             return redirect('resep_detail', pk=barang_jadi.id)
 
