@@ -124,6 +124,7 @@
                         <div class="card-body">
                                 {% csrf_token %}
                                 <button class='btn btn-primary' type="submit">Simpan Resep</button>
+                                <a onclick="add_bahan()" class="btn btn-primary" style="color: white; top: 0; margin-left: 470px;">Tambah Bahan</a>
                                 <br>
                                 <br> Nama:
                                 <input class="form-control" name="nama_roti" type="text" value="{{ form.instance.nama }}" placeholder='Masukan Nama Roti'>
@@ -168,7 +169,7 @@
                     </div>
                 </div>
             </form>
-            <button onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>Tambah Bahan</button>
+            {% comment %} <button onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>Tambah Bahan</button> {% endcomment %}
         </div>
     </section>
 {% endblock content %}

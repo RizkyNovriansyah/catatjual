@@ -17,6 +17,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 class BahanCreate(CreateView):
     model = MasterBahan
     form_class = MasterBahanForm
+    template_name = 'bahan/masterbahan_form.html'
     success_url = reverse_lazy('bahan_list')
     
     def form_valid(self, form):    
