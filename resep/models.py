@@ -20,7 +20,7 @@ class BarangJadi(models.Model):
     daftar_bahan = models.JSONField(blank=True, null=True)
     hpp = models.IntegerField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
-    master_roti = models.BooleanField(default=False)
+    master_roti = models.BooleanField(default=False) #Jika Master Roti True Maka Akan jadi (resep sebagai biang atau master) Jika False Maka Akan menjadi resep biasa (pada resep biasa bisa memilih master roti atau bahan lainnya)
 
     def __str__(self):
         return self.nama

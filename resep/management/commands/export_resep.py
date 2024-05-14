@@ -4,6 +4,8 @@ from resep.models import BarangJadi, ListPesanan, MasterBahan, Pesanan, Resep
 # import pandas as pd
 from django.core.management.base import BaseCommand
 from openpyxl import Workbook
+import os
+from datetime import datetime
 
 class Command(BaseCommand):
     help = 'Export data from database to an Excel file'
@@ -27,11 +29,16 @@ class Command(BaseCommand):
         ]
         
         colum_resep = [
-            'master_bahan_nama',
-            'master_bahan_kode',
+            'barang_jadi_kode_barang',
             'barang_jadi_nama',
-            'barang_jadi_kode',
             'jumlah_pemakaian',
+            'master_bahan_nama',
+            'master_bahan_kode_bahan',
+            'master_bahan_qty_keseluruhan',
+            'master_bahan_qty_terkecil',
+            'master_bahan_harga',
+            'master_bahan_harga_kg',
+            'master_bahan_harga_gram',
         ]
         
         row_num = 1
@@ -72,17 +79,27 @@ class Command(BaseCommand):
             row_num += 1
             
             row = [
+                item.barang_jadi.kode_barang,
+                item.barang_jadi.nama,
+                item.jumlah_pemakaian,
                 item.master_bahan.nama,
                 item.master_bahan.kode_bahan,
-                item.barang_jadi.nama,
-                item.barang_jadi.kode_barang,
-                item.jumlah_pemakaian,
+                item.master_bahan.qty_keseluruhan,
+                item.master_bahan.qty_terkecil,
+                item.master_bahan.harga,
+                item.master_bahan.harga_kg,
+                item.master_bahan.harga_gram,
             ]
             
             for col_num, cell_value in enumerate(row, 1):
                 cell = ws2.cell(row=row_num, column=col_num)
                 cell.value = cell_value
         
-        workbook.save(filename="export_resep.xlsx")
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        file_path = os.path.join("data", f"export_resep_{current_date}.xlsx")
+
+        workbook.save(filename=file_path)
+
+        print(f"Export Resep done! File saved at: {file_path}")
 
         print("Export Resep done!")
