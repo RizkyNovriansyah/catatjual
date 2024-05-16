@@ -14,11 +14,11 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
 # Kelas untuk menampilkan daftar resep.
-class ResepList(ListView):
+class TopingList(ListView):
     # Menentukan model yang akan digunakan untuk menampilkan daftar.
     model = BarangJadi
     # Menentukan nama template yang akan digunakan untuk render halaman.
-    template_name = 'resep/resep_list.html'
+    template_name = 'toping/toping_list.html'
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadis'
     
@@ -31,20 +31,20 @@ class ResepList(ListView):
         
             
 # Kelas untuk menghapus data resep.
-class ResepDelete(DeleteView):
+class TopingDelete(DeleteView):
     # Menentukan model yang akan dihapus.
     model = BarangJadi
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadi'
     # Menentukan URL yang akan diarahkan setelah proses penghapusan berhasil.
-    success_url = reverse_lazy('resep_list')
+    success_url = reverse_lazy('toping_list')
 
 # Kelas untuk menampilkan detail resep.
-class ResepDetail(DetailView):
+class TopingDetail(DetailView):
     # Menentukan model yang akan ditampilkan detailnya.
     model = BarangJadi
     # Menentukan nama template yang akan digunakan untuk render halaman.
-    template_name = 'resep/resep_detail.html'
+    template_name = 'toping/toping_detail.html'
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadi'   
     
@@ -118,7 +118,7 @@ def cek_master(request, id):
 
 
 # Fungsi untuk membuat resep baru
-def resep_create(request):
+def toping_create(request):
     # Mengambil semua bahan yang belum dihapus dari database
     bahans = MasterBahan.objects.filter(is_deleted=False)
     masters = BarangJadi.objects.filter(master_roti=True)
@@ -180,17 +180,17 @@ def resep_create(request):
             barang_jadi.save()
             """
             # Redirect ke halaman detail resep
-            return redirect('resep_detail', pk=barang_jadi.id)
+            return redirect('toping_detail', pk=barang_jadi.id)
 
     # Mengirimkan data bahan dan form ke template
     context = {'bahans': bahans, 'form': form}
-    return render(request, 'resep/resep_form.html', locals())
+    return render(request, 'toping/toping_form.html', locals())
 
 
-class ResepUpdateView(UpdateView):
+class TopingUpdateView(UpdateView):
     model = BarangJadi
     form_class = BarangJadiForm
-    template_name = 'resep/resep_update.html'
+    template_name = 'toping/toping_update.html'
     success_url = '/'
     context_object_name = 'barang_jadi'
     
@@ -237,4 +237,4 @@ class ResepUpdateView(UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('resep_detail', kwargs={'pk': self.object.id})
+        return reverse_lazy('toping_detail', kwargs={'pk': self.object.id})

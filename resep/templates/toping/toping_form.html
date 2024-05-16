@@ -166,37 +166,37 @@
 
     <section class="section">
         <div class="section-header">
-            <h1>Tambah Resep Baru</h1>
+            <h1>Tambah Toping Baru</h1>
         </div>
     </section>
 
     <section class="section">
         <div class="section-body">
-            <form method="post" action="{% url 'resep_create' %}">
+            <form method="post" action="{% url 'toping_create' %}">
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                                 {% csrf_token %}
-                                <button class='btn btn-primary' type="submit">Simpan Resep</button>
+                                <button class='btn btn-primary' type="submit">Simpan Toping</button>
                                 <br>
                                 <br> Nama:
-                                <input class="form-control" name="nama_roti" type="text" placeholder='Masukan Nama Roti'>
-                                <br> Kode Resep:
+                                <input class="form-control" name="nama_roti" type="text" placeholder='Masukan Nama Toping'>
+                                <br> Kode:
                                 <input class="form-control" name="kode_barang" type="text" placeholder='Masukan kode barang'>
                                 <br> Harga Jual:
                                 <input class="form-control" name="harga_jual" type="text" placeholder='Masukan Harga'>
                                 <br> HPP :
                                 <input id="hpp" class="form-control" name="hpp" type="text" readonly>
                                 <br>
-                                List Bahan:
+                                <p style="margin-bottom: 5px;">Tambahkan Bahan:</p>
                                 <select name="bahan_list[]" id="bahans" class="form-control">
                                     {% for bahan in bahans %}
                                     <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
                                     {% endfor %}
                                 </select>
                                 <br>
-                                Master Bahan:
+                                <p style="margin-bottom: 5px;">Menggunakan Master Bahan?</p>
                                 <select name="master_list[]" id="masters" class="form-control">
                                     {% for master in masters %}
                                     <option value="{{ master.id }}" data-kode="{{ master.kode_barang }}"> {{ master.nama }}</option>

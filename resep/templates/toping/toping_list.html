@@ -4,7 +4,7 @@
 {% block content %}
 <section class="section">
     <div class="section-header">
-        <h1>List Resep</h1> 
+        <h1>List Toping</h1> 
     </div>
     <div class="section-body">
         <div class="col-md-12">
@@ -14,8 +14,8 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Nama Resep</th>
-                                <th>Kode Resep</th>
+                                <th>Nama Toping</th>
+                                <th>Kode</th>
                                 <th>Harga Jual</th>
                                 <th>Harga Pokok Penjualan (HPP)</th>
                                 <th>Tindakan</th>
@@ -25,13 +25,13 @@
                             {% for barang in barang_jadis %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td><a href="{% url 'resep_detail' pk=barang.pk %}">{{ barang.nama }}</a></td>
+                                <td><a href="{% url 'toping_detail' pk=barang.pk %}">{{ barang.nama }}</a></td>
                                 <td>{{ barang.kode_barang }}</td>
                                 <td>Rp.{{ barang.harga_jual|intcomma }}</td>
                                 <td>Rp.{{ barang.hpp|intcomma }}</td>
                                 <td>
-                                    <a href="{% url 'resep_update' pk=barang.pk %}" class="btn btn-sm btn-warning mr-2">Update</a>
-                                    <a href="{% url 'resep_delete' pk=barang.pk %}" class="btn btn-sm btn-danger mr-2">Hapus</a>
+                                    <a href="{% url 'toping_update' pk=barang.pk %}" class="btn btn-sm btn-warning mr-2">Update</a>
+                                    <a href="{% url 'toping_delete' pk=barang.pk %}" class="btn btn-sm btn-danger mr-2">Hapus</a>
                                 </td>
                             </tr>
                             {% endfor %}

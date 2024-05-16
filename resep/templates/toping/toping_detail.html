@@ -26,17 +26,17 @@
 </style>
 <section class="section">
     <div class="section-header">
-        <h1>Detail Resep</h1>
+        <h1>Detail Toping</h1>
     </div>
     <div class="section-body">
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{% url 'resep_list' %}" class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i> Kembali ke List Resep
+                        <a href="{% url 'toping_list' %}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> Kembali ke List Toping
                         </a>
-                        <button onclick="window.location.href='{% url 'resep_update' pk=barang_jadi.pk %}'" class="btn btn-sm btn-warning mr-2">Update</button>
+                        <button onclick="window.location.href='{% url 'toping_update' pk=barang_jadi.pk %}'" class="btn btn-sm btn-warning mr-2">Update</button>
 
 
                     </div>
@@ -44,8 +44,8 @@
                         <div class="table-responsive"><table class="table"><tbody>
                             <div class="table-container">
                                 <div class="column">
-                                    <h6>Resep</h6>
-                                    <h6>Kode Resep</h6>
+                                    <h6>Toping</h6>
+                                    <h6>Kode</h6>
                                     <h6>Harga Jual Per 1 Roti</h6>
                                     <h6>Total HPP Keseluruhan</h6>
                                 </div>

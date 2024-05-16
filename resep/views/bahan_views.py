@@ -17,8 +17,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 class BahanCreate(CreateView):
     model = MasterBahan
     form_class = MasterBahanForm
-    template_name = 'bahan/masterbahan_form.html'
-    success_url = reverse_lazy('bahan_list')
+    template_name = 'bahanBaku/bahanBaku_form.html'
+    success_url = reverse_lazy('bahan_baku_list')
     
     def form_valid(self, form):    
         harga = form.cleaned_data['harga']    
@@ -40,22 +40,22 @@ class BahanCreate(CreateView):
 
 class BahanList(ListView):
     model = MasterBahan
-    template_name = 'bahan/masterbahan_list.html'
+    template_name = 'bahanBaku/bahanBaku_list.html'
     context_object_name = 'bahans'
 
 
 class BahanUpdate(UpdateView):
     model = MasterBahan
-    template_name = 'bahan/masterbahan_form.html'
+    template_name = 'bahanBaku/bahanBaku_form.html'
     fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
-    success_url = reverse_lazy('bahan_list')
+    success_url = reverse_lazy('bahan_baku_list')
     
 
 class BahanDelete(DeleteView):
     model = MasterBahan
     context_object_name = 'bahan'
-    template_name = 'bahan/masterbahan_confirm_delete.html'
-    success_url = reverse_lazy('bahan_list')
+    template_name = 'bahanBaku/bahanBaku_confirm_delete.html'
+    success_url = reverse_lazy('bahan_baku_list')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -69,6 +69,6 @@ class BahanDelete(DeleteView):
 
 class BahanDetail(DetailView):
     model = MasterBahan
-    template_name = 'bahan/masterbahan_detail.html'
+    template_name = 'bahanBaku/bahanBaku_detail.html'
     context_object_name = 'bahan'
     
