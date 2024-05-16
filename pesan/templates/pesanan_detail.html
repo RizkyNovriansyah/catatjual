@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>Detail Pesanan</h1>
+    </div>
+    <div class="section-body">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ pesanan.nama }}</h5>
+                <p class="card-text">Alamat: {{ pesanan.alamat }}</p>
+                <p class="card-text">Total Harga: {{ pesanan.total_harga }}</p>
+                <p class="card-text">Total Bayar: {{ pesanan.total_bayar }}</p>
+                <p class="card-text">Harga Modal: {{ pesanan.harga_modal }}</p>
+                <p class="card-text">Nomor Telepon: {{ pesanan.nomor_telp }}</p>
+                <p class="card-text">Catatan: {{ pesanan.catatan }}</p>
+                <p class="card-text">Tanggal Pesan: {{ pesanan.tanggal_pesan|date:"Y-m-d H:i:s" }}</p>
+                <a href="{% url 'pesanan_update' pesanan.id %}" class="btn btn-primary">Edit</a>
+                <form action="{% url 'pesanan_delete' pesanan.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

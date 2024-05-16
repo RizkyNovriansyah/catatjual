@@ -22,19 +22,27 @@
             </li>
         </ul>
 
-        <ul class="sidebar-menu">
+        {% comment %} <ul class="sidebar-menu">
             <li class="menu-header">Master Resep</li>
             <li class="nav-item dropdown">
                 <a href="{% url 'master_resep_list' %}" class="nav-link"><i class="fas fa-box"></i><span>List Master Resep</span></a>
                 <a href="{% url 'master_resep_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah Master Resep</span></a>
             </li>
-        </ul>
+        </ul> {% endcomment %}
 
         <ul class="sidebar-menu">
             <li class="menu-header">Bahan</li>
             <li class="nav-item dropdown">
                 <a href="{% url 'bahan_list' %}" class="nav-link"><i class="fas fa-box"></i><span>List Bahan Baku</span></a>
                 <a href="{% url 'bahan_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah</span></a>
+            </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+            <li class="menu-header">Pesanan</li>
+            <li class="nav-item dropdown">
+                <a href="{% url 'pesanan_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah Pesanan</span></a>
+                <a href="{% url 'pesanan_list' %}" class="nav-link"><i class="fas fa-box"></i><span>List Pesanan</span></a>
             </li>
         </ul>
 
