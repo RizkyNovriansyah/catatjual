@@ -64,6 +64,7 @@
 
                 console.log(all_bahan)
                 let hpp = document.getElementById('hpp');
+                hpp_sum = convertToTitikFormat(hpp_sum.toString())
                 hpp.value = hpp_sum
                 console.log('Nilai hppeee:', hpp_sum);
             }
@@ -199,7 +200,8 @@
                                 
                                 <div class="form-group">
                                     <label for="id_kode_bahan">Harga Jual</label>
-                                    <input class="form-control" name="harga_jual" type="text" placeholder='Masukan Harga'>
+                                    <input data-nama-bantuan="harga-bantuan-rupiah" class="form-control bantuan-rupiah" name="harga_jual" type="text" placeholder='Masukan Harga'>
+                                    <span id="harga-bantuan-rupiah" class="text-small">.</span>
                                 </div>
 
                                 <div class="form-group">

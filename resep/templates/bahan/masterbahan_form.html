@@ -107,28 +107,6 @@ $(document).ready(function(){
         console.log("name_satuan",name_satuan)
 
     });
-
-    $(".bantuan-rupiah").on("keyup", function(){
-        let harga = parseFloat($("#id_harga").val());
-        console.log(harga);
-        if(!isNaN(harga)){
-            //harga to stringformat
-
-
-
-
-            harga = convertToTitikFormat(harga.toString());
-            $("#harga-bantuan-rupiah").text("Rp. " + harga);
-        } else {
-            $("#harga-bantuan-rupiah").text("");
-        }
-    });
-
-    function convertToTitikFormat(value) {
-        // Your logic to convert the value to the desired format
-        // For example, converting to a comma-separated format
-        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
 });
 </script>
 {% endblock script %}
