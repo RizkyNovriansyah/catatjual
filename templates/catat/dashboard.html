@@ -1,57 +1,60 @@
 {% extends "base.html" %}
 {% block content %}
-        <section class="section">
-            <div class="section-header">
-                <h1>Dashboard</h1>
-            </div>
-            <div class="section-body">
-                <div class="row">
-
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Total Resep</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <h5>
-                                        {{resep_count}}
-                                    </h5>
-                                </div>
-                            </div>
+<section class="section">
+    <div class="section-header">
+        <h1>Dashboard</h1>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-primary">
+                        <i class="far fa-user"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Total Resep</h4>
+                        </div>
+                        <div class="card-body">
+                            {{resep_count}}
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Total Bahan</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <h5>
-                                        {{bahan_count}}
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Total Roti</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <h5>
-                                        {{barang_jadi_count}}
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-        </section>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-danger">
+                        <i class="far fa-newspaper"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Total Bahan</h4>
+                        </div>
+                        <div class="card-body">
+                            {{bahan_count}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-warning">
+                        <i class="far fa-file"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Total Roti</h4>
+                        </div>
+                        <div class="card-body">
+                            {{barang_jadi_count}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
     </div>
+</section>
+</div>
 {% endblock content %}
