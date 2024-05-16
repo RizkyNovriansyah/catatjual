@@ -10,7 +10,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table">
+                            <table id="myTable" class="display responsive nowrap" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Kode Bahan</th>
@@ -52,3 +52,15 @@
     </section>
 
 {% endblock content %}
+
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        console.log("added");
+        $('#myTable').DataTable({
+            responsive: true
+        });
+    });
+</script>
+{% endblock script %}
