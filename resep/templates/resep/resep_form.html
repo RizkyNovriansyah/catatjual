@@ -190,7 +190,7 @@
                                 <input id="hpp" class="form-control" name="hpp" type="text" readonly>
                                 <br>
                                 List Bahan:
-                                <select name="bahan_list[]" id="bahans" class="form-control">
+                                <select id="bahans" class="js-example-basic-single form-control" name="bahan_list[]">
                                     {% for bahan in bahans %}
                                     <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
                                     {% endfor %}
@@ -223,3 +223,11 @@
         </div>
     </section>
 {% endblock content %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+</script>
+{% endblock script %}
