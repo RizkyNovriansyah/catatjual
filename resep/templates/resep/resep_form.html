@@ -176,33 +176,51 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
+                        <div class="card-header">
+                            <h4></h4>
+                            <div class="card-header-action">
+                                <button class='btn btn-primary' type="submit">Simpan Resep</button>
+                            </div>
+                        </div>
                         <div class="card-body">
                                 {% csrf_token %}
-                                <button class='btn btn-primary' type="submit">Simpan Resep</button>
-                                <br>
-                                <br> Nama:
-                                <input class="form-control" name="nama_roti" type="text" placeholder='Masukan Nama Roti'>
-                                <br> Kode Resep:
-                                <input class="form-control" name="kode_barang" type="text" placeholder='Masukan kode barang'>
-                                <br> Harga Jual:
-                                <input class="form-control" name="harga_jual" type="text" placeholder='Masukan Harga'>
-                                <br> HPP :
-                                <input id="hpp" class="form-control" name="hpp" type="text" readonly>
-                                <br>
-                                List Bahan:
-                                <select id="bahans" class="js-example-basic-single form-control" name="bahan_list[]">
-                                    {% for bahan in bahans %}
-                                    <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
-                                    {% endfor %}
-                                </select>
-                                <br>
-                                Master Bahan:
-                                <select name="master_list[]" id="masters" class="form-control">
-                                    {% for master in masters %}
-                                    <option value="{{ master.id }}" data-kode="{{ master.kode_barang }}"> {{ master.nama }}</option>
-                                    {% endfor %}
-                                </select>
-                            
+                                
+                                
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Nama</label>
+                                    <input class="form-control" name="nama_roti" type="text" placeholder='Masukan Nama Roti'>    
+                                </div>
+                                
+
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Kode Resep</label>
+                                    <input class="form-control" name="kode_barang" type="text" placeholder='Masukan kode barang'>    
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Harga Jual</label>
+                                    <input class="form-control" name="harga_jual" type="text" placeholder='Masukan Harga'>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">HPP</label>
+                                    <input id="hpp" class="form-control" name="hpp" type="text" readonly>
+                                </div>
+
+                                {% comment %} line {% endcomment %}
+                                <hr>
+
+
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Bahan Tersedia</label>
+                                    <select id="bahans" class="js-example-basic-single form-control" name="bahan_list[]">
+                                        {% for bahan in bahans %}
+                                        <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
+                                    
+                                </div>                            
                         </div>
                     </div>
                 </div>
@@ -218,8 +236,6 @@
                     </div>
                 </div>
             </form>
-            <button onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>Tambah Bahan</button>
-            <button onclick="add_master()" style="margin-top: 25px" class='btn btn-info'>Tambah Master</button>
         </div>
     </section>
 {% endblock content %}
