@@ -23,7 +23,7 @@ class BahanCreate(CreateView):
     def form_valid(self, form):    
         harga = form.cleaned_data['harga']    
         quantity = form.cleaned_data['qty_keseluruhan']    
-        quantity_terkecil = form.cleaned_data['qty_terkecil']    
+        quantity_terkecil = 1
 
         if quantity != 0:
             harga_kg = harga / quantity

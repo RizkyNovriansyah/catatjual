@@ -5,6 +5,15 @@
             <h1>Tambah Bahan Baku Baru</h1>
         </div>
         <div class="section-body">
+            <h2 class="section-title">Bahan Baku Baru</h2>
+            <p class="section-lead">Keterangan<br>
+                Satuan Terkecil adalah satuan yang digunakan saat memasukkan bahan pada resep. seperti gr, sdm, pcs
+                <br>
+                Quantity Keseluruhan adalah berat total bahan dalam satuan terkecil saat dilakukan pembelian
+                <br>
+                
+            </p>
+            
             <div class="row">
                 <div class="col-md-8">
                     <div class="card">
@@ -23,33 +32,36 @@
                                     <label for="id_total">Total </label>
                                     {{ form.total }}
                                 </div> {% endcomment %}
-                                <script>
-                                    {% comment %} id_qty_keseluruhan {% endcomment %}
-                                    {% comment %} id_harga {% endcomment %}
-                                    function cek_harga_perkeseluruhan(){
-                                            
-                                        let get_value_id_harga = document.getElementById('id_harga').value
-                                        let get_value_id_qty_keseluruhan = document.getElementById('id_qty_keseluruhan').value
-
-                                        console.log("get_value_id_harga",get_value_id_harga)
-                                        console.log("get_value_id_qty_keseluruhan",get_value_id_qty_keseluruhan)
-                                        let total = get_value_id_harga/ get_value_id_qty_keseluruhan
-                                        document.getElementById('cek_harga_perkeseluruhan').textContent = "Rp."+total
-                                    }
-
-
-                                </script>
+                                <div class="form-group">
+                                    <label for="id_harga">Harga (Harga Beli disuplier)</label>
+                                    {{ form.harga }}
+                                    <span id="harga-bantuan-rupiah" class="text-small">.</span>
+                                </div>
                                 <div class="form-group">
                                     <label for="id_qty_keseluruhan">Quantity Keseluruhan (Total Berat dalam 'satuan')</label>
                                     {{ form.qty_keseluruhan }}
                                 </div>
-                                <div class="form-group">
+                                {% comment %} <div class="form-group">
                                     <label for="id_qty_terkecil">Quantity Terkecil ('satuan' terkecil)</label>
                                     {{ form.qty_terkecil }}
-                                </div>
+                                </div> {% endcomment %}
+
                                 <div class="form-group">
-                                    <label for="id_harga">Harga (Harga Beli disuplier)</label>
-                                    {{ form.harga }}
+                                    <label class="form-label">Satuan</label>
+                                    <div class="selectgroup w-100">
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="satuan-bahan" value="Sendok Makan" class="selectgroup-input satuan-input">
+                                            <span class="selectgroup-button">sdm (Sendok Makan)</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="satuan-bahan" value="Gram" class="selectgroup-input satuan-input">
+                                            <span class="selectgroup-button">gr (Gram)</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="satuan-bahan" value="Piece" class="selectgroup-input satuan-input">
+                                            <span class="selectgroup-button">pcs (Piece)</span>
+                                        </label>
+                                    </div>
                                 </div>
                                 {% comment %} <div class="form-group">
                                     <label for="id_harga_jual">Harga Jual 1000000</label>
@@ -57,13 +69,8 @@
                                 </div> {% endcomment %}
 
                                 <div class="form-group">
-                                    <label for="id_harga">Harga Beli dibagi perkg/satuan keseluruhan</label>
-                                    <span id="cek_harga_perkeseluruhan"></span>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="id_harga">Harga satuan</label>
-                                    
+                                    <label for="id_harga">Hpp per-<span id="selectedSatuan"></span></label>
+                                    seharga <b id="cek_harga_perkeseluruhan"><b>
                                 </div>
 
                                 <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
@@ -76,3 +83,52 @@
         </div>
     </section>
 {% endblock content %}
+{% block script %}
+<script>
+$(document).ready(function(){
+    $("#id_harga").val(null)
+    $("#id_qty_keseluruhan").val(null)
+
+    $(".satuan-input").on("click", function(){
+        let selectedSatuan = $("input[name=satuan-bahan]:checked").val();
+        $("#selectedSatuan").text(selectedSatuan);
+    });
+    $(".check-harga").on("keyup", function(){
+        console.log("check harga")
+        let harga = parseFloat($("#id_harga").val());
+        let qty_keseluruhan = parseFloat($("#id_qty_keseluruhan").val());
+        if(!isNaN(harga) && !isNaN(qty_keseluruhan) && qty_keseluruhan > 0){
+            let harga_per_keseluruhan = harga / qty_keseluruhan;
+            $("#cek_harga_perkeseluruhan").text("Rp. " + convertToTitikFormat(harga_per_keseluruhan.toString()) );
+        } else {
+            $("#cek_harga_perkeseluruhan").text("");
+        }
+        let name_satuan = $("input[name=satuan-bahan]").val();
+        console.log("name_satuan",name_satuan)
+
+    });
+
+    $(".bantuan-rupiah").on("keyup", function(){
+        let harga = parseFloat($("#id_harga").val());
+        console.log(harga);
+        if(!isNaN(harga)){
+            //harga to stringformat
+
+
+
+
+            harga = convertToTitikFormat(harga.toString());
+            $("#harga-bantuan-rupiah").text("Rp. " + harga);
+        } else {
+            $("#harga-bantuan-rupiah").text("");
+        }
+    });
+
+    function convertToTitikFormat(value) {
+        // Your logic to convert the value to the desired format
+        // For example, converting to a comma-separated format
+        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+});
+</script>
+{% endblock script %}
