@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.urls import reverse_lazy
@@ -7,41 +8,41 @@ from resep.models import BarangJadi, MasterBahan, Resep
 from .models import Pesanan, ListPesanan
 from .forms import PesananForm, ListPesananForm
 
+def cek_pesanan(request, id):
+    resep = Resep.objects.get(id=id)
+    result = {
+        "kode_bahan": resep.master_bahan.nama,
+        "nama": resep.barang_jadi.nama,
+        "total": resep.jumlah_pemakaian,
+    }
+    # Mengirimkan response dalam format JSON
+    return JsonResponse(result)
+
 def PesananCreate(request):
-    bahans = MasterBahan.objects.filter(is_deleted=False)
-    masters = BarangJadi.objects.filter(master_roti=True)
+    daftar_resep = Resep.objects.filter(is_deleted=False)
     
     form = ResepForm(request.POST or None)
 
     if request.method == 'POST':
         if form.is_valid():
-            nama_roti = request.POST.get('nama_roti')
-            kode_barang = request.POST.get('kode_barang')
-            harga_jual = request.POST.get('harga_jual')
-            hpp = request.POST.get('hpp')
+            nama = request.POST.get('nama')
+            print('nama: ', nama)
+            # alamat = request.POST.get('alamat')
+            # pesanan = request.POST.get('pesanan')
+            # tanggal_pesan = request.POST.get('tanggal_pesan')
+            # total_harga = request.POST.get('total_harga')
+            # total_bayar = request.POST.get('total_bayar')
+            # harga_modal = request.POST.get('harga_modal')
+            # nomor_telp = request.POST.get('nomor_telp')
+            # catatan = request.POST.get('catatan')
             
-            id_bahan_list = request.POST.getlist('id_bahan[]')
+            id_resep_list = request.POST.getlist('all_resep[]')
+            print('id_resep_list: ', id_resep_list)
             jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
+            print('jumlah_satuan_list: ', jumlah_satuan_list)
             
-            barang_jadi = BarangJadi.objects.create(
-                nama=nama_roti,
-                kode_barang=kode_barang,
-                harga_jual=harga_jual,
-                hpp=hpp,
-            )
-            
-            daftar_bahan = []
-            for i in range(len(id_bahan_list)):
-                bahan_id = id_bahan_list[i]
-                bahan_obj = MasterBahan.objects.get(id=bahan_id)
-           
-                resep_create = Resep.objects.create(
-                    master_bahan = bahan_obj,
-                    barang_jadi  = barang_jadi, 
-                    jumlah_pemakaian = jumlah_satuan_list[i],
-                )
        
-            return redirect('pesanan_list', pk=barang_jadi.id)
+            # return redirect('pesanan_list', pk=barang_jadi.id)
 
     return render(request, 'pesanan_create.html', locals())
 
