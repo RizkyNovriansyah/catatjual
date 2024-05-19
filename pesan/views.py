@@ -86,7 +86,14 @@ def PesananCreate(request):
 class PesananListView(ListView):
     model = Pesanan
     template_name = 'pesanan_list.html'
-    context_object_name = 'pesanan_list'
+    
+    def get_context_data(self, **kwargs):
+        pesanan_list = Pesanan.objects.filter(is_deleted=False)
+        context = {
+            'pesanan_list': pesanan_list,
+        }
+        return context
+    
     
 class PesananDetailView(DetailView):
     model = Pesanan
@@ -98,6 +105,14 @@ class PesananUpdateView(UpdateView):
     template_name = 'pesanan_update.html'
     success_url = reverse_lazy('pesanan_list')
 
-class PesananDeleteView(DeleteView):
-    model = Pesanan
-    success_url = reverse_lazy('pesanan_list')
+def PesananDelete(request, pk):
+    pesanan = get_object_or_404(Pesanan, pk=pk)
+    pesanan.is_deleted = True
+    pesanan.save()
+    list_pesanan = ListPesanan.objects.filter(pesanan=pesanan)
+    for item in list_pesanan:
+        item.is_deleted = True
+        item.save()
+        
+    return redirect('pesanan_list')
+

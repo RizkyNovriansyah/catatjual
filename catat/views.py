@@ -13,10 +13,10 @@ from pesan.models import ListPesanan, Pesanan
 
 
 def dashboard(request):
-    barang_jadi_count = BarangJadi.objects.count()
-    resep_count = Resep.objects.count()
-    bahan_count = MasterBahan.objects.count()
-    list_pesanan_count = ListPesanan.objects.count()
+    barang_jadi_count = BarangJadi.objects.filter(is_deleted=False).count()
+    resep_count = Resep.objects.filter(is_deleted=False).count()
+    bahan_count = MasterBahan.objects.filter(is_deleted=False).count()
+    list_pesanan_count = ListPesanan.objects.filter(is_deleted=False).count()
     context = {'bahan_count': bahan_count,
                'resep_count': resep_count,
                'list_pesanan_count': list_pesanan_count,
