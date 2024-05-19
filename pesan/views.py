@@ -26,21 +26,18 @@ def PesananCreate(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            nama = request.POST.get('nama')
-            print('nama: ', nama)
-            # alamat = request.POST.get('alamat')
-            # pesanan = request.POST.get('pesanan')
-            # tanggal_pesan = request.POST.get('tanggal_pesan')
-            # total_harga = request.POST.get('total_harga')
-            # total_bayar = request.POST.get('total_bayar')
-            # harga_modal = request.POST.get('harga_modal')
-            # nomor_telp = request.POST.get('nomor_telp')
-            # catatan = request.POST.get('catatan')
+            nama = request.POST.get('nama_pembeli')
+            alamat = request.POST.get('alamat_pembeli')
+            pesanan = request.POST.get('pesanan')
+            tanggal_pesan = request.POST.get('tanggal_pesan')
+            total_harga = request.POST.get('total_harga')
+            total_bayar = request.POST.get('total_bayar')
+            harga_modal = request.POST.get('harga_modal')
+            nomor_telp = request.POST.get('nomor_telp_pembeli')
+            catatan = request.POST.get('catatan_pembeli')
             
-            id_resep_list = request.POST.getlist('all_resep[]')
-            print('id_resep_list: ', id_resep_list)
-            jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
-            print('jumlah_satuan_list: ', jumlah_satuan_list)
+            id_roti_list = request.POST.getlist('roti_list[]')
+            print('id_roti_list: ', id_roti_list)
             
        
             # return redirect('pesanan_list', pk=barang_jadi.id)
