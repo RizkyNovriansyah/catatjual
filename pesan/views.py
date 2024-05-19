@@ -99,11 +99,57 @@ class PesananDetailView(DetailView):
     model = Pesanan
     template_name = 'pesanan_detail.html'
 
-class PesananUpdateView(UpdateView):
-    model = Pesanan
-    form_class = PesananForm
-    template_name = 'pesanan_update.html'
-    success_url = reverse_lazy('pesanan_list')
+def PesananUpdate(request, pk):
+    pesanan = get_object_or_404(Pesanan, pk=pk)
+    daftar_resep = Resep.objects.filter(is_deleted=False)
+
+    if request.method == 'POST':
+        nama = request.POST.get('nama_pembeli')
+        alamat = request.POST.get('alamat_pembeli')
+        tanggal_pesan = request.POST.get('tanggal_pesan')
+        total_bayar = int(request.POST.get('total_bayar', 0))
+        nomor_telp = request.POST.get('nomor_telp_pembeli')
+        catatan = request.POST.get('catatan_pembeli')
+
+        id_roti_list = request.POST.getlist('roti_list[]')
+        jumlah_list = request.POST.getlist('jumlah_list[]')
+
+        total_harga = 0
+        harga_modal = 0
+
+        for i, roti_id in enumerate(id_roti_list):
+            barang_jadi = BarangJadi.objects.get(id=roti_id)
+            jumlah = int(jumlah_list[i])
+            harga = barang_jadi.harga_jual
+            modal = barang_jadi.hpp
+            total_harga += harga * jumlah
+            harga_modal += modal * jumlah
+
+        # Update pesanan object
+        pesanan.nama = nama
+        pesanan.alamat = alamat
+        pesanan.tanggal_pesan = tanggal_pesan
+        pesanan.total_harga = total_harga
+        pesanan.total_bayar = total_bayar
+        pesanan.harga_modal = harga_modal
+        pesanan.nomor_telp = nomor_telp
+        pesanan.catatan = catatan
+        pesanan.save()
+
+        # Update ListPesanan entries
+        pesanan.list_pesanan.all().delete()  # Remove existing entries
+        for i, roti_id in enumerate(id_roti_list):
+            barang_jadi = BarangJadi.objects.get(id=roti_id)
+            jumlah = int(jumlah_list[i])
+            ListPesanan.objects.create(
+                pesanan=pesanan,
+                barang_jadi=barang_jadi,
+                jumlah_barang_jadi=jumlah
+            )
+
+        return redirect('pesanan_list')
+
+    return render(request, 'pesanan_update.html', {'pesanan': pesanan, 'daftar_resep': daftar_resep})
 
 def PesananDelete(request, pk):
     pesanan = get_object_or_404(Pesanan, pk=pk)
