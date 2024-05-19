@@ -11,9 +11,10 @@ from .forms import PesananForm, ListPesananForm
 def cek_pesanan(request, id):
     resep = Resep.objects.get(id=id)
     result = {
-        "kode_bahan": resep.master_bahan.nama,
+        "kode_resep": resep.barang_jadi.kode_barang,
         "nama": resep.barang_jadi.nama,
-        "total": resep.jumlah_pemakaian,
+        "harga_jual": resep.barang_jadi.harga_jual,
+        "hpp": resep.barang_jadi.hpp,
     }
     # Mengirimkan response dalam format JSON
     return JsonResponse(result)
