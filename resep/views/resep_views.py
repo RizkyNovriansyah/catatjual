@@ -23,7 +23,7 @@ class ResepList(ListView):
     context_object_name = 'barang_jadis'
     
     def get_queryset(self):
-        return BarangJadi.objects.filter(master_roti=False)
+        return BarangJadi.objects.filter(master_roti=True)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
