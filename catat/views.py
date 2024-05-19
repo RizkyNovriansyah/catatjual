@@ -9,13 +9,16 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from resep.models import BarangJadi, MasterBahan, Resep
+from pesan.models import ListPesanan, Pesanan
 
 
 def dashboard(request):
     barang_jadi_count = BarangJadi.objects.count()
     resep_count = Resep.objects.count()
     bahan_count = MasterBahan.objects.count()
+    list_pesanan_count = ListPesanan.objects.count()
     context = {'bahan_count': bahan_count,
                'resep_count': resep_count,
+               'list_pesanan_count': list_pesanan_count,
                'barang_jadi_count': barang_jadi_count}
     return render(request, 'catat/dashboard.html', context)

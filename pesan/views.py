@@ -21,28 +21,67 @@ def cek_pesanan(request, id):
 
 def PesananCreate(request):
     daftar_resep = Resep.objects.filter(is_deleted=False)
-    
-    form = ResepForm(request.POST or None)
 
     if request.method == 'POST':
-        if form.is_valid():
-            nama = request.POST.get('nama_pembeli')
-            alamat = request.POST.get('alamat_pembeli')
-            pesanan = request.POST.get('pesanan')
-            tanggal_pesan = request.POST.get('tanggal_pesan')
-            total_harga = request.POST.get('total_harga')
-            total_bayar = request.POST.get('total_bayar')
-            harga_modal = request.POST.get('harga_modal')
-            nomor_telp = request.POST.get('nomor_telp_pembeli')
-            catatan = request.POST.get('catatan_pembeli')
-            
-            id_roti_list = request.POST.getlist('roti_list[]')
-            print('id_roti_list: ', id_roti_list)
-            
-       
-            # return redirect('pesanan_list', pk=barang_jadi.id)
+        nama = request.POST.get('nama_pembeli')
+        alamat = request.POST.get('alamat_pembeli')
+        tanggal_pesan = request.POST.get('tanggal_pesan')
+        total_bayar = int(request.POST.get('total_bayar', 0))
+        nomor_telp = request.POST.get('nomor_telp_pembeli')
+        catatan = request.POST.get('catatan_pembeli')
 
-    return render(request, 'pesanan_create.html', locals())
+        id_roti_list = request.POST.getlist('roti_list[]')
+        jumlah_list = request.POST.getlist('jumlah_list[]')
+
+        # Initialize total_harga and harga_modal
+        total_harga = 0
+        harga_modal = 0
+        
+        # Calculate total_harga and harga_modal
+        for i, roti_id in enumerate(id_roti_list):
+            barang_jadi = BarangJadi.objects.get(id=roti_id)
+            jumlah = int(jumlah_list[i])
+            harga = barang_jadi.harga_jual
+            modal = barang_jadi.hpp
+            total_harga += harga * jumlah
+            harga_modal += modal * jumlah
+        
+        pesanan_list = {}    
+        for roti_id in id_roti_list:
+            barang_jadi = BarangJadi.objects.get(id=roti_id)
+            pesanan_list[roti_id] = {
+                'nama' : barang_jadi.nama,
+                'kode_barang' : barang_jadi.kode_barang,
+                'harga_jual' : barang_jadi.harga_jual,
+                'daftar_bahan' : barang_jadi.daftar_bahan,
+                'hpp' : barang_jadi.hpp,
+            }
+            
+        pesanan = Pesanan.objects.create(
+            nama=nama,
+            alamat=alamat,
+            pesanan=pesanan_list,
+            tanggal_pesan=tanggal_pesan,
+            total_harga=total_harga,
+            total_bayar=total_bayar,
+            harga_modal=harga_modal,
+            nomor_telp=nomor_telp,
+            catatan=catatan
+        )
+
+        # Create ListPesanan entries
+        for i, roti_id in enumerate(id_roti_list):
+            barang_jadi = BarangJadi.objects.get(id=roti_id)
+            jumlah = int(jumlah_list[i])
+            ListPesanan.objects.create(
+                pesanan=pesanan,
+                barang_jadi=barang_jadi,
+                jumlah_barang_jadi=jumlah
+            )
+
+        return redirect('pesanan_list')
+
+    return render(request, 'pesanan_create.html', {'daftar_resep': daftar_resep})
 
 class PesananListView(ListView):
     model = Pesanan

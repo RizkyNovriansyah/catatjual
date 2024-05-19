@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-       
 <section class="section">
     <div class="section-header">
         <h1>Tambah Pesanan Baru</h1>
@@ -22,99 +21,60 @@
                         <div class="card-body">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="id_kode_bahan">Nama</label>
+                                <label for="nama_pembeli">Nama</label>
                                 <input class="form-control" name="nama_pembeli" type="text" placeholder='Masukan Nama pembeli'>    
                             </div>
                             <div class="form-group">
-                                <label for="id_kode_bahan">Alamat</label>
-                                <input class="form-control" name="c" type="text" placeholder='Masukan alamat pembeli'>    
+                                <label for="alamat_pembeli">Alamat</label>
+                                <input class="form-control" name="alamat_pembeli" type="text" placeholder='Masukan alamat pembeli'>    
                             </div>
                             <div class="form-group">
-                                <label for="id_kode_bahan">Tanggal Pesanan</label>
+                                <label for="tanggal_pesan">Tanggal Pesanan</label>
                                 <input class="form-control" name="tanggal_pesan" type="date" placeholder='Masukan Tanggal'>    
                             </div>
                             <div class="form-group">
-                                <label for="id_kode_bahan">Total Harga</label>
-                                <input class="form-control" name="total_harga" type="number" disabled>    
-                            </div>
-                            <div class="form-group">
-                                <label for="id_kode_bahan">Total Bayar</label>
+                                <label for="total_bayar">Total Bayar</label>
                                 <input class="form-control" name="total_bayar" type="number" placeholder='Masukan Total Bayar'>    
                             </div>
                             <div class="form-group">
-                                <label for="id_kode_bahan">Harga Modal</label>
-                                <input class="form-control" name="harga_modal" type="text" disabled>    
-                            </div>
-                            <div class="form-group">
-                                <label for="id_kode_bahan">Nomor Telepon</label>
+                                <label for="nomor_telp_pembeli">Nomor Telepon</label>
                                 <input class="form-control" name="nomor_telp_pembeli" type="tel" placeholder='Masukan Nomor Telepon pembeli'>    
                             </div>
                             <div class="form-group">
-                                <label for="id_kode_bahan">Catatan</label>
+                                <label for="catatan_pembeli">Catatan</label>
                                 <input class="form-control" name="catatan_pembeli" type="text" placeholder='Masukan catatan pembeli'>    
                             </div>
-                            
                             <div class="form-group">
-                                <label for="id_kode_bahan">Tambah Roti</label>
+                                <label for="list-pesanan">Tambah Roti</label>
                                 <select id="list-pesanan" class="js-example-basic-single form-control" name="roti_list[]">
                                     {% for resep in daftar_resep %}
-                                    <option value="{{ resep.id }}" data-kode="{{ resep.kode_resep }}"> {{ resep.barang_jadi.nama }}</option>
+                                    <option value="{{ resep.barang_jadi.id }}" data-kode="{{ resep.kode_resep }}"> {{ resep.barang_jadi.nama }}</option>
                                     {% endfor %}
                                 </select>
                                 <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
-                                
                             </div>                            
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-md-6">
-                    
-                    
-                    {% csrf_token %}
-                    <div id="data_card">
-                    </div>
-                    
-                    
+                    <div id="data_card"></div>
                 </div>
             </div>
         </form>
     </div>
 </section>
 {% endblock content %}
-            
+
 {% block script %}
 <script>
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
     });
-</script>
-<script>
-    function get_data_bahan(id) {
-        var url = 'http://localhost:8001/pesan/cek_pesanan/' + id + '/';
-        return fetch(url)
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(resep) {
-            
-            var e = document.getElementById("list-pesanan");
-            var value = e.value;
-            var nama_resep = e.options[e.selectedIndex].text;
-            return {
-                nama_resep: nama_resep,
-            };
 
-        })
-        .catch(function(err) {
-            console.log('Kesalahan Fetch :-S', err);
-        });
-    }
-    
     function remove_bahan(id) {
         $("#data_bahan" + id).remove();
-    }        
-    
+    }
+
     function add_bahan() {
         var value = $("#list-pesanan").val();
         var nama_resep = $("#list-pesanan option:selected").text();
@@ -125,26 +85,23 @@
             return;
         }
 
-        get_data_bahan(value)
-        .then(function(bahanData) {
-            var html = 
-            `<div class="card card-warning" id='data_bahan${value}'>
+        var html = `
+            <div class="card card-warning" id='data_bahan${value}'>
                 <div class="card-header">
-                    <h4>${bahanData.nama_resep || ''}</h4>
+                    <h4>${nama_resep}</h4>
                     <div class="card-header-action">
                         <div onclick='remove_bahan("${value}")' class='btn btn-danger hapus-bahan' id='hapus-bahan-${value}'>x</div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group list-group-flush" >
-                        <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
-                    </ul>
+                    <div class="form-group">
+                        <label for="jumlah${value}">Jumlah</label>
+                        <input class="form-control" name="jumlah_list[]" type="number" value="1" min="1" id="jumlah${value}">
+                    </div>
                 </div>
             </div>`;
-            
-            $("#data_card").append(html);
-        });
+        
+        $("#data_card").append(html);
     }
-    
 </script>
 {% endblock script %}
