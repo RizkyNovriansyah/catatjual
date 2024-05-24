@@ -3,16 +3,6 @@ from django.utils import timezone
 
 from django.db import models
 
-class Pesanan(models.Model):
-    nama = models.CharField(max_length=100)
-    alamat = models.TextField(max_length=100)
-    
-    
-class ListPesanan(models.Model):
-    Pesanan = models.ForeignKey(Pesanan, on_delete=models.CASCADE, related_name='Pesanan')
-    BarangJadi = models.CharField(max_length=100, blank=True, null=True)
-    jumlah_barang_jadi = models.IntegerField(blank=True, null=True, default=0)    
-
 class BarangJadi(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
