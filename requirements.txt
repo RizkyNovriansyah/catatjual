@@ -1,9 +1,15 @@
 asgiref==3.7.2
 crispy-bootstrap4==2023.1
 Django==4.2.9
+django-admin-generator==2.6.0
 django-crispy-forms==2.1
 django-extensions==3.2.3
+django-utils2==3.0.2
+et-xmlfile==1.1.0
+openpyxl==3.1.2
 pillow==10.2.0
-# psycopg2==2.9.9
+psycopg2-binary==2.9.9
+python-utils==3.8.2
+six==1.16.0
 sqlparse==0.4.4
 typing_extensions==4.9.0
