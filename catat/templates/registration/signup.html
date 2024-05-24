@@ -5,19 +5,61 @@
         <form method="post" class="signup-form">
             {% csrf_token %}
             <div class="form-group">
-                {{ form.username.label_tag }}
-                {{ form.username }}
+                Masukan Username:
+                <input type="username" id="username" name="username" required>
             </div>
+            <!-- 
             <div class="form-group">
-                {{ form.password1.label_tag }}
+                Masukan Pin Baru:
                 {{ form.password1 }}
             </div>
-            <button type="submit" class="btn">Daftar</button>
+            <div class="form-group">
+                Konfirmasi Pin:
+                {{ form.password2 }}
+            </div>
+            -->
+            <div class="form-group">
+                Masukan Pin Baru:
+                <input type="password" id="id_password1" name="password1" required>
+                {% if form.password1.errors %}
+                    <p class="errors">
+                        {% for error in form.password1.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                Konfirmasi Pin:
+                <input type="password" id="id_password2" name="password2" required>
+                {% if form.password2.errors %}
+                    <p class="errors">
+                        {% for error in form.password2.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Daftar</button>
+
         </form>
-        <p>Sudah punya akun? <a href="{% url 'login' %}">Login disini</a></p>
+        <p>Sudah punya akun? <a href="{% url 'login' %}">Login di sini</a></p>
     </div>
 </section>
 {% endblock content %}
+
+<script>
+    document.getElementById("submit-btn").addEventListener("click", function(event) {
+        var pinInput = document.getElementById("id_password1");
+        var pinValue = pinInput.value;
+    
+        if (pinValue.length !== 6) {
+            alert("Pin harus terdiri dari 6 digit.");
+            event.preventDefault(); // Mencegah pengiriman formulir jika pin tidak valid
+        }
+    });
+</script>
+    
 
 <style>
 /* Tambahkan gaya CSS Anda di sini */

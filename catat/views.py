@@ -7,7 +7,7 @@ from django.contrib.auth import (
 from django.db.models.query import QuerySet
 from django.views import View  
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -104,4 +104,20 @@ class SignUpView(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
+    
+    def form_valid(self, form):
+        password1 = form.cleaned_data.get('password1')
+        password2 = form.cleaned_data.get('password2')
+        
+        # Check if passwords match
+        if password1 != password2:
+            form.add_error('password2', 'Password konfirmasi tidak sesuai.')
+            return self.form_invalid(form)
+
+        # Check if password length is 6 digits
+        if len(password1) != 6:
+            form.add_error('password1', 'Pin harus terdiri dari 6 digit.')
+            return self.form_invalid(form)
+        
+        return super().form_valid(form)
     
