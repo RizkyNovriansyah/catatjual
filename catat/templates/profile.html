@@ -1,0 +1,19 @@
+<!-- templates/profile.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>Profile</h1>
+    </div>
+    <div class="section-body">
+        <p><strong>User username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Staff Status:</strong> {{ user.is_staff }}</p>
+        <p><strong>Active Status:</strong> {{ user.is_active }}</p>
+        <p><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+        <p><strong>Groups:</strong> {% for group in user.groups.all %}{{ group.name }} {% endfor %}</p>
+        <p><strong>Permissions:</strong> {% for perm in user.user_permissions.all %}{{ perm.name }} {% endfor %}</p>
+    </div>
+</section>
+{% endblock content %}
