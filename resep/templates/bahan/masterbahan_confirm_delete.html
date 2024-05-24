@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <section class="section">
+        <div class="section-header">
+            <h1>Konfirmasi Penghapusan Master Bahan</h1>
+        </div>
+        <div class="section-body">
+            <p>Apakah Anda yakin ingin menghapus master bahan dengan nama "{{ bahan.nama }}"?</p>
+            <form method="post">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-danger" value="Hapus">
+                <a href="{% url 'bahan_list' %}" class="btn btn-secondary">Batal</a>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock content %}

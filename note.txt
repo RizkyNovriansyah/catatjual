@@ -1,0 +1,3 @@
+fix Qty Terkecil pada detail bahan
+hapus Qty Terkecil pada list bahan
+Hide or delete mekanisme Master Bahan

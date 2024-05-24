@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>Dashboard</h1>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <a href="{% url 'pesanan_list' %}">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="far fa-user"></i>
+                        </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total Pesanan</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{list_pesanan_count}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <a href="{% url 'bahan_list' %}">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-danger">
+                        <i class="far fa-newspaper"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Total Bahan</h4>
+                        </div>
+                        <div class="card-body">
+                            {{bahan_count}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <a href="{% url 'resep_list' %}">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-warning">
+                        <i class="far fa-file"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Total Roti</h4>
+                        </div>
+                        <div class="card-body">
+                            {{barang_jadi_count}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        </div>
+    </div>
+</section>
+</div>
+{% endblock content %}

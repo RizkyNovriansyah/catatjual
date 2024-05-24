@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>List Barang Jadi</h1> 
+    </div>
+    <div class="section-body">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="myTable" class="display responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Nama Resep</th>
+                                <th>Kode Resep</th>
+                                <th>Harga Jual</th>
+                                <th>Harga Pokok Penjualan (HPP)</th>
+                                <th>Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for barang in barang_jadis %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><a href="{% url 'resep_detail' pk=barang.pk %}">{{ barang.nama }}</a></td>
+                                <td>{{ barang.kode_barang }}</td>
+                                <td>Rp.{{ barang.harga_jual|intcomma }}</td>
+                                <td>Rp.{{ barang.hpp|intcomma }}</td>
+                                <td>
+                                    <a href="{% url 'resep_update' pk=barang.pk %}" class="btn btn-sm btn-warning mr-2">Update</a>
+                                    <a href="{% url 'resep_delete' pk=barang.pk %}" class="btn btn-sm btn-danger mr-2">Hapus</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        console.log("added");
+        $('#myTable').DataTable({
+            responsive: true
+        });
+    });
+</script>
+{% endblock script %}

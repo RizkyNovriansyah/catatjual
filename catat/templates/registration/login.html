@@ -1,0 +1,86 @@
+{% block content %}
+<section class="login-section">
+    <div class="container">
+        <h2>Login</h2>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Masukan Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Masukan Pin:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <br>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p>Belum punya akun? <a href="{% url 'signup' %}">Signup disini</a></p>
+    </div>
+</section>
+{% endblock content %}
+
+<style>
+  /* Tambahkan gaya CSS Anda di sini */
+  .login-section {
+      padding: 50px 0;
+      background: #f9f9f9;
+  }
+  
+  .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-form .form-group {
+      margin-bottom: 15px;
+  }
+  
+  .login-form label {
+      display: block;
+      margin-bottom: 5px;
+  }
+  
+  .login-form input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+  }
+  
+  .login-form .btn {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+  
+  .login-form .btn:hover {
+      background: #0056b3;
+  }
+
+  .messages {
+      margin-bottom: 20px;
+  }
+
+  .messages p {
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #f8d7da;
+      color: #721c24;
+  }
+</style>

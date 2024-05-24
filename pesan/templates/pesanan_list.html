@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>List Pesanan</h1>
+    </div>
+    <div class="section-body">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'pesanan_create' %}" class="btn btn-primary">Tambah Pesanan</a>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Total Harga</th>
+                            <th>Total Bayar</th>
+                            <th>Harga Modal</th>
+                            <th>Catatan</th>
+                            <th>Tanggal Pesan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pesanan in pesanan_list %}
+                            <tr>
+                                <td>{{ pesanan.nama }}</td>
+                                <td>{{ pesanan.alamat }}</td>
+                                <td>{{ pesanan.total_harga }}</td>
+                                <td>{{ pesanan.total_bayar }}</td>
+                                <td>{{ pesanan.harga_modal }}</td>
+                                <td>{{ pesanan.catatan }}</td>
+                                <td>{{ pesanan.tanggal_pesan|date:"Y-m-d H:i:s" }}</td>
+                                <td>
+                                    <a href="{% url 'pesanan_detail' pesanan.id %}" class="btn btn-info">Detail</a>
+                                    <a href="{% url 'pesanan_update' pesanan.id %}" class="btn btn-primary">Edit</a>
+                                    <form action="{% url 'pesanan_delete' pesanan.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8">Tidak ada pesanan.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

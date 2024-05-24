@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .container p {
+            margin: 0;
+        }
+
+        .container p strong {
+            display: inline-block;
+            width: 150px; 
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container-isi {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+
+    <section class="section">
+        <div class="section-header">
+            <h1>Detail Bahan</h1>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
+                        </div>
+                        <div class="card-header">
+                            <h5>{{ bahan.nama }}</h5>
+                        </div>                        
+                        <div class="card-body">
+                            <div class="container-isi">
+                                <div>
+                                    <p><strong>Kode Bahan</strong>: {{ bahan.kode_bahan }}</p>
+                                    <p><strong>Total</strong>: {{ bahan.total }}</p>
+                                    <p><strong>Qty Keseluruhan</strong>: {{ bahan.qty_keseluruhan }} Kg</p>
+                                    <p><strong>Qty Terkecil</strong>: {{ bahan.qty_terkecil }} Gram</p>
+                                    <p><strong>Harga</strong>: Rp.{{ bahan.harga|intcomma }}</p>
+                               
+                                    <p><strong>Harga Jual</strong>:  Rp.{{ bahan.harga_jual|intcomma }}</p>
+                                    <p><strong>Harga per Kg</strong>:  Rp.{{ bahan.harga_kg|intcomma }}</p>
+                                    <p><strong>Harga per Gram</strong>: Rp.{{ bahan.harga_gram|intcomma }}</p>
+                                    <p><strong>Dibuat pada</strong>: {{ bahan.created_date|naturaltime }}</p>
+                                    <p><strong>Diperbarui pada</strong>: {{ bahan.updated_date|naturaltime }}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

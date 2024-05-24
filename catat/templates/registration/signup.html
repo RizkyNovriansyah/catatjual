@@ -1,0 +1,99 @@
+{% block content %}
+<section class="signup-section">
+    <div class="container">
+        <h1>Buat Akun</h1>
+        <form method="post" class="signup-form">
+            {% csrf_token %}
+            <div class="form-group">
+                Username:
+                <input type="username" id="username" name="username" placeholder="Masukan Username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Masukan Pin:</label>
+                <input type="password" id="id_password1" name="password1" placeholder="Pin Terdiri dari 6 angka" required>
+                {% if form.password1.errors %}
+                    <p class="errors">
+                        {% for error in form.password1.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="password2">Konfirmasi Pin:</label>
+                <input type="password" id="id_password2" name="password2" placeholder="Pin Terdiri dari 6 angka" required>
+                {% if form.password2.errors %}
+                    <p class="errors">
+                        {% for error in form.password2.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Daftar</button>
+
+        </form>
+        <p>Sudah punya akun? <a href="{% url 'login' %}">Login di sini</a></p>
+    </div>
+</section>
+{% endblock content %}
+
+<script>
+    document.getElementById("submit-btn").addEventListener("click", function(event) {
+        var pinInput = document.getElementById("id_password1");
+        var pinValue = pinInput.value;
+    
+        if (pinValue.length !== 6) {
+            alert("Pin harus terdiri dari 6 digit.");
+            event.preventDefault(); // Mencegah pengiriman formulir jika pin tidak valid
+        }
+    });
+</script>
+    
+
+<style>
+/* Tambahkan gaya CSS Anda di sini */
+.signup-section {
+    padding: 50px 0;
+    background: #f9f9f9;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.signup-form .form-group {
+    margin-bottom: 15px;
+}
+
+.signup-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.signup-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.signup-form .btn {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.signup-form .btn:hover {
+    background: #0056b3;
+}
+</style>
