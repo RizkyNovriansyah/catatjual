@@ -2,7 +2,8 @@ from django.urls import path, include
 from  .views import *
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .forms import UserProfileCreationForm
+from .forms import UserCreationForm
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission, User
 
 urlpatterns = [
     path('', dashboard, name='dashboard'),

@@ -16,8 +16,9 @@ from resep.models import BarangJadi, MasterBahan, Resep
 from pesan.models import ListPesanan, Pesanan
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import UserProfileCreationForm
-from catat.models import LoginSessionsTrack, UserProfile
+from .forms import UserCreationForm
+from catat.models import LoginSessionsTrack, User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission, User
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -61,11 +62,11 @@ def dashboard(request):
     bahan_count = MasterBahan.objects.filter(is_deleted=False).count()
     list_pesanan_count = ListPesanan.objects.filter(is_deleted=False).count()
     
-    email = ''
+    username = ''
     login_info = 0  
 
     if request.user.is_authenticated:
-        email = request.user.email
+        username = request.user.username
         login_track = LoginSessionsTrack.objects.filter(user=request.user).first()
         if login_track:
             login_time = timezone.now() - login_track.daily_login
@@ -74,18 +75,18 @@ def dashboard(request):
     
     context = {'bahan_count': bahan_count,
                'resep_count': resep_count,
-               'email': email,
+               'username': username,
                'login_info': login_info,  # Menambahkan login_info ke dalam konteks
                'list_pesanan_count': list_pesanan_count,
                'barang_jadi_count': barang_jadi_count}
     return render(request, 'dashboard.html', context)
 
 def profile(request):
-    user = UserProfile.objects.get(email=request.user)
+    user = User.objects.get(username=request.user)
     
     
     context = {'user': user,
-                'email' : user.email, 
+                'username' : user.username, 
                 'is_staff' : user.is_staff, 
                 'is_active' : user.is_active, 
                 'date_joined' : user.date_joined, 
@@ -100,7 +101,7 @@ def profile(request):
 
     
 class SignUpView(generic.CreateView):
-    form_class = UserProfileCreationForm
+    form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
     

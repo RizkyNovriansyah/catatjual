@@ -1,4 +1,3 @@
-<!-- templates/profile.html -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -8,7 +7,6 @@
     </div>
     <div class="section-body">
         <p><strong>User username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Staff Status:</strong> {{ user.is_staff }}</p>
         <p><strong>Active Status:</strong> {{ user.is_active }}</p>
         <p><strong>Date Joined:</strong> {{ user.date_joined }}</p>

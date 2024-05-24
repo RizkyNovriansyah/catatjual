@@ -6,4 +6,5 @@ makemigrations:
 	@python manage.py makemigrations
 shell:
 	@python manage.py shell_plus
-
+initial:
+	@python manage.py initial
