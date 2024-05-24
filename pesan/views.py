@@ -2,12 +2,13 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.urls import reverse_lazy
-
+from django.contrib.auth.decorators import login_required
 from resep.forms import ResepForm
 from resep.models import BarangJadi, MasterBahan, Resep
 from .models import Pesanan, ListPesanan
 from .forms import PesananForm, ListPesananForm
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+@login_required(login_url='login')
 def cek_pesanan(request, id):
     resep = Resep.objects.get(id=id)
     result = {
@@ -19,6 +20,7 @@ def cek_pesanan(request, id):
     # Mengirimkan response dalam format JSON
     return JsonResponse(result)
 
+@login_required(login_url='login')
 def PesananCreate(request):
     daftar_resep = Resep.objects.filter(is_deleted=False)
 
@@ -83,10 +85,10 @@ def PesananCreate(request):
 
     return render(request, 'pesanan_create.html', {'daftar_resep': daftar_resep})
 
-class PesananListView(ListView):
+class PesananListView(LoginRequiredMixin, ListView):
     model = Pesanan
     template_name = 'pesanan_list.html'
-    
+    login_url = 'login'
     def get_context_data(self, **kwargs):
         pesanan_list = Pesanan.objects.filter(is_deleted=False)
         context = {
@@ -94,10 +96,11 @@ class PesananListView(ListView):
         }
         return context
     
-    
-class PesananDetailView(DetailView):
+
+class PesananDetailView(LoginRequiredMixin, DetailView):
     model = Pesanan
     template_name = 'pesanan_detail.html'
+    login_url = 'login'
 
 def PesananUpdate(request, pk):
     pesanan = get_object_or_404(Pesanan, pk=pk)
@@ -151,6 +154,7 @@ def PesananUpdate(request, pk):
 
     return render(request, 'pesanan_update.html', {'pesanan': pesanan, 'daftar_resep': daftar_resep})
 
+@login_required(login_url='login')
 def PesananDelete(request, pk):
     pesanan = get_object_or_404(Pesanan, pk=pk)
     pesanan.is_deleted = True

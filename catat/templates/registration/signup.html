@@ -5,22 +5,12 @@
         <form method="post" class="signup-form">
             {% csrf_token %}
             <div class="form-group">
-                Masukan Username:
-                <input type="username" id="username" name="username" required>
-            </div>
-            <!-- 
-            <div class="form-group">
-                Masukan Pin Baru:
-                {{ form.password1 }}
+                Username:
+                <input type="username" id="username" name="username" placeholder="Masukan Username" required>
             </div>
             <div class="form-group">
-                Konfirmasi Pin:
-                {{ form.password2 }}
-            </div>
-            -->
-            <div class="form-group">
-                Masukan Pin Baru:
-                <input type="password" id="id_password1" name="password1" required>
+                <label for="password">Masukan Pin:</label>
+                <input type="password" id="id_password1" name="password1" placeholder="Pin Terdiri dari 6 angka" required>
                 {% if form.password1.errors %}
                     <p class="errors">
                         {% for error in form.password1.errors %}
@@ -30,8 +20,8 @@
                 {% endif %}
             </div>
             <div class="form-group">
-                Konfirmasi Pin:
-                <input type="password" id="id_password2" name="password2" required>
+                <label for="password2">Konfirmasi Pin:</label>
+                <input type="password" id="id_password2" name="password2" placeholder="Pin Terdiri dari 6 angka" required>
                 {% if form.password2.errors %}
                     <p class="errors">
                         {% for error in form.password2.errors %}

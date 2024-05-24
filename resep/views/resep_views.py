@@ -8,19 +8,22 @@ from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 # JsonResponse untuk merespons data dalam format JSON
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Kelas untuk menampilkan daftar resep.
-class ResepList(ListView):
+class ResepList(LoginRequiredMixin, ListView):
     # Menentukan model yang akan digunakan untuk menampilkan daftar.
     model = BarangJadi
     # Menentukan nama template yang akan digunakan untuk render halaman.
     template_name = 'resep/resep_list.html'
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadis'
+    login_url = 'login'
     
     def get_queryset(self):
         return BarangJadi.objects.filter(master_roti=True)
@@ -31,22 +34,24 @@ class ResepList(ListView):
         
             
 # Kelas untuk menghapus data resep.
-class ResepDelete(DeleteView):
+class ResepDelete(LoginRequiredMixin, DeleteView):
     # Menentukan model yang akan dihapus.
     model = BarangJadi
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadi'
     # Menentukan URL yang akan diarahkan setelah proses penghapusan berhasil.
     success_url = reverse_lazy('resep_list')
+    login_url = 'login'
 
 # Kelas untuk menampilkan detail resep.
-class ResepDetail(DetailView):
+class ResepDetail(LoginRequiredMixin, DetailView):
     # Menentukan model yang akan ditampilkan detailnya.
     model = BarangJadi
     # Menentukan nama template yang akan digunakan untuk render halaman.
     template_name = 'resep/resep_detail.html'
     # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadi'   
+    login_url = 'login'
     
     # Method untuk mendapatkan data bahan yang digunakan dalam resep.
     def get_context_data(self, **kwargs):
@@ -77,6 +82,7 @@ class ResepDetail(DetailView):
         context['selisih'] = selisih
         return context
 
+@login_required(login_url='login')
 # Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
 def cek_bahan(request, id):
     # Mengambil objek bahan dari database berdasarkan id
@@ -98,7 +104,7 @@ def cek_bahan(request, id):
     # Mengirimkan response dalam format JSON
     return JsonResponse(result)
 
-
+@login_required(login_url='login')
 def cek_master(request, id):
     # Mengambil objek bahan dari database berdasarkan id
     bahan = BarangJadi.objects.get(id=id, master_roti=True)
@@ -117,6 +123,7 @@ def cek_master(request, id):
     return JsonResponse(result)
 
 
+@login_required(login_url='login')
 # Fungsi untuk membuat resep baru
 def resep_create(request):
     # Mengambil semua bahan yang belum dihapus dari database
@@ -187,12 +194,13 @@ def resep_create(request):
     return render(request, 'resep/resep_form.html', locals())
 
 
-class ResepUpdateView(UpdateView):
+class ResepUpdateView(LoginRequiredMixin,  UpdateView):
     model = BarangJadi
     form_class = BarangJadiForm
     template_name = 'resep/resep_update.html'
     success_url = '/'
     context_object_name = 'barang_jadi'
+    login_url = 'login'
     
 
     def get_context_data(self, **kwargs):

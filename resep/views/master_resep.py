@@ -1,25 +1,23 @@
-# views.py
 import json
 
 from django.views import View  
 from ..models import Resep, MasterBahan, BarangJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
-# JsonResponse untuk merespons data dalam format JSON
+from django.contrib.auth.decorators import login_required
+
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
-# Kelas untuk menampilkan daftar resep.
-class MasterResepList(ListView):
-    # Menentukan model yang akan digunakan untuk menampilkan daftar.
+class MasterResepList(LoginRequiredMixin, ListView):
     model = BarangJadi
-    # Menentukan nama template yang akan digunakan untuk render halaman.
     template_name = 'resep/resep_list.html'
-    # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadis'
+    login_url = 'login'
     
     def get_queryset(self):
         return BarangJadi.objects.filter(master_roti=True)
@@ -27,41 +25,27 @@ class MasterResepList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
-# Kelas untuk menghapus data resep.
+
 class MasterResepDelete(DeleteView):
-    # Menentukan model yang akan dihapus.
     model = BarangJadi
-    # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadi'
-    # Menentukan URL yang akan diarahkan setelah proses penghapusan berhasil.
     success_url = reverse_lazy('master_resep_list')
 
-# Kelas untuk menampilkan detail resep.
 class MasterResepDetail(DetailView):
-    # Menentukan model yang akan ditampilkan detailnya.
     model = BarangJadi
-    # Menentukan nama template yang akan digunakan untuk render halaman.
     template_name = 'masterResep/master_resep_detail.html'
-    # Menentukan nama objek konteks yang akan digunakan di template.
     context_object_name = 'barang_jadi'   
     
-    # Method untuk mendapatkan data bahan yang digunakan dalam resep.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Menghitung selisih antara harga jual dan harga pokok penjualan.
         selisih = self.object.harga_jual - self.object.hpp
-        # Mendapatkan id resep.
         id_bahan = self.object.id
-        # Mendapatkan daftar bahan yang digunakan dalam resep.
         resep = Resep.objects.filter(barang_jadi__id=id_bahan)
         
         bahans = []
-        # Loop untuk setiap bahan dalam resep.
         for bahan in resep:
             nama = bahan.master_bahan.nama
             jumlah = bahan.jumlah_pemakaian
-            # Menghitung total harga pokok penjualan untuk satu bahan.
             total_hpp_single_bahan = bahan.master_bahan.harga_gram * jumlah
             bahans.append({'nama' : nama, 
                            'jumlah' : jumlah,
@@ -70,16 +54,11 @@ class MasterResepDetail(DetailView):
                            'total_hpp_single_bahan' : total_hpp_single_bahan,
                            })
             
-        # Menyimpan daftar bahan dan selisih ke dalam konteks.
         context['bahans'] = bahans
         context['selisih'] = selisih
         return context
-
-# Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
 def cek_bahan(request, id):
-    # Mengambil objek bahan dari database berdasarkan id
     bahan = MasterBahan.objects.get(id=id)
-    # Menyiapkan data bahan dalam format JSON
     result = {
         "kode_bahan": bahan.kode_bahan,
         "nama": bahan.nama,
@@ -93,34 +72,24 @@ def cek_bahan(request, id):
         "created_date": bahan.created_date,
         "updated_date": bahan.updated_date
     }
-    # Mengirimkan response dalam format JSON
     return JsonResponse(result)
-
-# Fungsi untuk membuat resep baru
 def master_resep_create(request):
-    # Mengambil semua bahan yang belum dihapus dari database
     bahans = MasterBahan.objects.filter(is_deleted=False)
-    # Membuat form untuk input resep
     form = ResepForm(request.POST or None)
 
-    # Jika request method adalah POST (form telah disubmit)
     if request.method == 'POST':
-        # Memeriksa apakah form valid
         
         if form.is_valid():
             
-            # Mengambil data dari form
             nama_roti = request.POST.get('nama_roti')
             kode_barang = request.POST.get('kode_barang')
             harga_jual = request.POST.get('harga_jual')
             hpp = request.POST.get('hpp')
             
-            # Mengambil daftar id bahan dan jumlah satuan dari form
             id_bahan_list = request.POST.getlist('id_bahan[]')
             jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
             master_bahan = True
             print('master_bahan: ', master_bahan)
-            # Simpan data resep ke dalam database
             barang_jadi = BarangJadi.objects.create(
                 nama=nama_roti,
                 kode_barang=kode_barang,
@@ -131,14 +100,11 @@ def master_resep_create(request):
             barang_jadi_check = barang_jadi.master_roti
             print('barang_jadi_check: ', barang_jadi_check)
             
-            # Membuat daftar bahan yang akan disimpan dalam bentuk JSON
             daftar_bahan = []
             for i in range(len(id_bahan_list)):
-                # Mengambil objek bahan dari database berdasarkan id
                 bahan_id = id_bahan_list[i]
                 bahan_obj = MasterBahan.objects.get(id=bahan_id)
                 
-                # Membuat dictionary untuk setiap bahan
                 """ Mekanisme Kotor
                 bahan = {
                     'id_bahan': bahan_id,
@@ -150,27 +116,22 @@ def master_resep_create(request):
                 daftar_bahan.append(bahan)
                 """
                 
-                # Simpan data resep ke dalam database
                 resep_create = Resep.objects.create(
                     master_bahan = bahan_obj,
                     barang_jadi  = barang_jadi, 
                     jumlah_pemakaian = jumlah_satuan_list[i],
                 )
             
-            # Menyimpan daftar bahan dalam bentuk JSON ke dalam objek barang_jadi
             """ Mekanisme Kotor   
             daftar_bahan_json = json.dumps(daftar_bahan)
             barang_jadi.daftar_bahan = daftar_bahan_json
             barang_jadi.save()
             """
           
-            # Redirect ke halaman detail resep
             return redirect('resep_detail', pk=barang_jadi.id)
 
-    # Mengirimkan data bahan dan form ke template
     context = {'bahans': bahans, 'form': form}
     return render(request, 'masterResep/master_resep_form.html', locals())
-
 
 class MasterResepUpdateView(UpdateView):
     model = BarangJadi
@@ -198,17 +159,14 @@ class MasterResepUpdateView(UpdateView):
         harga_jual = form.cleaned_data.get('harga_jual')
         hpp = form.cleaned_data.get('hpp')
         
-        # Update data barang jadi
         self.object.nama = nama_roti
         self.object.kode_barang = kode_barang
         self.object.harga_jual = harga_jual
         self.object.hpp = hpp
         self.object.save()
 
-        # Delete existing resep
         Resep.objects.filter(barang_jadi=self.object).delete()
 
-        # Simpan data resep ke dalam database
         for i in range(len(self.request.POST.getlist('id_bahan[]'))):
             bahan_id = self.request.POST.getlist('id_bahan[]')[i]
             bahan_obj = MasterBahan.objects.get(id=bahan_id)
