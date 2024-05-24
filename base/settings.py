@@ -149,6 +149,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-AUTH_USER_MODEL = 'catat.CustomUser'
+AUTH_USER_MODEL = 'catat.UserProfile'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'

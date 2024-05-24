@@ -1,14 +1,25 @@
 # accounts/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser
+from .models import UserProfile
 
-class CustomUserCreationForm(UserCreationForm):
+class UserProfileCreationForm(UserCreationForm):
+
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
+        model = UserProfile
         fields = ('email', 'username')
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].validators = []
+        self.fields['password2'].validators = []
 
-class CustomUserChangeForm(UserChangeForm):
+class UserProfileChangeForm(UserChangeForm):
     class Meta:
-        model = CustomUser
+        model = UserProfile
         fields = ('email','username')
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].validators = []
+        self.fields['password2'].validators = []

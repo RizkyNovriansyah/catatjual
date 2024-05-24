@@ -18,20 +18,22 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, username, **extra_fields)
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
+    username = models.CharField(max_length=100, blank=True, null=True)
+    daily_login = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    username = models.CharField(max_length=100, blank=True, null=True)
-
+    groups = models.ManyToManyField( Group, related_name='groups_user_set',  blank=True,)
+    user_permissions = models.ManyToManyField(Permission, related_name='permissions_user_set', blank=True,)
+    
     objects = CustomUserManager()
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-
-    groups = models.ManyToManyField( Group, related_name='customuser_set',  blank=True,)
-    user_permissions = models.ManyToManyField(Permission, related_name='customuser_set', blank=True,)
-
     def __str__(self):
         return self.email
+
+class LoginSessionsTrack(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True)
+    daily_login = models.DateTimeField(auto_now_add=False, null=True, blank=True)
