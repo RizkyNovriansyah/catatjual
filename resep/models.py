@@ -8,7 +8,7 @@ class BarangJadi(models.Model):
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
     harga_jual = models.IntegerField(blank=True, null=True)     #tambahkan input ini ke tambah roti baru tidak boleh kurang dari modal
     daftar_bahan = models.JSONField(blank=True, null=True)
-    hpp = models.IntegerField(blank=True, null=True)
+    hpp = models.DecimalField(max_digits=10, decimal_places=2)
     is_deleted = models.BooleanField(default=False)
     master_roti = models.BooleanField(default=False) #Jika Master Roti True Maka Akan jadi (resep sebagai biang atau master) Jika False Maka Akan menjadi resep biasa (pada resep biasa bisa memilih master roti atau bahan lainnya)
 
