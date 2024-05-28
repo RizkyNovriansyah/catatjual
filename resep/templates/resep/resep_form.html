@@ -86,7 +86,7 @@
 </script>
 <script>
     function get_data_bahan(id) {
-        var url = 'http://localhost:8001/resep/cek_bahan/' + id + '/';
+        var url = 'https://alhazirakbar.pythonanywhere.com/resep/cek_bahan/' + id + '/';
         // Menggunakan fetch untuk mengambil data
         return fetch(url)
         .then(function(response) {
@@ -179,7 +179,7 @@
     }
     
     function get_data_master(id) {
-        var url = 'http://localhost:8001/resep/cek_master/' + id + '/';
+        var url = 'https://alhazirakbar.pythonanywhere.com/resep/cek_master/' + id + '/';
         // Menggunakan fetch untuk mengambil data
         return fetch(url)
         .then(function(response) {
