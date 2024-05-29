@@ -165,3 +165,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
+
+LOGIN_URL = 'login/'
+GLOBAL_PASSWORD = 'password_catat_dan_jual_123'
