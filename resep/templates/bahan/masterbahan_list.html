@@ -10,7 +10,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <table id="myTable" class="display responsive nowrap" style="width:100%">
+                            <table id="tableBahan" class="display nowrap" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Kode Bahan</th>
@@ -58,8 +58,11 @@
 <script>
     $(document).ready(function () {
         console.log("added");
-        $('#myTable').DataTable({
-            responsive: true
+        $('#tableBahan').DataTable({
+            responsive: true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            }
         });
     });
 </script>
