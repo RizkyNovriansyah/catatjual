@@ -48,4 +48,3 @@ class Resep(models.Model):
     
     def __str__(self):
         return f"{self.master_bahan.nama} - {self.barang_jadi.nama}"
- 
