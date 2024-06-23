@@ -1,10 +1,9 @@
 # vim: set fileencoding=utf-8 :
 from django.contrib import admin
-
+from simple_history.admin import SimpleHistoryAdmin
 import resep.models as models
 
-class BarangJadiAdmin(admin.ModelAdmin):
-
+class BarangJadiAdmin(SimpleHistoryAdmin):
     list_display = (
         'id',
         'nama',
@@ -27,8 +26,7 @@ class BarangJadiAdmin(admin.ModelAdmin):
     )
 
 
-class MasterBahanAdmin(admin.ModelAdmin):
-
+class MasterBahanAdmin(SimpleHistoryAdmin):
     list_display = (
         'id',
         'kode_bahan',
@@ -61,8 +59,32 @@ class MasterBahanAdmin(admin.ModelAdmin):
     )
 
 
-class ResepAdmin(admin.ModelAdmin):
+class BahanOlahanAdmin(SimpleHistoryAdmin):
+    list_display = (
+        'id',
+        'nama',
+        'qty_keseluruhan',
+        'qty_terkecil',
+        'harga_kg',
+        'harga_gram',
+        'created_date',
+        'updated_date',
+        'is_deleted',
+    )
+    list_filter = (
+        'created_date',
+        'updated_date',
+        'is_deleted',
+        'id',
+        'nama',
+        'qty_keseluruhan',
+        'qty_terkecil',
+        'harga_kg',
+        'harga_gram',
+    )
 
+
+class ResepAdmin(SimpleHistoryAdmin):
     list_display = (
         'id',
         'master_bahan',
@@ -79,10 +101,29 @@ class ResepAdmin(admin.ModelAdmin):
     )
 
 
-def _register(model, admin_class):
-    admin.site.register(model, admin_class)
+class ResepBahanOlahanAdmin(SimpleHistoryAdmin):
+    list_display = (
+        'id',
+        'resep',
+        'bahan_olahan',
+        'qty',
+        'created_date',
+        'updated_date',
+        'is_deleted',
+    )
+    list_filter = (
+        'created_date',
+        'updated_date',
+        'is_deleted',
+        'id',
+        'resep',
+        'bahan_olahan',
+        'qty',
+    )
 
 
-_register(models.BarangJadi, BarangJadiAdmin)
-_register(models.MasterBahan, MasterBahanAdmin)
-_register(models.Resep, ResepAdmin)
+admin.site.register(models.BarangJadi, BarangJadiAdmin)
+admin.site.register(models.MasterBahan, MasterBahanAdmin)
+admin.site.register(models.BahanOlahan, BahanOlahanAdmin)
+admin.site.register(models.Resep, ResepAdmin)
+admin.site.register(models.ResepBahanOlahan, ResepBahanOlahanAdmin)
