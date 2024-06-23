@@ -1,5 +1,6 @@
 from django.urls import path
 from .views.bahan_views import *
+from .views.bahan_olah_views import *
 from .views.resep_views import *
 from .views.master_resep import *
 from .views.utils_views import *
@@ -22,6 +23,13 @@ urlpatterns = [
     path('bahans/create/', BahanCreate.as_view(), name='bahan_create'),
     path('bahans/update/<int:pk>/', BahanUpdate.as_view(), name='bahan_update'),
     path('bahans/delete/<int:pk>/', BahanDelete.as_view(), name='bahan_delete'),
+
+    #Bahan Olah
+    path('bahans_olah/', BahanOlahList.as_view(), name='bahan_olah_list'),
+    path('bahans_olah/<int:pk>/', BahanOlahDetail.as_view(), name='bahan_Olah_detail'),
+    path('bahans_olah/create/', BahanOlahCreate.as_view(), name='bahan_olah_create'),
+    path('bahans_olah/update/<int:pk>/', BahanOlahUpdate.as_view(), name='bahan_olah_update'),
+    path('bahans_olah/delete/<int:pk>/', BahanOlahDelete.as_view(), name='bahan_olah_delete'),
 
     # cek bahan, by id
     path('cek_bahan/<int:id>/', cek_bahan, name='cek_bahan'),

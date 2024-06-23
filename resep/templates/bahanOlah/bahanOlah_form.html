@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="section">
+        <div class="section-header">
+            <h1>Tambah Bahan Baku Baru</h1>
+        </div>
+        <div class="section-body">
+            <h2 class="section-title">Bahan Baku Baru</h2>
+            <p class="section-lead">Keterangan<br>
+                Satuan Terkecil adalah satuan yang digunakan saat memasukkan bahan pada resep. seperti gr, sdm, pcs
+                <br>
+                Quantity Keseluruhan adalah berat total bahan dalam satuan terkecil saat dilakukan pembelian
+                <br>
+                
+            </p>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="post" class="form">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Kode Bahan</label>
+                                    {{ form.kode_bahan }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_nama">Nama</label>
+                                    {{ form.nama }}
+                                </div>
+                                {% comment %} <div class="form-group">
+                                    <label for="id_total">Total </label>
+                                    {{ form.total }}
+                                </div> {% endcomment %}
+                                <div class="form-group">
+                                    <label for="id_harga">Harga (Harga Beli disuplier)</label>
+                                    {{ form.harga }}
+                                    <span id="harga-bantuan-rupiah" class="text-small">.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_qty_keseluruhan">Quantity Keseluruhan (Total Berat dalam 'satuan')</label>
+                                    {{ form.qty_keseluruhan }}
+                                </div>
+                                {% comment %} <div class="form-group">
+                                    <label for="id_qty_terkecil">Quantity Terkecil ('satuan' terkecil)</label>
+                                    {{ form.qty_terkecil }}
+                                </div> {% endcomment %}
+
+                                <div class="form-group">
+                                    <label class="form-label">Satuan</label>
+                                    <div class="selectgroup w-100">
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="satuan-bahan" value="Sendok Makan" class="selectgroup-input satuan-input">
+                                            <span class="selectgroup-button">sdm (Sendok Makan)</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="satuan-bahan" value="Gram" class="selectgroup-input satuan-input">
+                                            <span class="selectgroup-button">gr (Gram)</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="satuan-bahan" value="Piece" class="selectgroup-input satuan-input">
+                                            <span class="selectgroup-button">pcs (Piece)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% comment %} <div class="form-group">
+                                    <label for="id_harga_jual">Harga Jual 1000000</label>
+                                    {{ form.harga_jual }}
+                                </div> {% endcomment %}
+
+                                <div class="form-group">
+                                    <label for="id_harga">Hpp per-<span id="selectedSatuan"></span></label>
+                                    seharga <b id="cek_harga_perkeseluruhan"><b>
+                                </div>
+
+                                <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+{% block script %}
+<script>
+$(document).ready(function(){
+    $("#id_harga").val(null)
+    $("#id_qty_keseluruhan").val(null)
+
+    $(".satuan-input").on("click", function(){
+        let selectedSatuan = $("input[name=satuan-bahan]:checked").val();
+        $("#selectedSatuan").text(selectedSatuan);
+    });
+    $(".check-harga").on("keyup", function(){
+        console.log("check harga")
+        let harga = parseFloat($("#id_harga").val());
+        let qty_keseluruhan = parseFloat($("#id_qty_keseluruhan").val());
+        if(!isNaN(harga) && !isNaN(qty_keseluruhan) && qty_keseluruhan > 0){
+            let harga_per_keseluruhan = harga / qty_keseluruhan;
+            $("#cek_harga_perkeseluruhan").text("Rp. " + convertToTitikFormat(harga_per_keseluruhan.toString()) );
+        } else {
+            $("#cek_harga_perkeseluruhan").text("");
+        }
+        let name_satuan = $("input[name=satuan-bahan]").val();
+        console.log("name_satuan",name_satuan)
+
+    });
+});
+</script>
+{% endblock script %}
