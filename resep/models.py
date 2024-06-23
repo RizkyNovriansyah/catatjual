@@ -1,6 +1,6 @@
 # models.py
 from django.utils import timezone
-
+from simple_history.models import HistoricalRecords
 from django.db import models
 
 class BarangJadi(models.Model):
@@ -11,7 +11,7 @@ class BarangJadi(models.Model):
     hpp = models.DecimalField(max_digits=10, decimal_places=2)
     is_deleted = models.BooleanField(default=False)
     master_roti = models.BooleanField(default=False) #Jika Master Roti True Maka Akan jadi (resep sebagai biang atau master) Jika False Maka Akan menjadi resep biasa (pada resep biasa bisa memilih master roti atau bahan lainnya)
-
+    history = HistoricalRecords() 
     def __str__(self):
         return self.nama
 
@@ -28,7 +28,7 @@ class MasterBahan(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-    
+    history = HistoricalRecords() 
     def __str__(self):
         return self.nama
     
@@ -49,7 +49,7 @@ class BahanOlahan(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-    
+    history = HistoricalRecords() 
     def __str__(self):
         return self.nama
 
@@ -58,7 +58,7 @@ class Resep(models.Model):
     barang_jadi = models.ForeignKey(BarangJadi,blank=True, null=True, on_delete=models.CASCADE, related_name='BarangJadi')
     jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
     is_deleted = models.BooleanField(default=False)
-    
+    history = HistoricalRecords() 
     def __str__(self):
         return f"{self.master_bahan.nama} - {self.barang_jadi.nama}"
     
@@ -69,6 +69,6 @@ class ResepBahanOlahan(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-    
+    history = HistoricalRecords() 
     def __str__(self):
         return f"{self.resep} - {self.bahan_olahan}"
