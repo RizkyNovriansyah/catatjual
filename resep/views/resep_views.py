@@ -14,6 +14,8 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+# from import reserve 
+from django.urls import reverse
 
 # Kelas untuk menampilkan daftar resep.
 class ResepList(LoginRequiredMixin, ListView):
@@ -96,6 +98,27 @@ def cek_bahan(request, id):
         "qty_terkecil": bahan.qty_terkecil,
         "harga": bahan.harga,
         "harga_jual": bahan.harga_jual,
+        "harga_kg": bahan.harga_kg,
+        "harga_gram": bahan.harga_gram,
+        "created_date": bahan.created_date,
+        "updated_date": bahan.updated_date
+    }
+    # Mengirimkan response dalam format JSON
+    return JsonResponse(result)
+
+
+@login_required(login_url='login')
+# Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
+def cek_bahan_olah(request, id):
+    # Mengambil objek bahan dari database berdasarkan id
+    bahan = BahanOlahan.objects.get(id=id)
+    # Menyiapkan data bahan dalam format JSON
+    result = {
+        "nama": bahan.nama,
+        "total": bahan.total,
+        "qty_keseluruhan": bahan.qty_keseluruhan,
+        "qty_terkecil": bahan.qty_terkecil,
+        "harga": bahan.harga,
         "harga_kg": bahan.harga_kg,
         "harga_gram": bahan.harga_gram,
         "created_date": bahan.created_date,
@@ -191,7 +214,11 @@ def resep_create(request):
             return redirect('resep_detail', pk=barang_jadi.id)
 
     # Mengirimkan data bahan dan form ke template
-    context = {'bahans': bahans, 'form': form, 'olahans':olahans}
+    # import reverse
+    
+    url_get_bahan = reverse('cek_bahan', kwargs={'id': 99999})
+    url_get_olahan = reverse('cek_bahan_olah', kwargs={'id': 99999})
+    context = {'bahans': bahans, 'form': form, 'olahans':olahans, 'url_get_bahan':url_get_bahan, 'url_get_olahan':url_get_olahan}
     return render(request, 'resep/resep_form.html', locals())
 
 

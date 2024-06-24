@@ -56,7 +56,7 @@
                                     <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
                                     {% endfor %}
                                 </select>
-                                <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
+                                <div onclick="add_bahan(0)" style="margin-top: 25px" class='btn btn-info'>+</div>
                             </div>                            
                             <div class="form-group">
                                 <label for="id_kode_bahan">Olahan Tersedia</label>
@@ -65,7 +65,7 @@
                                     <option value="{{ bahan.id }}" data-kode="{{ bahan.id }}"> {{ bahan.nama }}</option>
                                     {% endfor %}
                                 </select>
-                                <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
+                                <div onclick="add_bahan(1)" style="margin-top: 25px" class='btn btn-info'>+</div>
                             </div>                            
                         </div>
                     </div>
@@ -93,8 +93,16 @@
     });
 </script>
 <script>
-    function get_data_bahan(id) {
-        var url = 'https://alhazirakbar.pythonanywhere.com/resep/cek_bahan/' + id + '/';
+    function get_data_bahan(id, is_thing) {
+        let url_get_bahan 
+        if (is_thing == "bahan")
+            url_get_bahan = "{{url_get_bahan}}"
+        else if (is_thing == "olahan")
+            url_get_bahan = "{{url_get_olahan}}"
+        console.log
+        // replace 99999 with id
+        url_get_bahan = url_get_bahan.replace('99999', id);
+        var url = url_get_bahan;
         // Menggunakan fetch untuk mengambil data
         return fetch(url)
         .then(function(response) {
@@ -105,17 +113,20 @@
             // Memastikan objek bahan memiliki struktur yang benar
             let satuan = "gram";
             let harga_persatuan = bahan['harga_gram'];
+            let harga_gram = bahan['harga_gram'];
             
             var e = document.getElementById("bahans");
             var value = e.value;
-            var nama_bahan = e.options[e.selectedIndex].text;
+            var nama_bahan = bahan.nama;
             // Mengembalikan objek yang berisi data relevan
             console.log(url)
+            console.log
             return {
                 nama_bahan: nama_bahan,
                 kode_bahan: bahan.kode_bahan,
                 satuan: satuan,
-                harga_persatuan: harga_persatuan
+                harga_persatuan: harga_persatuan,
+                harga_gram: harga_gram
             };
         })
         .catch(function(err) {
@@ -124,7 +135,8 @@
     }
     
     function remove_bahan(id) {
-        $("#data_bahan" + id).remove();
+        console.log("id",id)
+        $("#"+id).remove();
         cekhpp();
     }        
     
@@ -151,19 +163,30 @@
     }
     
     
-    function add_bahan() {
-        var value = $("#bahans").val();
-        var nama_bahan = $("#bahans option:selected").text();
-        var kode_bahan = $("#bahans option:selected").data('kode');
+    function add_bahan(code) {
+        let is_thing;
+        let id_thing;
+        if (code == 0){
+            is_thing = "bahan"
+            id_thing = "#bahans"
+        } else if (code == 1){
+            is_thing = "olahan"
+            id_thing = "#olahans"
+        }
+
+        var value = $(id_thing).val();
+        
+        var nama_bahan = $(id_thing+" option:selected").text();
+        var kode_bahan = $(id_thing+" option:selected").data('kode');
         // Panggil get_data_bahan dan tangani Promise yang dikembalikan
         // Panggil get_data_bahan dan tangani Promise yang dikembalikan
-        get_data_bahan(value)
+        get_data_bahan(value, is_thing)
         .then(function(bahanData) {
-            var html = `<div class="card card-warning" id='data_bahan${value}'>
+            var html = `<div class="card card-warning" id='data_${is_thing}${value}'>
                 <div class="card-header">
                     <h4>${bahanData.nama_bahan || ''}</h4>
                     <div class="card-header-action">
-                        <div onclick='remove_bahan("${value}")' class='btn btn-danger hapus-bahan' id='hapus-bahan-${value}'>x</div>
+                        <div onclick='remove_bahan("data_${is_thing}${value}")' class='btn btn-danger hapus-bahan' id='hapus-${is_thing}-${value}'>x</div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -171,10 +194,11 @@
                         <li class="list-group-item" style="padding:0">Nama Bahan : ${bahanData.nama_bahan || ''} </li>
                         <li class="list-group-item" style="padding:0">Kode Bahan : ${bahanData.kode_bahan || ''} </li>
                         <li class="list-group-item" style="padding:0">Satuan : <b>${bahanData.satuan || ''}</b></li>
+                        <li class="list-group-item" style="padding:0">HPP Satuan : <b>${bahanData.harga_gram || ''}</b></li>
                         <li class="list-group-item" style="padding:0">Harga Jual: <span id='hpp_satuan-${bahanData.kode_bahan}'></span></li>
                         <li class="list-group-item" style="padding:0">Harga Jumlah pakai : 
-                            <input id='bahan_added#${bahanData.kode_bahan}' onkeyup='cekhpp()'  class='form-control bahan_added' data-hargapersatuan='${bahanData.harga_persatuan}' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>
-                            <input class='form-control' style='visibility: hidden' name='id_bahan[]' type='number' value='${value}'>
+                            <input id='${is_thing}_added#${bahanData.kode_bahan}' onkeyup='cekhpp()'  class='form-control bahan_added' data-hargapersatuan='${bahanData.harga_persatuan}' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>
+                            <input class='form-control' style='visibility: hidden' name='id_${is_thing}[]' type='number' value='${value}'>
                         </li>
                         <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
                     </ul>
