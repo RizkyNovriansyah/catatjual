@@ -64,7 +64,7 @@ class BahanOlahan(models.Model):
     def __str__(self):
         return self.nama
 
-class ResepBahanOlahan(models.Model):
+class ResepOlahanJadi(models.Model):
     bahan_olahan = models.ForeignKey(BahanOlahan, on_delete=models.CASCADE, related_name='resep_bahan_olahan_set')
     barang_jadi = models.ForeignKey(BarangJadi, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahan_olahan_set')
     created_date = models.DateTimeField(auto_now_add=True)

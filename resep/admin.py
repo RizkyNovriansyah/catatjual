@@ -98,7 +98,7 @@ class ResepBahanJadiAdmin(SimpleHistoryAdmin):
     )
 
 
-class ResepBahanOlahanAdmin(SimpleHistoryAdmin):
+class ResepOlahanJadiAdmin(SimpleHistoryAdmin):
     list_display = (
         'id',
         'bahan_olahan',
@@ -121,4 +121,4 @@ admin.site.register(models.BarangJadi, BarangJadiAdmin)
 admin.site.register(models.MasterBahan, MasterBahanAdmin)
 admin.site.register(models.BahanOlahan, BahanOlahanAdmin)
 admin.site.register(models.ResepBahanJadi, ResepBahanJadiAdmin)
-admin.site.register(models.ResepBahanOlahan, ResepBahanOlahanAdmin)
+admin.site.register(models.ResepOlahanJadi, ResepOlahanJadiAdmin)
