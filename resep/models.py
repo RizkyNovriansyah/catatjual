@@ -9,7 +9,7 @@ class BarangJadi(models.Model):
     daftar_bahan = models.JSONField(blank=True, null=True)
     hpp = models.DecimalField(max_digits=10, decimal_places=2)
     is_deleted = models.BooleanField(default=False)
-    # history = HistoricalRecords()
+    history = HistoricalRecords()
     
     def __str__(self):
         return self.nama
@@ -27,7 +27,7 @@ class MasterBahan(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-    # history = HistoricalRecords()
+    history = HistoricalRecords()
     
     def __str__(self):
         return self.nama
@@ -45,7 +45,7 @@ class ResepBahanJadi(models.Model):
     barang_jadi = models.ForeignKey(BarangJadi, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahan_jadi_set')
     jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
     is_deleted = models.BooleanField(default=False)
-    # history = HistoricalRecords()
+    history = HistoricalRecords()
     
     def __str__(self):
         return f"{self.master_bahan.nama} - {self.barang_jadi.nama}"
@@ -59,7 +59,7 @@ class BahanOlahan(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-    # history = HistoricalRecords()
+    history = HistoricalRecords()
     
     def __str__(self):
         return self.nama
@@ -70,7 +70,7 @@ class ResepBahanOlahan(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-    # history = HistoricalRecords()
+    history = HistoricalRecords()
     
     def __str__(self):
         return f"{self.barang_jadi.nama} - {self.bahan_olahan.nama}"
