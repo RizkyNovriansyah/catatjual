@@ -35,3 +35,6 @@
    pip install django-extensions
    python manage.py graph_models -a -o new_models.dot
    dot -Tpng new_models.dot -o new_models.png
+
+10. Update requirements.txt
+    pip freeze > requirements.txt 

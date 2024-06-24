@@ -54,8 +54,10 @@ class BahanOlahan(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
     qty_keseluruhan = models.IntegerField(blank=True, null=True, default=0)
     qty_terkecil = models.IntegerField(blank=True, null=True, default=0)
-    harga_kg = models.IntegerField(blank=True, null=True, default=0) #not used
-    harga_gram = models.IntegerField(blank=True, null=True, default=0) #used
+    harga_kg = models.IntegerField(blank=True, null=True, default=0)
+    harga_gram = models.IntegerField(blank=True, null=True, default=0)
+    harga = models.IntegerField(blank=True, null=True, default=0)
+    total = models.CharField(max_length=100, blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)

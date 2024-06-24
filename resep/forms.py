@@ -44,6 +44,32 @@ class MasterBahanForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class BahanOlahanForm(forms.ModelForm):
+    class Meta:
+        model = BahanOlahan
+        fields = ['nama', 'qty_keseluruhan', 'qty_terkecil', 'total', 'harga']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['nama'].label = 'Nama Bahan'
+        self.fields['total'].label = 'total'
+        self.fields['harga'].label = 'harga'
+        self.fields['qty_keseluruhan'].label = 'qty_keseluruhan'
+        self.fields['qty_terkecil'].label = 'qty_terkecil'
+
+        # add css in nama
+        self.fields['nama'].widget.attrs.update({'class':'form-control','placeholder':"contoh : Gula"})
+        self.fields['total'].widget.attrs.update({'class':'form-control','placeholder':"contoh : total"})
+        self.fields['harga'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah','placeholder':"contoh : 500000","data-nama-bantuan":"harga-bantuan-rupiah"})
+        self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : 10000"})
+        self.fields['qty_terkecil'].widget.attrs.update({'class':'form-control','placeholder':"contoh : 100"})
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+        return instance
         
 # class BahanOlahan(models.Model):
 #     nama = models.CharField(max_length=100, blank=True, null=True)
