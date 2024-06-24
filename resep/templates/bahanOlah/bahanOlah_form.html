@@ -2,10 +2,10 @@
 {% block content %}
     <section class="section">
         <div class="section-header">
-            <h1>Tambah Bahan Baku Baru</h1>
+            <h1>Tambah Olahan Baru (Setengah Jadi)</h1>
         </div>
         <div class="section-body">
-            <h2 class="section-title">Bahan Baku Baru</h2>
+            <h2 class="section-title">Olahan (Setengah Jadi)</h2>
             <p class="section-lead">Keterangan<br>
                 Satuan Terkecil adalah satuan yang digunakan saat memasukkan bahan pada resep. seperti gr, sdm, pcs
                 <br>
@@ -15,62 +15,29 @@
             </p>
             
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <form method="post" class="form">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <label for="id_kode_bahan">Kode Bahan</label>
-                                    {{ form.kode_bahan }}
-                                </div>
-                                <div class="form-group">
                                     <label for="id_nama">Nama</label>
                                     {{ form.nama }}
                                 </div>
-                                {% comment %} <div class="form-group">
-                                    <label for="id_total">Total </label>
-                                    {{ form.total }}
-                                </div> {% endcomment %}
-                                <div class="form-group">
-                                    <label for="id_harga">Harga (Harga Beli disuplier)</label>
-                                    {{ form.harga }}
-                                    <span id="harga-bantuan-rupiah" class="text-small">.</span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="id_qty_keseluruhan">Quantity Keseluruhan (Total Berat dalam 'satuan')</label>
-                                    {{ form.qty_keseluruhan }}
-                                </div>
-                                {% comment %} <div class="form-group">
-                                    <label for="id_qty_terkecil">Quantity Terkecil ('satuan' terkecil)</label>
-                                    {{ form.qty_terkecil }}
-                                </div> {% endcomment %}
 
                                 <div class="form-group">
-                                    <label class="form-label">Satuan</label>
-                                    <div class="selectgroup w-100">
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="satuan-bahan" value="Sendok Makan" class="selectgroup-input satuan-input">
-                                            <span class="selectgroup-button">sdm (Sendok Makan)</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="satuan-bahan" value="Gram" class="selectgroup-input satuan-input">
-                                            <span class="selectgroup-button">gr (Gram)</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="satuan-bahan" value="Piece" class="selectgroup-input satuan-input">
-                                            <span class="selectgroup-button">pcs (Piece)</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                {% comment %} <div class="form-group">
-                                    <label for="id_harga_jual">Harga Jual 1000000</label>
-                                    {{ form.harga_jual }}
-                                </div> {% endcomment %}
-
+                                    <label for="id_kode_bahan">Bahan Tersedia</label>
+                                    <select id="bahans" class="js-example-basic-single form-control" name="bahan_list[]">
+                                        {% for bahan in bahans %}
+                                        <option value="{{ bahan.id }}" data-kode="{{ bahan.kode_bahan }}"> {{ bahan.nama }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
+                                </div>    
+                                
                                 <div class="form-group">
                                     <label for="id_harga">Hpp per-<span id="selectedSatuan"></span></label>
-                                    seharga <b id="cek_harga_perkeseluruhan"><b>
+                                    seharga <b id="cek_harga_perkeseluruhan"></b>
                                 </div>
 
                                 <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
@@ -79,34 +46,176 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    {% csrf_token %}
+                    <div id="data_card">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 {% endblock content %}
 {% block script %}
 <script>
-$(document).ready(function(){
-    $("#id_harga").val(null)
-    $("#id_qty_keseluruhan").val(null)
-
-    $(".satuan-input").on("click", function(){
-        let selectedSatuan = $("input[name=satuan-bahan]:checked").val();
-        $("#selectedSatuan").text(selectedSatuan);
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
     });
-    $(".check-harga").on("keyup", function(){
-        console.log("check harga")
-        let harga = parseFloat($("#id_harga").val());
-        let qty_keseluruhan = parseFloat($("#id_qty_keseluruhan").val());
-        if(!isNaN(harga) && !isNaN(qty_keseluruhan) && qty_keseluruhan > 0){
-            let harga_per_keseluruhan = harga / qty_keseluruhan;
-            $("#cek_harga_perkeseluruhan").text("Rp. " + convertToTitikFormat(harga_per_keseluruhan.toString()) );
-        } else {
-            $("#cek_harga_perkeseluruhan").text("");
-        }
-        let name_satuan = $("input[name=satuan-bahan]").val();
-        console.log("name_satuan",name_satuan)
+</script>
+<script>
+    function get_data_bahan(id) {
+        let url_get_bahan = "{{url_get_bahan}}"
+        // replace 99999 with id
+        url_get_bahan = url_get_bahan.replace('99999', id);
+        let url = url_get_bahan;
+        // Menggunakan fetch untuk mengambil data
+        return fetch(url)
+        .then(function(response) {
+            // Mengubah respons menjadi JSON
+            return response.json();
+        })
+        .then(function(bahan) {
+            // Memastikan objek bahan memiliki struktur yang benar
+            let satuan = "gram";
+            let harga_persatuan = bahan['harga_gram'];
+            
+            var e = document.getElementById("bahans");
+            var value = e.value;
+            var nama_bahan = e.options[e.selectedIndex].text;
+            // Mengembalikan objek yang berisi data relevan
+            console.log(url)
+            return {
+                nama_bahan: nama_bahan,
+                kode_bahan: bahan.kode_bahan,
+                satuan: satuan,
+                harga_persatuan: harga_persatuan
+            };
+        })
+        .catch(function(err) {
+            console.log('Kesalahan Fetch :-S', err);
+        });
+    }
+    
+    function remove_bahan(id) {
+        $("#data_bahan" + id).remove();
+        cekhpp();
+    }        
+    
+    function cekhpp(){
+        let all_bahan = []
+        let hpp_sum = 0;
+        $('.bahan_added').each(function() {
+            var id_current = $(this).attr('id');
+            var kode_bahan = id_current.split('#')[1];
+            var value = $(this).val();
+            var hargapersatuan = $(this).data('hargapersatuan');
+            var hpp_satuan = value * hargapersatuan;
+    
+            // Update the span element with the calculated HPP
+            console.log()
+            $('#hpp_satuan-' + kode_bahan).text(convertToTitikFormat(hpp_satuan.toString()));
+    
+            // Calculate total HPP
+            hpp_sum += hpp_satuan;
+        });
+    
+        // Display the total HPP
+        $('#hpp').val(convertToTitikFormat(hpp_sum.toString()));
+    }
+    
+    
+    function add_bahan() {
+        var value = $("#bahans").val();
+        var nama_bahan = $("#bahans option:selected").text();
+        var kode_bahan = $("#bahans option:selected").data('kode');
+        // Panggil get_data_bahan dan tangani Promise yang dikembalikan
+        // Panggil get_data_bahan dan tangani Promise yang dikembalikan
+        get_data_bahan(value)
+        .then(function(bahanData) {
+            console.log(bahanData);
+            var html = `<div class="card card-warning" id='data_bahan${value}'>
+                <div class="card-header">
+                    <h4>${bahanData.nama_bahan || ''}</h4>
+                    <div class="card-header-action">
+                        <div onclick='remove_bahan("${value}")' class='btn btn-danger hapus-bahan' id='hapus-bahan-${value}'>x</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush" >
+                        <li class="list-group-item" style="padding:0">Nama Bahan : ${bahanData.nama_bahan || ''} </li>
+                        <li class="list-group-item" style="padding:0">Kode Bahan : ${bahanData.kode_bahan || ''} </li>
+                        <li class="list-group-item" style="padding:0">Satuan : <b>${bahanData.satuan || ''}</b></li>
+                        <li class="list-group-item" style="padding:0">Harga Jual: <span id='hpp_satuan-${bahanData.kode_bahan}'></span></li>
+                        <li class="list-group-item" style="padding:0">Harga Jumlah pakai : 
+                            <input id='bahan_added#${bahanData.kode_bahan}' onkeyup='cekhpp()'  class='form-control bahan_added' data-hargapersatuan='${bahanData.harga_persatuan}' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>
+                            <input class='form-control' style='visibility: hidden' name='id_bahan[]' type='number' value='${value}'>
+                        </li>
+                        <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
+                    </ul>
+                </div>
+            </div>`;
+            
+            // Sisipkan HTML ke elemen yang ditentukan
+            $("#data_card").append(html);
+        });
+    }
+    
+    function get_data_master(id) {
+        let url_get_bahan = "{{url_get_bahan}}"
+        // replace 99999 with id
+        url_get_bahan = url_get_bahan.replace('99999', id);
 
-    });
-});
+        var url = url_get_bahan;
+        console.log(url)
+        // Menggunakan fetch untuk mengambil data
+        return fetch(url)
+        .then(function(response) {
+            // Mengubah respons menjadi JSON
+            return response.json();
+        })
+        .then(function(master) {
+            // Memastikan objek master memiliki struktur yang benar
+            
+            var e = document.getElementById("masters");
+            var value = e.value;
+            var nama_master = e.options[e.selectedIndex].text;
+            
+            // Mengembalikan objek yang berisi data relevan
+            return {
+                nama: nama_master,
+                kode_master: master.kode_barang // tambahkan kode_master dari respons server
+            };
+        })
+        .catch(function(err) {
+            console.log('Kesalahan Fetch :-S', err);
+        });
+    }
+    
+    
+    function remove_master(id) {
+        $("#data_master" + id).remove();
+    }
+    
+    function add_master() {
+        var value = $("#masters").val();
+        var nama_master = $("#masters option:selected").text();
+        var kode_master = $("#masters option:selected").data('kode');
+    
+        // Panggil get_data_master dan tangani Promise yang dikembalikan
+        get_data_master(value)
+            .then(function(masterData) {
+                var html = `
+                    <div class='card' id='data_master${value}'>
+                        <div class='card-body'>
+                            Nama:<b>${masterData.nama || ''}</b><br>
+                            Kode:<b>${kode_master || ''}</b><br>
+                            <div id='jumlah-master-container-${value}'></div>
+                            <div class='btn btn-danger hapus-master' id='hapus-master-${value}'>Hapus master</div>
+                        </div>
+                    </div>`;
+                // Sisipkan HTML ke elemen yang ditentukan
+                $("#data_card").append(html);
+            });
+    }        
+            
 </script>
 {% endblock script %}

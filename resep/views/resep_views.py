@@ -3,7 +3,7 @@ import json
 
 from django.db.models.query import QuerySet
 from django.views import View  
-from ..models import ResepBahanJadi, MasterBahan, BarangJadi
+from ..models import ResepBahanJadi, MasterBahan, BarangJadi,BahanOlahan
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 # JsonResponse untuk merespons data dalam format JSON
 from django.urls import reverse_lazy
@@ -128,6 +128,7 @@ def cek_master(request, id):
 def resep_create(request):
     # Mengambil semua bahan yang belum dihapus dari database
     bahans = MasterBahan.objects.filter(is_deleted=False)
+    olahans = BahanOlahan.objects.filter(is_deleted=False)
     masters = BarangJadi.objects.filter()
     
     # Membuat form untuk input resep
@@ -190,7 +191,7 @@ def resep_create(request):
             return redirect('resep_detail', pk=barang_jadi.id)
 
     # Mengirimkan data bahan dan form ke template
-    context = {'bahans': bahans, 'form': form}
+    context = {'bahans': bahans, 'form': form, 'olahans':olahans}
     return render(request, 'resep/resep_form.html', locals())
 
 

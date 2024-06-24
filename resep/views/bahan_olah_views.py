@@ -2,7 +2,7 @@
 import json
 
 from django.views import View  
-from ..models import ResepBahanJadi, MasterBahan, BarangJadi
+from ..models import ResepBahanJadi, MasterBahan, BarangJadi,BahanOlahan
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 
 from django.urls import reverse, reverse_lazy
@@ -38,12 +38,23 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
         
         return super(BahanOlahCreate, self).form_valid(form)
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bahans'] = MasterBahan.objects.all()
+        url_get_bahan = reverse('cek_bahan', kwargs={'id': 99999})
+        context['url_get_bahan'] = url_get_bahan
+        print("url_get_bahan",url_get_bahan)
+        return context
 
 class BahanOlahList(LoginRequiredMixin, ListView):
-    model = MasterBahan
+    model = BahanOlahan
     template_name = 'bahanOlah/bahanOlah_list.html'
     context_object_name = 'bahans'
     login_url = 'login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class BahanOlahUpdate(LoginRequiredMixin, UpdateView):

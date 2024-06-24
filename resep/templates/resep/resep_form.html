@@ -57,7 +57,15 @@
                                     {% endfor %}
                                 </select>
                                 <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
-                                
+                            </div>                            
+                            <div class="form-group">
+                                <label for="id_kode_bahan">Olahan Tersedia</label>
+                                <select id="olahans" class="js-example-basic-single form-control" name="olahans_list[]">
+                                    {% for bahan in olahans %}
+                                    <option value="{{ bahan.id }}" data-kode="{{ bahan.id }}"> {{ bahan.nama }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
                             </div>                            
                         </div>
                     </div>
@@ -179,7 +187,7 @@
     }
     
     function get_data_master(id) {
-        var url = 'https://alhazirakbar.pythonanywhere.com/resep/cek_master/' + id + '/';
+        var url = '{{base_url}}' + id + '/';
         // Menggunakan fetch untuk mengambil data
         return fetch(url)
         .then(function(response) {
