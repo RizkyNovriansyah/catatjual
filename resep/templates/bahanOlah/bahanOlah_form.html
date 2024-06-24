@@ -28,6 +28,8 @@
                                 <div class="form-group">
                                     <label for="id_kode_bahan">HPP</label>
                                     <input id="hpp" class="form-control" name="hpp" type="text" readonly>
+                                    cek
+                                    {{ form.harga_gram }}
                                 </div>
                                 
 
@@ -121,6 +123,7 @@
     
         // Display the total HPP
         $('#hpp').val(convertToTitikFormat(hpp_sum.toString()));
+        $('#hpp_input').val(hpp_sum);
     }
     
     

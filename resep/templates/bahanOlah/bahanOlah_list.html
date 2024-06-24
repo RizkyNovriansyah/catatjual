@@ -3,7 +3,7 @@
 
     <section class="section">
         <div class="section-header">
-            <h1>List Bahan Baku</h1>
+            <h1>List Bahan Olah (Setengah Jadi)</h1>
         </div>
         <div class="section-body">
            
@@ -23,10 +23,10 @@
                                     <tr>
                                         <td>{{ bahan.nama }}</td>
                                         <td>
-                                            <a href="{% url 'bahan_update' pk=bahan.pk %}" class="btn btn-sm btn-primary mr-2">Update</a>
+                                            <a href="{% url 'bahan_olah_update' pk=bahan.pk %}" class="btn btn-sm btn-primary mr-2">Update</a>
                                         </td>
                                         <td>
-                                            <a href="{% url 'bahan_delete' pk=bahan.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                            <a href="{% url 'bahan_olah_delete' pk=bahan.pk %}" class="btn btn-sm btn-danger">Delete</a>
                                         </td>
                                         
                                     </tr>
