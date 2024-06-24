@@ -3,7 +3,7 @@
 
     <section class="section">
         <div class="section-header">
-            <h1>List Bahan Baku</h1>
+            <h1>List Bahan Olah</h1>
         </div>
         <div class="section-body">
            
@@ -13,13 +13,12 @@
                             <table id="tableBahan" class="display nowrap" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Kode Bahan</th>
+                                        
                                         <th>Nama Bahan</th>
                                         <th>Total</th>
                                         <th>qty_keseluruhan</th>
                                         <th>qty_terkecil</th>
                                         <th>harga</th>
-                                        <th>harga_jual</th>
                                         <th>Update</th>
                                         <th>Delete</th>
                                     </tr>
@@ -27,13 +26,11 @@
                                 <tbody>
                                     {% for bahan in bahans %}
                                     <tr>
-                                        <td>{{ bahan.kode_bahan }}</td>
                                         <td><a href="{% url 'bahan_olah_detail' pk=bahan.pk %}">{{ bahan.nama }}</a></td>
                                         <td>{{ bahan.total }}</td>
                                         <td>{{ bahan.qty_keseluruhan }} Kg</td>
                                         <td>{{ bahan.qty_terkecil }} Gram</td>
                                         <td>Rp.{{ bahan.harga }}</td>
-                                        <td>Rp.{{ bahan.harga_jual }}</td>
                                         <td>
                                             <a href="{% url 'bahan_olah_update' pk=bahan.pk %}" class="btn btn-sm btn-primary mr-2">Update</a>
                                         </td>

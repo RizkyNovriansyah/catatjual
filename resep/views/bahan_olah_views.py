@@ -49,7 +49,7 @@ class BahanOlahList(LoginRequiredMixin, ListView):
 class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
     model = BahanOlahan
     template_name = 'bahanOlah/bahanOlah_form.html'
-    fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
+    fields = ['nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga']
     success_url = reverse_lazy('bahan_olah_list')
     login_url = 'login'
     
