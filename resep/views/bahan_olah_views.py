@@ -2,8 +2,8 @@
 import json
 
 from django.views import View  
-from ..models import ResepBahanJadi, MasterBahan, BarangJadi
-from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
+from ..models import ResepBahanJadi, BahanOlahan, BarangJadi
+from ..forms import BarangJadiForm, BahanOlahanForm, ResepForm
 
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, JsonResponse
@@ -15,8 +15,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 #Bahan
 class BahanOlahCreate(LoginRequiredMixin, CreateView):
-    model = MasterBahan
-    form_class = MasterBahanForm
+    model = BahanOlahan
+    form_class = BahanOlahanForm
     template_name = 'bahanOlah/bahanOlah_form.html'
     success_url = reverse_lazy('bahan_list')
     login_url = 'login'
@@ -40,14 +40,14 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
     
 
 class BahanOlahList(LoginRequiredMixin, ListView):
-    model = MasterBahan
+    model = BahanOlahan
     template_name = 'bahanOlah/bahanOlah_list.html'
     context_object_name = 'bahans'
     login_url = 'login'
 
 
 class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
-    model = MasterBahan
+    model = BahanOlahan
     template_name = 'bahanOlah/bahanOlah_form.html'
     fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
     success_url = reverse_lazy('bahan_list')
@@ -55,7 +55,7 @@ class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
     
 
 class BahanOlahDelete(LoginRequiredMixin, DeleteView):
-    model = MasterBahan
+    model = BahanOlahan
     context_object_name = 'bahan'
     template_name = 'bahanOlah/bahanOlah_confirm_delete.html'
     success_url = reverse_lazy('bahan_list')
@@ -72,7 +72,7 @@ class BahanOlahDelete(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 class BahanOlahDetail(LoginRequiredMixin, DetailView):
-    model = MasterBahan
+    model = BahanOlahan
     template_name = 'bahanOlah/bahanOlah_detail.html'
     context_object_name = 'bahan'
     login_url = 'login'
