@@ -48,7 +48,7 @@ class MasterBahanForm(forms.ModelForm):
 class BahanOlahanForm(forms.ModelForm):
     class Meta:
         model = MasterBahan
-        fields = ['nama', 'qty_keseluruhan', 'qty_terkecil']
+        fields = ['nama', 'qty_keseluruhan', 'qty_terkecil', 'total', 'harga']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
