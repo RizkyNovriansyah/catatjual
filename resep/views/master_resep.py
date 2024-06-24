@@ -1,7 +1,7 @@
 import json
 
 from django.views import View  
-from ..models import Resep, MasterBahan, BarangJadi
+from ..models import ResepBahanJadi, MasterBahan, BarangJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 from django.contrib.auth.decorators import login_required
 
@@ -40,7 +40,7 @@ class MasterResepDetail(DetailView):
         context = super().get_context_data(**kwargs)
         selisih = self.object.harga_jual - self.object.hpp
         id_bahan = self.object.id
-        resep = Resep.objects.filter(barang_jadi__id=id_bahan)
+        resep = ResepBahanJadi.objects.filter(barang_jadi__id=id_bahan)
         
         bahans = []
         for bahan in resep:
@@ -116,7 +116,7 @@ def master_resep_create(request):
                 daftar_bahan.append(bahan)
                 """
                 
-                resep_create = Resep.objects.create(
+                resep_create = ResepBahanJadi.objects.create(
                     master_bahan = bahan_obj,
                     barang_jadi  = barang_jadi, 
                     jumlah_pemakaian = jumlah_satuan_list[i],
@@ -146,7 +146,7 @@ class MasterResepUpdateView(UpdateView):
         barang_jadi = self.object
         print('barang_jadi: ', barang_jadi)
         
-        daftar_resep = Resep.objects.filter(barang_jadi=barang_jadi)
+        daftar_resep = ResepBahanJadi.objects.filter(barang_jadi=barang_jadi)
         print('daftar_resep: ', daftar_resep)
         context['daftar_resep'] = daftar_resep
         context['bahans'] = MasterBahan.objects.filter(is_deleted=False)
@@ -165,13 +165,13 @@ class MasterResepUpdateView(UpdateView):
         self.object.hpp = hpp
         self.object.save()
 
-        Resep.objects.filter(barang_jadi=self.object).delete()
+        ResepBahanJadi.objects.filter(barang_jadi=self.object).delete()
 
         for i in range(len(self.request.POST.getlist('id_bahan[]'))):
             bahan_id = self.request.POST.getlist('id_bahan[]')[i]
             bahan_obj = MasterBahan.objects.get(id=bahan_id)
             jumlah_pemakaian = self.request.POST.getlist('jumlah_satuan[]')[i]
-            Resep.objects.create(
+            ResepBahanJadi.objects.create(
                 master_bahan=bahan_obj,
                 barang_jadi=self.object,
                 jumlah_pemakaian=jumlah_pemakaian,

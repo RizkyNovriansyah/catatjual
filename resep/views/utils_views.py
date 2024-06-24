@@ -3,7 +3,7 @@ import json
 
 from django.db.models.query import QuerySet
 from django.views import View  
-from ..models import Resep, MasterBahan, BarangJadi
+from ..models import ResepBahanJadi, MasterBahan, BarangJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 # JsonResponse untuk merespons data dalam format JSON
 from django.urls import reverse_lazy

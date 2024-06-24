@@ -21,7 +21,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from resep.models import BarangJadi, MasterBahan, Resep
+from resep.models import BarangJadi, MasterBahan, ResepBahanJadi
 from pesan.models import ListPesanan, Pesanan
 from django.urls import reverse_lazy
 from django.views import generic
@@ -118,7 +118,7 @@ class SignUpView(generic.CreateView):
 @login_required(login_url='login')
 def dashboard(request):
 	barang_jadi_count = BarangJadi.objects.filter(is_deleted=False).count()
-	resep_count = Resep.objects.filter(is_deleted=False).count()
+	resep_count = ResepBahanJadi.objects.filter(is_deleted=False).count()
 	bahan_count = MasterBahan.objects.filter(is_deleted=False).count()
 	list_pesanan_count = ListPesanan.objects.filter(is_deleted=False).count()
 	

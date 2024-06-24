@@ -4,13 +4,13 @@ from django.views.generic import CreateView, DetailView, UpdateView, DeleteView,
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from resep.forms import ResepForm
-from resep.models import BarangJadi, MasterBahan, Resep
+from resep.models import BarangJadi, MasterBahan, ResepBahanJadi
 from .models import Pesanan, ListPesanan
 from .forms import PesananForm, ListPesananForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 @login_required(login_url='login')
 def cek_pesanan(request, id):
-    resep = Resep.objects.get(id=id)
+    resep = ResepBahanJadi.objects.get(id=id)
     result = {
         "kode_resep": resep.barang_jadi.kode_barang,
         "nama": resep.barang_jadi.nama,
@@ -22,7 +22,7 @@ def cek_pesanan(request, id):
 
 @login_required(login_url='login')
 def PesananCreate(request):
-    daftar_resep = Resep.objects.filter(is_deleted=False)
+    daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
 
     if request.method == 'POST':
         nama = request.POST.get('nama_pembeli')
@@ -104,7 +104,7 @@ class PesananDetailView(LoginRequiredMixin, DetailView):
 
 def PesananUpdate(request, pk):
     pesanan = get_object_or_404(Pesanan, pk=pk)
-    daftar_resep = Resep.objects.filter(is_deleted=False)
+    daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
 
     if request.method == 'POST':
         nama = request.POST.get('nama_pembeli')

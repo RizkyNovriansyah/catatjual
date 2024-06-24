@@ -1,6 +1,6 @@
 import openpyxl
 from django.core.management.base import BaseCommand
-from resep.models import BarangJadi, MasterBahan, Resep
+from resep.models import BarangJadi, MasterBahan, ResepBahanJadi
 
 class Command(BaseCommand):
     help = 'Impor data dari file Excel'
@@ -48,7 +48,7 @@ class Command(BaseCommand):
                     print(f"MasterBahan dengan kode_bahan {row[4]} tidak ditemukan.")
                     continue
 
-                Resep.objects.create(
+                ResepBahanJadi.objects.create(
                     barang_jadi=barang_jadi,
                     master_bahan=master_bahan,
                     jumlah_pemakaian=row[2],

@@ -1,6 +1,6 @@
 # models.py
 from django.utils import timezone
-from resep.models import BarangJadi, MasterBahan, Resep
+from resep.models import BarangJadi, MasterBahan, ResepBahanJadi
 from django.db import models
 
 class Pesanan(models.Model):

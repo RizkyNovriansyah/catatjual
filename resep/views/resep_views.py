@@ -3,7 +3,7 @@ import json
 
 from django.db.models.query import QuerySet
 from django.views import View  
-from ..models import Resep, MasterBahan, BarangJadi
+from ..models import ResepBahanJadi, MasterBahan, BarangJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 # JsonResponse untuk merespons data dalam format JSON
 from django.urls import reverse_lazy
@@ -61,7 +61,7 @@ class ResepDetail(LoginRequiredMixin, DetailView):
         # Mendapatkan id resep.
         id_bahan = self.object.id
         # Mendapatkan daftar bahan yang digunakan dalam resep.
-        resep = Resep.objects.filter(barang_jadi__id=id_bahan)
+        resep = ResepBahanJadi.objects.filter(barang_jadi__id=id_bahan)
         
         bahans = []
         # Loop untuk setiap bahan dalam resep.
@@ -175,7 +175,7 @@ def resep_create(request):
                 daftar_bahan.append(bahan)
                 """
                 # Simpan data resep ke dalam database
-                resep_create = Resep.objects.create(
+                resep_create = ResepBahanJadi.objects.create(
                     master_bahan = bahan_obj,
                     barang_jadi  = barang_jadi, 
                     jumlah_pemakaian = jumlah_satuan_list[i],
@@ -208,7 +208,7 @@ class ResepUpdateView(LoginRequiredMixin,  UpdateView):
         barang_jadi = self.object
         print('barang_jadi: ', barang_jadi)
         
-        daftar_resep = Resep.objects.filter(barang_jadi=barang_jadi)
+        daftar_resep = ResepBahanJadi.objects.filter(barang_jadi=barang_jadi)
         print('daftar_resep: ', daftar_resep)
         context['daftar_resep'] = daftar_resep
         context['bahans'] = MasterBahan.objects.filter(is_deleted=False)
@@ -229,14 +229,14 @@ class ResepUpdateView(LoginRequiredMixin,  UpdateView):
         self.object.save()
 
         # Delete existing resep
-        Resep.objects.filter(barang_jadi=self.object).delete()
+        ResepBahanJadi.objects.filter(barang_jadi=self.object).delete()
 
         # Simpan data resep ke dalam database
         for i in range(len(self.request.POST.getlist('id_bahan[]'))):
             bahan_id = self.request.POST.getlist('id_bahan[]')[i]
             bahan_obj = MasterBahan.objects.get(id=bahan_id)
             jumlah_pemakaian = self.request.POST.getlist('jumlah_satuan[]')[i]
-            Resep.objects.create(
+            ResepBahanJadi.objects.create(
                 master_bahan=bahan_obj,
                 barang_jadi=self.object,
                 jumlah_pemakaian=jumlah_pemakaian,

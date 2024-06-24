@@ -29,3 +29,9 @@
    file excel disimpan pada folder data
    Example :
    Export Resep done! File saved at: data/export_resep_2024-05-14.xlsx
+
+9. Export models to png :
+   sudo apt-get install graphviz
+   pip install django-extensions
+   python manage.py graph_models -a -o new_models.dot
+   dot -Tpng new_models.dot -o new_models.png

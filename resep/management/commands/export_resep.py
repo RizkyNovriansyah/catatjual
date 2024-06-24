@@ -1,6 +1,6 @@
 import csv
 from django.core.management.base import BaseCommand
-from resep.models import BarangJadi, ListPesanan, MasterBahan, Pesanan, Resep
+from resep.models import BarangJadi, MasterBahan, ResepBahanJadi
 # import pandas as pd
 from django.core.management.base import BaseCommand
 from openpyxl import Workbook
@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         queryset_barang_jadi = BarangJadi.objects.filter(is_deleted=False)
-        queryset_resep = Resep.objects.filter(is_deleted=False)
+        queryset_resep = ResepBahanJadi.objects.filter(is_deleted=False)
         workbook = Workbook()
 
         # Get active worksheet/tab

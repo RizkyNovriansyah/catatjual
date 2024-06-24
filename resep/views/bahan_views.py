@@ -2,7 +2,7 @@
 import json
 
 from django.views import View  
-from ..models import Resep, MasterBahan, BarangJadi
+from ..models import MasterBahan, BarangJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 
 from django.urls import reverse, reverse_lazy

@@ -12,16 +12,13 @@ class BarangJadiAdmin(SimpleHistoryAdmin):
         'daftar_bahan',
         'hpp',
         'is_deleted',
-        'master_roti',
     )
     list_filter = (
         'is_deleted',
-        'master_roti',
         'id',
         'nama',
         'kode_barang',
         'harga_jual',
-        'daftar_bahan',
         'hpp',
     )
 
@@ -84,7 +81,7 @@ class BahanOlahanAdmin(SimpleHistoryAdmin):
     )
 
 
-class ResepAdmin(SimpleHistoryAdmin):
+class ResepBahanJadiAdmin(SimpleHistoryAdmin):
     list_display = (
         'id',
         'master_bahan',
@@ -104,9 +101,8 @@ class ResepAdmin(SimpleHistoryAdmin):
 class ResepBahanOlahanAdmin(SimpleHistoryAdmin):
     list_display = (
         'id',
-        'resep',
         'bahan_olahan',
-        'qty',
+        'barang_jadi',
         'created_date',
         'updated_date',
         'is_deleted',
@@ -116,14 +112,13 @@ class ResepBahanOlahanAdmin(SimpleHistoryAdmin):
         'updated_date',
         'is_deleted',
         'id',
-        'resep',
         'bahan_olahan',
-        'qty',
+        'barang_jadi',
     )
 
 
 admin.site.register(models.BarangJadi, BarangJadiAdmin)
 admin.site.register(models.MasterBahan, MasterBahanAdmin)
 admin.site.register(models.BahanOlahan, BahanOlahanAdmin)
-admin.site.register(models.Resep, ResepAdmin)
+admin.site.register(models.ResepBahanJadi, ResepBahanJadiAdmin)
 admin.site.register(models.ResepBahanOlahan, ResepBahanOlahanAdmin)
