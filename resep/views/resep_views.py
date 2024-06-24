@@ -26,7 +26,7 @@ class ResepList(LoginRequiredMixin, ListView):
     login_url = 'login'
     
     def get_queryset(self):
-        return BarangJadi.objects.filter(master_roti=True)
+        return BarangJadi.objects.filter(is_deleted=False)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
@@ -107,7 +107,7 @@ def cek_bahan(request, id):
 @login_required(login_url='login')
 def cek_master(request, id):
     # Mengambil objek bahan dari database berdasarkan id
-    bahan = BarangJadi.objects.get(id=id, master_roti=True)
+    bahan = BarangJadi.objects.get(id=id)
     print('bahan: ', bahan)
     # Menyiapkan data bahan dalam format JSON
     result = {
@@ -128,7 +128,7 @@ def cek_master(request, id):
 def resep_create(request):
     # Mengambil semua bahan yang belum dihapus dari database
     bahans = MasterBahan.objects.filter(is_deleted=False)
-    masters = BarangJadi.objects.filter(master_roti=True)
+    masters = BarangJadi.objects.filter()
     
     # Membuat form untuk input resep
     form = ResepForm(request.POST or None)

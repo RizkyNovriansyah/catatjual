@@ -20,7 +20,7 @@ class MasterResepList(LoginRequiredMixin, ListView):
     login_url = 'login'
     
     def get_queryset(self):
-        return BarangJadi.objects.filter(master_roti=True)
+        return BarangJadi.objects.filter(is_deleted=False)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
