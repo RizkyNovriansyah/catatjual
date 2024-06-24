@@ -28,17 +28,17 @@
                                     {% for bahan in bahans %}
                                     <tr>
                                         <td>{{ bahan.kode_bahan }}</td>
-                                        <td><a href="{% url 'bahan_Olah_detail' pk=bahan.pk %}">{{ bahan.nama }}</a></td>
+                                        <td><a href="{% url 'bahan_olah_detail' pk=bahan.pk %}">{{ bahan.nama }}</a></td>
                                         <td>{{ bahan.total }}</td>
                                         <td>{{ bahan.qty_keseluruhan }} Kg</td>
                                         <td>{{ bahan.qty_terkecil }} Gram</td>
                                         <td>Rp.{{ bahan.harga }}</td>
                                         <td>Rp.{{ bahan.harga_jual }}</td>
                                         <td>
-                                            <a href="{% url 'bahan_Olah_update' pk=bahan.pk %}" class="btn btn-sm btn-primary mr-2">Update</a>
+                                            <a href="{% url 'bahan_olah_update' pk=bahan.pk %}" class="btn btn-sm btn-primary mr-2">Update</a>
                                         </td>
                                         <td>
-                                            <a href="{% url 'bahan_Olah_delete' pk=bahan.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                            <a href="{% url 'bahan_olah_delete' pk=bahan.pk %}" class="btn btn-sm btn-danger">Delete</a>
                                         </td>
                                         
                                     </tr>
