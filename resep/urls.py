@@ -26,7 +26,7 @@ urlpatterns = [
 
     #Bahan Olah
     path('bahans_olah/', BahanOlahList.as_view(), name='bahan_olah_list'),
-    path('bahans_olah/<int:pk>/', BahanOlahDetail.as_view(), name='bahan_Olah_detail'),
+    path('bahans_olah/<int:pk>/', BahanOlahDetail.as_view(), name='bahan_olah_detail'),
     path('bahans_olah/create/', BahanOlahCreate.as_view(), name='bahan_olah_create'),
     path('bahans_olah/update/<int:pk>/', BahanOlahUpdate.as_view(), name='bahan_olah_update'),
     path('bahans_olah/delete/<int:pk>/', BahanOlahDelete.as_view(), name='bahan_olah_delete'),
