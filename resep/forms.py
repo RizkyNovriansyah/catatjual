@@ -1,6 +1,6 @@
 # forms.py
 from django import forms
-from .models import BarangJadi, ResepBahanJadi, MasterBahan
+from .models import BahanOlahan, BarangJadi, ResepBahanJadi, MasterBahan
 from decimal import Decimal
 
 class ResepForm(forms.ModelForm):
@@ -47,7 +47,7 @@ class MasterBahanForm(forms.ModelForm):
 
 class BahanOlahanForm(forms.ModelForm):
     class Meta:
-        model = MasterBahan
+        model = BahanOlahan
         fields = ['nama', 'qty_keseluruhan', 'qty_terkecil', 'total', 'harga']
 
     def __init__(self, *args, **kwargs):

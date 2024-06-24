@@ -18,7 +18,7 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
     model = BahanOlahan
     form_class = BahanOlahanForm
     template_name = 'bahanOlah/bahanOlah_form.html'
-    success_url = reverse_lazy('bahan_list')
+    success_url = reverse_lazy('bahan_olah_list')
     login_url = 'login'
     
     def form_valid(self, form):    
@@ -50,7 +50,7 @@ class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
     model = BahanOlahan
     template_name = 'bahanOlah/bahanOlah_form.html'
     fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
-    success_url = reverse_lazy('bahan_list')
+    success_url = reverse_lazy('bahan_olah_list')
     login_url = 'login'
     
 
@@ -58,7 +58,7 @@ class BahanOlahDelete(LoginRequiredMixin, DeleteView):
     model = BahanOlahan
     context_object_name = 'bahan'
     template_name = 'bahanOlah/bahanOlah_confirm_delete.html'
-    success_url = reverse_lazy('bahan_list')
+    success_url = reverse_lazy('bahan_olah_list')
     login_url = 'login'
 
     def delete(self, request, *args, **kwargs):
