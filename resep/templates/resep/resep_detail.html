@@ -95,6 +95,34 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <h2>Adonan yang digunakan </h2>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nama Bahan</th>
+                                        <th>Kode Bahan</th>
+                                        <th>Jumlah Pemakaian</th>
+                                        <th>Harga per Gram</th>
+                                        <th>Total HPP per Bahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for bahan in olahans %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ bahan.nama }}</td>
+                                            <td>{{ bahan.kode_bahan }}</td>
+                                            <td>{{ bahan.jumlah }} Gram</td>
+                                            <td>Rp.{{ bahan.harga_gram|intcomma }} </td>
+                                            <td>Rp.{{ bahan.total_hpp_single_bahan|intcomma }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

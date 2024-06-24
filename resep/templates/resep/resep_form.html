@@ -197,7 +197,7 @@
                         <li class="list-group-item" style="padding:0">HPP Satuan : <b>${bahanData.harga_gram || ''}</b></li>
                         <li class="list-group-item" style="padding:0">Harga Jual: <span id='hpp_satuan-${bahanData.kode_bahan}'></span></li>
                         <li class="list-group-item" style="padding:0">Harga Jumlah pakai : 
-                            <input id='${is_thing}_added#${bahanData.kode_bahan}' onkeyup='cekhpp()'  class='form-control bahan_added' data-hargapersatuan='${bahanData.harga_persatuan}' name='jumlah_satuan[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>
+                            <input id='${is_thing}_added#${bahanData.kode_bahan}' onkeyup='cekhpp()'  class='form-control bahan_added' data-hargapersatuan='${bahanData.harga_persatuan}' name='jumlah_satuan_${is_thing}[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>
                             <input class='form-control' style='visibility: hidden' name='id_${is_thing}[]' type='number' value='${value}'>
                         </li>
                         <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>

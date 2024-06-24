@@ -69,6 +69,8 @@ class BahanOlahan(models.Model):
 class ResepOlahanJadi(models.Model):
     bahan_olahan = models.ForeignKey(BahanOlahan, on_delete=models.CASCADE, related_name='resep_bahan_olahan_set')
     barang_jadi = models.ForeignKey(BarangJadi, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahan_olahan_set')
+    jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
+    
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)

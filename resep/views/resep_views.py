@@ -3,7 +3,7 @@ import json
 
 from django.db.models.query import QuerySet
 from django.views import View  
-from ..models import ResepBahanJadi, MasterBahan, BarangJadi,BahanOlahan
+from ..models import ResepBahanJadi, MasterBahan, BarangJadi,BahanOlahan,ResepOlahanJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 # JsonResponse untuk merespons data dalam format JSON
 from django.urls import reverse_lazy
@@ -81,6 +81,21 @@ class ResepDetail(LoginRequiredMixin, DetailView):
             
         # Menyimpan daftar bahan dan selisih ke dalam konteks.
         context['bahans'] = bahans
+
+        resepOlahan = ResepOlahanJadi.objects.filter(barang_jadi__id=id_bahan)
+        olahans = []
+        for olahan in resepOlahan:
+            nama = olahan.bahan_olahan.nama
+            jumlah = olahan.jumlah_pemakaian
+            total_hpp_single_bahan = olahan.bahan_olahan.harga_gram * jumlah
+            olahans.append({'nama' : nama, 
+                           'jumlah' : jumlah,
+                           'kode_bahan' : "olahan_"+str(olahan.bahan_olahan.id),
+                           'harga_gram': olahan.bahan_olahan.harga_gram,
+                           'total_hpp_single_bahan' : total_hpp_single_bahan,
+                           })
+        
+        context['olahans'] = olahans
         context['selisih'] = selisih
         return context
 
@@ -114,6 +129,7 @@ def cek_bahan_olah(request, id):
     bahan = BahanOlahan.objects.get(id=id)
     # Menyiapkan data bahan dalam format JSON
     result = {
+        "kode_bahan": "olahan_"+str(bahan.id),
         "nama": bahan.nama,
         "total": bahan.total,
         "qty_keseluruhan": bahan.qty_keseluruhan,
@@ -169,7 +185,16 @@ def resep_create(request):
             
             # Mengambil daftar id bahan dan jumlah satuan dari form
             id_bahan_list = request.POST.getlist('id_bahan[]')
-            jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
+            id_olahan_list = request.POST.getlist('id_olahan[]')
+
+            jumlah_satuan_bahan_list = request.POST.getlist('jumlah_satuan_bahan[]')
+            jumlah_satuan_olahan_list = request.POST.getlist('jumlah_satuan_olahan[]')
+
+            print('id_bahan_list: ', id_bahan_list)
+            print(jumlah_satuan_bahan_list)
+
+            print('id_olahan_list: ', id_olahan_list)
+            print(jumlah_satuan_olahan_list)
             
             # Simpan data resep ke dalam database
             barang_jadi = BarangJadi.objects.create(
@@ -202,14 +227,23 @@ def resep_create(request):
                 resep_create = ResepBahanJadi.objects.create(
                     master_bahan = bahan_obj,
                     barang_jadi  = barang_jadi, 
-                    jumlah_pemakaian = jumlah_satuan_list[i],
+                    jumlah_pemakaian = jumlah_satuan_bahan_list[i],
                 )
+                print("bahan",resep_create)
+
+            for i in range(len(id_olahan_list)):
+                # Mengambil objek bahan dari database berdasarkan id
+                bahan_id = id_olahan_list[i]
+                bahan_obj = BahanOlahan.objects.get(id=bahan_id)
                 
-            """ Mekanisme Kurang bersih 
-            daftar_bahan_json = json.dumps(daftar_bahan)
-            barang_jadi.daftar_bahan = daftar_bahan_json
-            barang_jadi.save()
-            """
+
+                # Simpan data resep ke dalam database
+                resep_create = ResepOlahanJadi.objects.create(
+                    bahan_olahan = bahan_obj,
+                    barang_jadi  = barang_jadi,
+                    jumlah_pemakaian = jumlah_satuan_olahan_list[i],
+                )
+                print("olahan",resep_create)
             # Redirect ke halaman detail resep
             return redirect('resep_detail', pk=barang_jadi.id)
 
