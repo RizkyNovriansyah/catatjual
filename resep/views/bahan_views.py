@@ -49,10 +49,24 @@ class BahanList(LoginRequiredMixin, ListView):
 class BahanUpdate(LoginRequiredMixin, UpdateView):
     model = MasterBahan
     template_name = 'bahan/masterbahan_form.html'
-    fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
+    # fields = ['kode_bahan', 'nama', 'total', 'qty_keseluruhan', 'qty_terkecil', 'harga', 'harga_jual']
     success_url = reverse_lazy('bahan_list')
     login_url = 'login'
+    form_class = MasterBahanForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # get id 
+        id = self.kwargs.get('pk')
+        # get object
+        bahan = MasterBahan.objects.get(id=id) 
+        # Optionally, set initial data for the form fields
+        return kwargs
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bahan'] = MasterBahan.objects.get(id=self.kwargs.get('pk'))
+        return context
 
 class BahanDelete(LoginRequiredMixin, DeleteView):
     model = MasterBahan

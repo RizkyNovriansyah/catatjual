@@ -88,13 +88,18 @@
 $(document).ready(function(){
     $("#id_harga").val(null)
     $("#id_qty_keseluruhan").val(null)
-
+    $("#id_harga").val("{{ bahan.harga }}")
+    $("#id_qty_keseluruhan").val("{{ bahan.qty_keseluruhan }}")
+    cek_hpp()
     $(".satuan-input").on("click", function(){
         let selectedSatuan = $("input[name=satuan-bahan]:checked").val();
         $("#selectedSatuan").text(selectedSatuan);
     });
     $(".check-harga").on("keyup", function(){
         console.log("check harga")
+        cek_hpp()
+    });
+    function cek_hpp(){
         let harga = parseFloat($("#id_harga").val());
         let qty_keseluruhan = parseFloat($("#id_qty_keseluruhan").val());
         if(!isNaN(harga) && !isNaN(qty_keseluruhan) && qty_keseluruhan > 0){
@@ -105,8 +110,7 @@ $(document).ready(function(){
         }
         let name_satuan = $("input[name=satuan-bahan]").val();
         console.log("name_satuan",name_satuan)
-
-    });
+    }
 });
 </script>
 {% endblock script %}

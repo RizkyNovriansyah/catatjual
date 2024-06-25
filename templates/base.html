@@ -91,9 +91,16 @@
         }
     });
     
-    $(".bantuan-rupiah").on("keyup", function(){
-      let harga = parseFloat($(this).val());
-      let data_nama_bantuan = $(this).data("nama-bantuan");
+
+    function convertToTitikFormat(value) {
+        // Your logic to convert the value to the desired format
+        // For example, converting to a comma-separated format
+        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function cek_rupiah(this_el){
+      let harga = parseFloat($(this_el).val());
+      let data_nama_bantuan = $(this_el).data("nama-bantuan");
       console.log(harga);
       if(!isNaN(harga)){
           //harga to stringformat
@@ -102,14 +109,17 @@
       } else {
           $("#" + data_nama_bantuan).text("");
       }
-    });
-    
-    function convertToTitikFormat(value) {
-        // Your logic to convert the value to the desired format
-        // For example, converting to a comma-separated format
-        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
+    $(".bantuan-rupiah").on("keyup", function(){
+      cek_rupiah(this)
+    });
+
+    // fetch .bantuan-rupiah
+    $(".bantuan-rupiah").each(function(){
+      cek_rupiah(this)
+    });
+    
 
   </script>
   {% block script %}{% endblock script %}
