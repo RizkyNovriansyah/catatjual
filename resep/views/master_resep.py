@@ -119,11 +119,9 @@ class MasterResepCreate(CreateView):
 
 class MasterResepUpdateView(UpdateView):
     model = BarangJadi
-    form_class = BarangJadiForm
-    template_name = 'masterResep/master_resep_create.html'
-    success_url = '/'
-    context_object_name = 'barang_jadi'
-    
+    form_class = BarangJadiForm  # Ganti dengan form class yang sesuai untuk BarangJadi
+    template_name = 'masterResep/master_resep_create.html'  # Sesuaikan dengan template Anda
+    success_url = reverse_lazy('master_resep_list')  # URL redirect setelah sukses membuat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

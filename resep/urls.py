@@ -12,11 +12,11 @@ urlpatterns = [
     path('resep/update/<int:pk>/', ResepUpdateView.as_view(), name='resep_update'),
     path('resep/delete/<int:pk>/', ResepDelete.as_view(), name='resep_delete'),
 
-    path('master_resep/', MasterResepList.as_view(), name='master_resep_list'),
-    path('master_resep/create/', MasterResepCreate.as_view(), name='master_resep_create'),
-    path('master_resep/detail/<int:pk>/', MasterResepDetail.as_view(), name='master_resep_detail'),
-    path('master_resep/update/<int:pk>/', MasterResepUpdateView.as_view(), name='master_resep_update'),
-    path('master_resep/delete/<int:pk>/', MasterResepDelete.as_view(), name='master_resep_delete'),
+    # path('master_resep/', MasterResepList.as_view(), name='master_resep_list'),
+    # path('master_resep/create/', MasterResepCreate.as_view(), name='master_resep_create'),
+    # path('master_resep/detail/<int:pk>/', MasterResepDetail.as_view(), name='master_resep_detail'),
+    # path('master_resep/update/<int:pk>/', MasterResepUpdateView.as_view(), name='master_resep_update'),
+    # path('master_resep/delete/<int:pk>/', MasterResepDelete.as_view(), name='master_resep_delete'),
     
     path('bahans/', BahanList.as_view(), name='bahan_list'),
     path('bahans/<int:pk>/', BahanDetail.as_view(), name='bahan_detail'),
