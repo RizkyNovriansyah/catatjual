@@ -59,6 +59,8 @@ class MasterResepDetail(DetailView):
         return context
 def cek_bahan(request, id):
     bahan = MasterBahan.objects.get(id=id)
+    print('bahan: ', bahan)
+    print("nama bahan",bahan.nama)
     result = {
         "kode_bahan": bahan.kode_bahan,
         "nama": bahan.nama,

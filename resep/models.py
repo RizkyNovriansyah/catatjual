@@ -41,8 +41,8 @@ class MasterBahan(models.Model):
         return timezone.localtime(self.updated_date)
 
 class ResepBahanJadi(models.Model):
-    master_bahan = models.ForeignKey(MasterBahan, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahan_jadi_set')
-    barang_jadi = models.ForeignKey(BarangJadi, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahan_jadi_set')
+    master_bahan = models.ForeignKey(MasterBahan, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahanjadi_bahan')
+    barang_jadi = models.ForeignKey(BarangJadi, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahanjadi_jadi')
     jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
     is_deleted = models.BooleanField(default=False)
     history = HistoricalRecords()
@@ -67,8 +67,8 @@ class BahanOlahan(models.Model):
         return self.nama
 
 class ResepOlahanJadi(models.Model):
-    bahan_olahan = models.ForeignKey(BahanOlahan, on_delete=models.CASCADE, related_name='resep_bahan_olahan_set')
-    barang_jadi = models.ForeignKey(BarangJadi, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahan_olahan_set')
+    bahan_olahan = models.ForeignKey(BahanOlahan, on_delete=models.CASCADE, related_name='resep_olahanjadi_olahan')
+    barang_jadi = models.ForeignKey(BarangJadi, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_olahanjadi_jadi')
     jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
     
     created_date = models.DateTimeField(auto_now_add=True)
@@ -78,3 +78,14 @@ class ResepOlahanJadi(models.Model):
     
     def __str__(self):
         return f"{self.barang_jadi.nama} - {self.bahan_olahan.nama}"
+
+
+class ResepBahanOlahan(models.Model):
+    master_bahan = models.ForeignKey(MasterBahan, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahanolahan_bahan')
+    bahan_olahan = models.ForeignKey(BahanOlahan, blank=True, null=True, on_delete=models.CASCADE, related_name='resep_bahanolahan_olahan')
+    jumlah_pemakaian = models.IntegerField(blank=True, null=True, default=0)
+    is_deleted = models.BooleanField(default=False)
+    history = HistoricalRecords()
+    
+    def __str__(self):
+        return f"{self.master_bahan.nama} - {self.bahan_olahan.nama}"

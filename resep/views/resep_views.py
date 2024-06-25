@@ -104,6 +104,8 @@ class ResepDetail(LoginRequiredMixin, DetailView):
 def cek_bahan(request, id):
     # Mengambil objek bahan dari database berdasarkan id
     bahan = MasterBahan.objects.get(id=id)
+    print('bahan: ', bahan)
+    print("nama bahan",bahan.nama)
     # Menyiapkan data bahan dalam format JSON
     result = {
         "kode_bahan": bahan.kode_bahan,
