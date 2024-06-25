@@ -106,7 +106,7 @@ class BahanOlahanForm(forms.ModelForm):
         self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : 10000"})
         self.fields['qty_terkecil'].widget.attrs.update({'class':'form-control','placeholder':"contoh : 100"})
         self.fields['harga_kg'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah','placeholder':"contoh : 500000","data-nama-bantuan":"harga-bantuan-rupiah"})
-        self.fields['harga_gram'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : ", "name":"hpp_input", "id":"hpp_input"})
+        self.fields['harga_gram'].widget.attrs.update({'class':'form-control check-harga d-none','placeholder':"contoh : ", "name":"hpp_input", "id":"hpp_input"})
 
 
     def save(self, commit=True):

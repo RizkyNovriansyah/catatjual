@@ -10,41 +10,34 @@
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
             <li class="nav-item dropdown active">
-                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fas fa-fire"></i><span>Beranda</span></a>
+                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fas fa-cube"></i><span>Beranda</span></a>
             </li>
         </ul>
 
         <ul class="sidebar-menu">
-            <li class="menu-header">Resep</li>
+            <li class="menu-header">Mentah</li>
             <li class="nav-item dropdown">
-                <a href="{% url 'resep_list' %}" class="nav-link"><i class="fas fa-box"></i><span>List Barang Jadi</span></a>
-                <a href="{% url 'resep_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah</span></a>
-            </li>
-        </ul>
-
-        {% comment %} <ul class="sidebar-menu">
-            <li class="menu-header">Master Resep</li>
-            <li class="nav-item dropdown">
-                <a href="{% url 'master_resep_list' %}" class="nav-link"><i class="fas fa-box"></i><span>List Master Resep</span></a>
-                <a href="{% url 'master_resep_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah Master Resep</span></a>
-            </li>
-        </ul> {% endcomment %}
-
-        <ul class="sidebar-menu">
-            <li class="menu-header">Bahan</li>
-            <li class="nav-item dropdown">
-                <a href="{% url 'bahan_list' %}" class="nav-link"><i class="fas fa-box"></i><span>List Bahan Baku</span></a>
+                <a href="{% url 'bahan_list' %}" class="nav-link"><i class="far fa-lemon"></i><span>List Bahan Baku</span></a>
                 <a href="{% url 'bahan_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah</span></a>
             </li>
         </ul>
 
         <ul class="sidebar-menu">
-            <li class="menu-header">Bahan Olah</li>
+            <li class="menu-header">Setengah Jadi</li>
             <li class="nav-item dropdown">
-                <a href="{% url 'bahan_olah_list' %}" class="nav-link"><i class="fas fa-box"></i><span>List Bahan Olah</span></a>
+                <a href="{% url 'bahan_olah_list' %}" class="nav-link"><i class="fas fa-glass-whiskey"></i><span>List Bahan Olah</span></a>
                 <a href="{% url 'bahan_olah_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah Bahan Olah</span></a>
             </li>
         </ul>
+
+        <ul class="sidebar-menu">
+            <li class="menu-header">Jadi</li>
+            <li class="nav-item dropdown">
+                <a href="{% url 'resep_list' %}" class="nav-link"><i class="fas fa-bread-slice"></i><span>List Barang Jadi</span></a>
+                <a href="{% url 'resep_create' %}" class="nav-link"><i class="fas fa-plus"></i><span>Tambah</span></a>
+            </li>
+        </ul>
+
 
         <ul class="sidebar-menu">
             <li class="menu-header">Pesanan</li>

@@ -13,12 +13,8 @@
                             <table id="tableBahan" class="display nowrap" style="width:100%">
                                 <thead>
                                     <tr>
-                                        
-                                        <th>Nama Bahan</th>
-                                        <th>Total</th>
-                                        <th>qty_keseluruhan</th>
-                                        <th>qty_terkecil</th>
-                                        <th>harga</th>
+                                        <th>Nama Olahan</th>
+                                        <th>HPP</th>
                                         <th>Update</th>
                                         <th>Delete</th>
                                     </tr>
@@ -27,10 +23,7 @@
                                     {% for bahan in bahans %}
                                     <tr>
                                         <td><a href="{% url 'bahan_olah_detail' pk=bahan.pk %}">{{ bahan.nama }}</a></td>
-                                        <td>{{ bahan.total }}</td>
-                                        <td>{{ bahan.qty_keseluruhan }} Kg</td>
-                                        <td>{{ bahan.qty_terkecil }} Gram</td>
-                                        <td>Rp.{{ bahan.harga }}</td>
+                                        <td>Rp.{{ bahan.harga_gram }}</td>
                                         <td>
                                             <a href="{% url 'bahan_olah_update' pk=bahan.pk %}" class="btn btn-sm btn-primary mr-2">Update</a>
                                         </td>
