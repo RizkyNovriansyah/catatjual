@@ -166,26 +166,25 @@ def cek_master(request, id):
 # Fungsi untuk membuat resep baru
 class ResepCreate(LoginRequiredMixin, CreateView):
     model = BarangJadi
-    form_class = ResepForm
+    form_class = BarangJadiForm
     template_name = 'resep/resep_form.html'
+    success_url = reverse_lazy('bahan_olah_list')
     login_url = 'login'
 
     def get_success_url(self):
         return reverse_lazy('resep_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
-        # Additional processing when the form is valid
         list_bahans = json.loads(self.request.POST.get('list_bahans'))
-        nama_roti = self.request.POST.get('nama_roti')
-        kode_barang = self.request.POST.get('kode_barang')
-        harga_jual = self.request.POST.get('harga_jual')
+        nama_roti = form.cleaned_data.get('nama')
+        kode_barang = form.cleaned_data.get('kode_barang')
+        harga_jual = form.cleaned_data.get('harga_jual')
+        hpp = form.cleaned_data.get('hpp')
         hpp = int("".join(self.request.POST.get('hpp').split(".")))
-        barang_jadi = BarangJadi.objects.create(
-            nama=nama_roti,
-            kode_barang=kode_barang,
-            harga_jual=harga_jual,
-            hpp=hpp,
-        )
+        form.instance.hpp = hpp
+        form.instance.save()
+
+        barang_jadi = form.instance
 
         for bahan in list_bahans:
             tipe = bahan['id'].split("_")[0]
@@ -208,7 +207,7 @@ class ResepCreate(LoginRequiredMixin, CreateView):
                 )
                 roj.save()
 
-        return super().form_valid(form)
+        return super(ResepCreate,self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -216,12 +215,14 @@ class ResepCreate(LoginRequiredMixin, CreateView):
         context['olahans'] = BahanOlahan.objects.filter(is_deleted=False)
         context['url_get_bahan'] = reverse('cek_bahan', kwargs={'id': 99999})
         context['url_get_olahan'] = reverse('cek_bahan_olah', kwargs={'id': 99999})
+        context['olahan_used'] = []
+        context['bahan_used'] = []
         return context
 
 
 class ResepUpdateView(LoginRequiredMixin,  UpdateView):
     model = BarangJadi
-    form_class = ResepForm
+    form_class = BarangJadiForm
     template_name = 'resep/resep_form.html'
     login_url = 'login'
 

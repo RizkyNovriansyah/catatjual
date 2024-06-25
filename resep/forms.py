@@ -15,6 +15,37 @@ class BarangJadiForm(forms.ModelForm):
         model = BarangJadi
         fields = ['nama', 'kode_barang', 'hpp', 'harga_jual']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        hpp = cleaned_data.get('hpp')
+        harga_jual = cleaned_data.get('harga_jual')
+
+        # Custom validation logic if needed
+        if hpp and harga_jual:
+            if hpp > harga_jual:
+                raise forms.ValidationError("HPP tidak boleh lebih besar dari Harga Jual")
+
+        return cleaned_data
+
+
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['nama'].label = 'Nama Barang'
+            self.fields['kode_barang'].label = 'Kode Barang'
+            self.fields['hpp'].label = 'HPP'
+            self.fields['harga_jual'].label = 'Harga Jual'
+
+            self.fields['nama'].widget.attrs.update({'class':'form-control','placeholder':"contoh : Roti"})
+            self.fields['kode_barang'].widget.attrs.update({'class':'form-control','placeholder':"contoh : RT001"})
+            self.fields['hpp'].widget.attrs.update({'class':'form-control','placeholder':"contoh : 5000", "id":"hpp"})
+            self.fields['harga_jual'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah','placeholder':"contoh : 5000","data-nama-bantuan":"harga-bantuan-rupiah"})
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+        return instance
+
 class MasterBahanForm(forms.ModelForm):
     class Meta:
         model = MasterBahan

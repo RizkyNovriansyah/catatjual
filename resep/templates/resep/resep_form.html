@@ -9,7 +9,8 @@
 
 <section class="section">
     <div class="section-body">
-        <form class="form" method="post" action="{% url 'resep_create' %}">
+        {{ form.errors }}
+        <form class="form" method="post">
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
@@ -25,24 +26,24 @@
                             
                             <div class="form-group">
                                 <label for="id_kode_bahan">Nama</label>
-                                <input class="form-control" name="nama_roti" type="text" placeholder='Masukan Nama Roti'>    
+                                {{ form.nama }}
                             </div>
                             
                             
                             <div class="form-group">
                                 <label for="id_kode_bahan">Kode Resep</label>
-                                <input class="form-control" name="kode_barang" type="text" placeholder='Masukan kode barang'>    
+                                {{ form.kode_barang }}
                             </div>
                             
                             <div class="form-group">
                                 <label for="id_kode_bahan">Harga Jual</label>
-                                <input data-nama-bantuan="harga-bantuan-rupiah" class="form-control bantuan-rupiah" name="harga_jual" type="text" placeholder='Masukan Harga'>
+                                {{ form.harga_jual }}
                                 <span id="harga-bantuan-rupiah" class="text-small">.</span>
                             </div>
                             
                             <div class="form-group">
                                 <label for="id_kode_bahan">HPP</label>
-                                <input id="hpp" class="form-control" name="hpp" type="text" readonly>
+                                {{ form.hpp }}
                             </div>
                             
                             {% comment %} line {% endcomment %}
@@ -93,7 +94,7 @@
     });
 </script>
 <script>
-    initData()
+    initData();
     function get_data_bahan(id, is_thing) {
         let url_get_bahan 
         if (is_thing == "bahan")

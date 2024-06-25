@@ -7,7 +7,7 @@ class BarangJadi(models.Model):
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
     harga_jual = models.IntegerField(blank=True, null=True)
     daftar_bahan = models.JSONField(blank=True, null=True)
-    hpp = models.DecimalField(max_digits=10, decimal_places=2)
+    hpp = models.IntegerField(blank=True, null=True, default=0)
     is_deleted = models.BooleanField(default=False)
     history = HistoricalRecords()
     

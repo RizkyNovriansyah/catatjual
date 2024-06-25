@@ -40,6 +40,7 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
         context['bahans'] = MasterBahan.objects.all()
         url_get_bahan = reverse('cek_bahan', kwargs={'id': 99999})
         context['url_get_bahan'] = url_get_bahan
+        context['bahan_used'] = []
         print("url_get_bahan",url_get_bahan)
         return context
 
