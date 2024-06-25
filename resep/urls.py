@@ -7,7 +7,7 @@ from .views.utils_views import *
 
 urlpatterns = [
     path('resep/', ResepList.as_view(), name='resep_list'),
-    path('resep/create/', resep_create, name='resep_create'),
+    path('resep/create/', ResepCreate.as_view(), name='resep_create'),
     path('resep/detail/<int:pk>/', ResepDetail.as_view(), name='resep_detail'),
     path('resep/update/<int:pk>/', ResepUpdateView.as_view(), name='resep_update'),
     path('resep/delete/<int:pk>/', ResepDelete.as_view(), name='resep_delete'),

@@ -163,79 +163,60 @@ def cek_master(request, id):
     # Mengirimkan response dalam format JSON
     return JsonResponse(result)
 
-
-@login_required(login_url='login')
 # Fungsi untuk membuat resep baru
-def resep_create(request):
-    # Mengambil semua bahan yang belum dihapus dari database
-    bahans = MasterBahan.objects.filter(is_deleted=False)
-    olahans = BahanOlahan.objects.filter(is_deleted=False)
-    masters = BarangJadi.objects.filter()
-    
-    # Membuat form untuk input resep
-    form = ResepForm(request.POST or None)
+class ResepCreate(LoginRequiredMixin, CreateView):
+    model = BarangJadi
+    form_class = ResepForm
+    template_name = 'resep/resep_form.html'
+    login_url = 'login'
 
-    # Jika request method adalah POST (form telah disubmit)
-    if request.method == 'POST':
-        # Memeriksa apakah form valid
-        if form.is_valid():
-            # Mengambil data dari form
-            list_bahans = request.POST.get('list_bahans')
-            print("list_bahans",list_bahans)
-            list_bahans = json.loads(list_bahans)
-            print("list_bahans",list_bahans)
-            
-            nama_roti = request.POST.get('nama_roti')
-            kode_barang = request.POST.get('kode_barang')
-            harga_jual = request.POST.get('harga_jual')
-            hpp = int("".join(request.POST.get('hpp').split(".")))
+    def get_success_url(self):
+        return reverse_lazy('resep_detail', kwargs={'pk': self.object.pk})
 
-            print("hpp",hpp)
+    def form_valid(self, form):
+        # Additional processing when the form is valid
+        list_bahans = json.loads(self.request.POST.get('list_bahans'))
+        nama_roti = self.request.POST.get('nama_roti')
+        kode_barang = self.request.POST.get('kode_barang')
+        harga_jual = self.request.POST.get('harga_jual')
+        hpp = int("".join(self.request.POST.get('hpp').split(".")))
+        barang_jadi = BarangJadi.objects.create(
+            nama=nama_roti,
+            kode_barang=kode_barang,
+            harga_jual=harga_jual,
+            hpp=hpp,
+        )
 
-            # Simpan data resep ke dalam database
-            barang_jadi = BarangJadi.objects.create(
-                nama=nama_roti,
-                kode_barang=kode_barang,
-                harga_jual=harga_jual,
-                hpp=hpp,
-            )
-            
-            print("list_bahans",list_bahans)
-            for bahan in list_bahans:
-                tipe = bahan['id'].split("_")[0]
-                kode_bahan = bahan['id'].split("#")[1]
-                print("tipe",tipe)
-                print("kode_bahan",kode_bahan)
-                if tipe == "bahan":
-                    mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
-                    rbo = ResepBahanJadi.objects.create(
-                        barang_jadi = barang_jadi,
-                        master_bahan = mb,
-                        jumlah_pemakaian = bahan['value']
-                    )
-                    rbo.save()
-                    print("rbo",rbo, rbo.barang_jadi,rbo.master_bahan,rbo.jumlah_pemakaian)
-                elif tipe == "olahan":
-                    id_olahan = kode_bahan.split("_")[1]
-                    print("id_olahan",id_olahan)
-                    bo = BahanOlahan.objects.get(id=id_olahan)
-                    roj = ResepOlahanJadi.objects.create(
-                        barang_jadi = barang_jadi,
-                        bahan_olahan = bo,
-                        jumlah_pemakaian = bahan['value']
-                    )
-                    roj.save()
-                    print("roj",roj, roj.barang_jadi,roj.bahan_olahan,roj.jumlah_pemakaian)
-            # Redirect ke halaman detail resep
-            return redirect('resep_detail', pk=barang_jadi.id)
+        for bahan in list_bahans:
+            tipe = bahan['id'].split("_")[0]
+            kode_bahan = bahan['id'].split("#")[1]
+            if tipe == "bahan":
+                mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
+                rbo = ResepBahanJadi.objects.create(
+                    barang_jadi=barang_jadi,
+                    master_bahan=mb,
+                    jumlah_pemakaian=bahan['value']
+                )
+                rbo.save()
+            elif tipe == "olahan":
+                id_olahan = kode_bahan.split("_")[1]
+                bo = BahanOlahan.objects.get(id=id_olahan)
+                roj = ResepOlahanJadi.objects.create(
+                    barang_jadi=barang_jadi,
+                    bahan_olahan=bo,
+                    jumlah_pemakaian=bahan['value']
+                )
+                roj.save()
 
-    # Mengirimkan data bahan dan form ke template
-    # import reverse
-    
-    url_get_bahan = reverse('cek_bahan', kwargs={'id': 99999})
-    url_get_olahan = reverse('cek_bahan_olah', kwargs={'id': 99999})
-    context = {'bahans': bahans, 'form': form, 'olahans':olahans, 'url_get_bahan':url_get_bahan, 'url_get_olahan':url_get_olahan}
-    return render(request, 'resep/resep_form.html', locals())
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bahans'] = MasterBahan.objects.filter(is_deleted=False)
+        context['olahans'] = BahanOlahan.objects.filter(is_deleted=False)
+        context['url_get_bahan'] = reverse('cek_bahan', kwargs={'id': 99999})
+        context['url_get_olahan'] = reverse('cek_bahan_olah', kwargs={'id': 99999})
+        return context
 
 
 class ResepUpdateView(LoginRequiredMixin,  UpdateView):
