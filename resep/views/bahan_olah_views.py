@@ -84,6 +84,7 @@ class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
         return context
     
     def form_valid(self, form):
+        ResepBahanOlahan.objects.filter(bahan_olahan=self.object).delete()
         # list_bahans
         list_bahans = self.request.POST.get('list_bahans')
         list_bahans = json.loads(list_bahans)
