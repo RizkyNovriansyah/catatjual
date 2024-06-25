@@ -9,14 +9,14 @@
 
 <section class="section">
     <div class="section-body">
-        <form method="post" action="{% url 'resep_create' %}">
+        <form class="form" method="post" action="{% url 'resep_create' %}">
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h4></h4>
                             <div class="card-header-action">
-                                <button class='btn btn-primary' type="submit">Simpan Resep</button>
+                                <div onclick="sumbit_form()" class='btn btn-primary' >Simpan Resep</div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -261,7 +261,38 @@
                 // Sisipkan HTML ke elemen yang ditentukan
                 $("#data_card").append(html);
             });
-    }        
+    }
+
+    function sumbit_form() { 
+        console.log("submitting form");
+        //get all .bahan_added
+        let list_bahans = [];
+        let bahan;
+        var bahan_added = document.querySelectorAll('.bahan_added');
+        // loop through all .bahan_added
+        bahan_added.forEach(function(bahan) {
+            // get the id of the bahan
+            var id = bahan.id;
+            // get the value of the bahan
+            var value = bahan.value;
+            // create a hidden input with the value of the bahan
+            bahan = {
+                id: id,
+                value: value
+            }
+            console.log(bahan);
+            list_bahans.push(bahan);
+        });
+
+        var form = document.querySelector('.form');
+        console.log(form)
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'list_bahans';
+        input.value = JSON.stringify(list_bahans);
+        form.appendChild(input);
+        form.submit();
+    }
             
 </script>
 {% endblock script %}

@@ -180,24 +180,18 @@ def resep_create(request):
         # Memeriksa apakah form valid
         if form.is_valid():
             # Mengambil data dari form
+            list_bahans = request.POST.get('list_bahans')
+            print("list_bahans",list_bahans)
+            list_bahans = json.loads(list_bahans)
+            print("list_bahans",list_bahans)
+            
             nama_roti = request.POST.get('nama_roti')
             kode_barang = request.POST.get('kode_barang')
             harga_jual = request.POST.get('harga_jual')
-            hpp = request.POST.get('hpp')
-            
-            # Mengambil daftar id bahan dan jumlah satuan dari form
-            id_bahan_list = request.POST.getlist('id_bahan[]')
-            id_olahan_list = request.POST.getlist('id_olahan[]')
+            hpp = int("".join(request.POST.get('hpp').split(".")))
 
-            jumlah_satuan_bahan_list = request.POST.getlist('jumlah_satuan_bahan[]')
-            jumlah_satuan_olahan_list = request.POST.getlist('jumlah_satuan_olahan[]')
+            print("hpp",hpp)
 
-            print('id_bahan_list: ', id_bahan_list)
-            print(jumlah_satuan_bahan_list)
-
-            print('id_olahan_list: ', id_olahan_list)
-            print(jumlah_satuan_olahan_list)
-            
             # Simpan data resep ke dalam database
             barang_jadi = BarangJadi.objects.create(
                 nama=nama_roti,
@@ -206,46 +200,32 @@ def resep_create(request):
                 hpp=hpp,
             )
             
-            # Membuat daftar bahan yang akan disimpan dalam bentuk JSON
-            daftar_bahan = []
-            for i in range(len(id_bahan_list)):
-                # Mengambil objek bahan dari database berdasarkan id
-                bahan_id = id_bahan_list[i]
-                bahan_obj = MasterBahan.objects.get(id=bahan_id)
-                
-                # Membuat dictionary untuk setiap bahan
-                
-                """ Mekanisme Kurang bersih
-                bahan = {
-                    'id_bahan': bahan_id,
-                    'nama_bahan': bahan_obj.nama,
-                    'kode_bahan': bahan_obj.kode_bahan,
-                    'harga_jual': harga_jual,
-                    'jumlah_satuan': jumlah_satuan_list[i],
-                }
-                daftar_bahan.append(bahan)
-                """
-                # Simpan data resep ke dalam database
-                resep_create = ResepBahanJadi.objects.create(
-                    master_bahan = bahan_obj,
-                    barang_jadi  = barang_jadi, 
-                    jumlah_pemakaian = jumlah_satuan_bahan_list[i],
-                )
-                print("bahan",resep_create)
-
-            for i in range(len(id_olahan_list)):
-                # Mengambil objek bahan dari database berdasarkan id
-                bahan_id = id_olahan_list[i]
-                bahan_obj = BahanOlahan.objects.get(id=bahan_id)
-                
-
-                # Simpan data resep ke dalam database
-                resep_create = ResepOlahanJadi.objects.create(
-                    bahan_olahan = bahan_obj,
-                    barang_jadi  = barang_jadi,
-                    jumlah_pemakaian = jumlah_satuan_olahan_list[i],
-                )
-                print("olahan",resep_create)
+            print("list_bahans",list_bahans)
+            for bahan in list_bahans:
+                tipe = bahan['id'].split("_")[0]
+                kode_bahan = bahan['id'].split("#")[1]
+                print("tipe",tipe)
+                print("kode_bahan",kode_bahan)
+                if tipe == "bahan":
+                    mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
+                    rbo = ResepBahanJadi.objects.create(
+                        barang_jadi = barang_jadi,
+                        master_bahan = mb,
+                        jumlah_pemakaian = bahan['value']
+                    )
+                    rbo.save()
+                    print("rbo",rbo, rbo.barang_jadi,rbo.master_bahan,rbo.jumlah_pemakaian)
+                elif tipe == "olahan":
+                    id_olahan = kode_bahan.split("_")[1]
+                    print("id_olahan",id_olahan)
+                    bo = BahanOlahan.objects.get(id=id_olahan)
+                    roj = ResepOlahanJadi.objects.create(
+                        barang_jadi = barang_jadi,
+                        bahan_olahan = bo,
+                        jumlah_pemakaian = bahan['value']
+                    )
+                    roj.save()
+                    print("roj",roj, roj.barang_jadi,roj.bahan_olahan,roj.jumlah_pemakaian)
             # Redirect ke halaman detail resep
             return redirect('resep_detail', pk=barang_jadi.id)
 
