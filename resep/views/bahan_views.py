@@ -67,6 +67,24 @@ class BahanUpdate(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['bahan'] = MasterBahan.objects.get(id=self.kwargs.get('pk'))
         return context
+    
+    def form_valid(self, form):
+
+        harga = form.cleaned_data['harga']    
+        quantity = form.cleaned_data['qty_keseluruhan']    
+        quantity_terkecil = 1
+
+        if quantity != 0:
+            harga_kg = harga / quantity
+            harga_gram = harga_kg / quantity_terkecil
+        else:
+            harga_kg = 0
+            harga_gram = 0
+        
+        form.instance.harga_kg = harga_kg
+        form.instance.harga_gram = harga_gram
+        
+        return super(BahanUpdate, self).form_valid(form)
 
 class BahanDelete(LoginRequiredMixin, DeleteView):
     model = MasterBahan
