@@ -221,22 +221,51 @@ class ResepCreate(LoginRequiredMixin, CreateView):
 
 class ResepUpdateView(LoginRequiredMixin,  UpdateView):
     model = BarangJadi
-    form_class = BarangJadiForm
-    template_name = 'resep/resep_update.html'
-    success_url = '/'
-    context_object_name = 'barang_jadi'
+    form_class = ResepForm
+    template_name = 'resep/resep_form.html'
     login_url = 'login'
-    
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         barang_jadi = self.object
-        print('barang_jadi: ', barang_jadi)
-        
-        daftar_resep = ResepBahanJadi.objects.filter(barang_jadi=barang_jadi)
-        print('daftar_resep: ', daftar_resep)
-        context['daftar_resep'] = daftar_resep
+        context = super().get_context_data(**kwargs)
         context['bahans'] = MasterBahan.objects.filter(is_deleted=False)
+        context['olahans'] = BahanOlahan.objects.filter(is_deleted=False)
+        context['url_get_bahan'] = reverse('cek_bahan', kwargs={'id': 99999})
+        context['url_get_olahan'] = reverse('cek_bahan_olah', kwargs={'id': 99999})
+        
+        daftar_resep_bahan = ResepBahanJadi.objects.filter(barang_jadi=barang_jadi)
+        print('daftar_resep: ', daftar_resep_bahan)
+        context['daftar_resep_bahan'] = daftar_resep_bahan
+
+        bahan_used_list = []
+        for item in daftar_resep_bahan:
+            bahan_used_list.append({
+                'id': item.id,
+                'master_bahan_id': item.master_bahan.id,
+                'barang_jadi_id': item.barang_jadi.id,
+                'jumlah_pemakaian': item.jumlah_pemakaian,
+                'is_deleted': str(item.is_deleted).lower()  # Convert boolean to lowercase string
+            })
+        
+        context['bahan_used'] = bahan_used_list
+        
+
+        daftar_resep_olahan = ResepOlahanJadi.objects.filter(barang_jadi=barang_jadi)
+        print('daftar_resep_olahan: ', daftar_resep_olahan)
+        context['daftar_resep_olahan'] = daftar_resep_olahan
+
+        olahan_used_list = []
+        for item in daftar_resep_olahan:
+            olahan_used_list.append({
+                'id': item.id,
+                'bahan_olahan_id': item.bahan_olahan.id,
+                'barang_jadi_id': item.barang_jadi.id,
+                'jumlah_pemakaian': item.jumlah_pemakaian,
+                'is_deleted': str(item.is_deleted).lower()  # Convert boolean to lowercase string
+            })
+        
+        context['olahan_used'] = olahan_used_list
+        
         return context
 
     def form_valid(self, form):

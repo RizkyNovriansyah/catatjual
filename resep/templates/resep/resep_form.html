@@ -93,17 +93,19 @@
     });
 </script>
 <script>
+    initData()
     function get_data_bahan(id, is_thing) {
         let url_get_bahan 
         if (is_thing == "bahan")
             url_get_bahan = "{{url_get_bahan}}"
         else if (is_thing == "olahan")
             url_get_bahan = "{{url_get_olahan}}"
-        console.log
+        console.log("url_get_bahan",url_get_bahan)
         // replace 99999 with id
         url_get_bahan = url_get_bahan.replace('99999', id);
         var url = url_get_bahan;
         // Menggunakan fetch untuk mengambil data
+        console.log("url",url)
         return fetch(url)
         .then(function(response) {
             // Mengubah respons menjadi JSON
@@ -120,7 +122,6 @@
             var nama_bahan = bahan.nama;
             // Mengembalikan objek yang berisi data relevan
             console.log(url)
-            console.log
             return {
                 nama_bahan: nama_bahan,
                 kode_bahan: bahan.kode_bahan,
@@ -162,6 +163,34 @@
         $('#hpp').val(convertToTitikFormat(hpp_sum.toString()));
     }
     
+    function add_to_list(bahanData,value,is_thing, jumlah_pemakaian){
+        var html = `<div class="card card-warning" id='data_${is_thing}${value}'>
+            <div class="card-header">
+                <h4>${bahanData.nama_bahan || ''}</h4>
+                <div class="card-header-action">
+                    <div onclick='remove_bahan("data_${is_thing}${value}")' class='btn btn-danger hapus-bahan' id='hapus-${is_thing}-${value}'>x</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush" >
+                    <li class="list-group-item" style="padding:0">Nama Bahan : ${bahanData.nama_bahan || ''} </li>
+                    <li class="list-group-item" style="padding:0">Kode Bahan : ${bahanData.kode_bahan || ''} </li>
+                    <li class="list-group-item" style="padding:0">Satuan : <b>${bahanData.satuan || ''}</b></li>
+                    <li class="list-group-item" style="padding:0">HPP Satuan : <b>${bahanData.harga_gram || ''}</b></li>
+                    <li class="list-group-item" style="padding:0">Harga Jual: <span id='hpp_satuan-${bahanData.kode_bahan}'></span></li>
+                    <li class="list-group-item" style="padding:0">Harga Jumlah pakai : 
+                        <input id='${is_thing}_added#${bahanData.kode_bahan}' onkeyup='cekhpp()' value="${jumlah_pemakaian}" class='form-control bahan_added' data-hargapersatuan='${bahanData.harga_persatuan}' name='jumlah_satuan_${is_thing}[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>
+                        <input class='form-control' style='visibility: hidden' name='id_${is_thing}[]' type='number' value='${value}'>
+                    </li>
+                    <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
+                </ul>
+            </div>
+        </div>`;
+        
+        // Sisipkan HTML ke elemen yang ditentukan
+        $("#data_card").append(html);
+        cekhpp();
+    }
     
     function add_bahan(code) {
         let is_thing;
@@ -182,31 +211,7 @@
         // Panggil get_data_bahan dan tangani Promise yang dikembalikan
         get_data_bahan(value, is_thing)
         .then(function(bahanData) {
-            var html = `<div class="card card-warning" id='data_${is_thing}${value}'>
-                <div class="card-header">
-                    <h4>${bahanData.nama_bahan || ''}</h4>
-                    <div class="card-header-action">
-                        <div onclick='remove_bahan("data_${is_thing}${value}")' class='btn btn-danger hapus-bahan' id='hapus-${is_thing}-${value}'>x</div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush" >
-                        <li class="list-group-item" style="padding:0">Nama Bahan : ${bahanData.nama_bahan || ''} </li>
-                        <li class="list-group-item" style="padding:0">Kode Bahan : ${bahanData.kode_bahan || ''} </li>
-                        <li class="list-group-item" style="padding:0">Satuan : <b>${bahanData.satuan || ''}</b></li>
-                        <li class="list-group-item" style="padding:0">HPP Satuan : <b>${bahanData.harga_gram || ''}</b></li>
-                        <li class="list-group-item" style="padding:0">Harga Jual: <span id='hpp_satuan-${bahanData.kode_bahan}'></span></li>
-                        <li class="list-group-item" style="padding:0">Harga Jumlah pakai : 
-                            <input id='${is_thing}_added#${bahanData.kode_bahan}' onkeyup='cekhpp()'  class='form-control bahan_added' data-hargapersatuan='${bahanData.harga_persatuan}' name='jumlah_satuan_${is_thing}[]' type='number' placeholder='Masukkan Jumlah Satuan Pakai'>
-                            <input class='form-control' style='visibility: hidden' name='id_${is_thing}[]' type='number' value='${value}'>
-                        </li>
-                        <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
-                    </ul>
-                </div>
-            </div>`;
-            
-            // Sisipkan HTML ke elemen yang ditentukan
-            $("#data_card").append(html);
+            add_to_list(bahanData,value,is_thing,0)
         });
     }
     
@@ -292,6 +297,38 @@
         input.value = JSON.stringify(list_bahans);
         form.appendChild(input);
         form.submit();
+    }
+
+    function initData(){
+        console.log("INIT")
+        let bahan_used = {{bahan_used | safe}};
+        let olahan_used = {{olahan_used | safe}};
+        console.log(bahan_used)
+        // loop bahan bahan_used
+        bahan_used.forEach(function(bahan) {
+            // get the id of the bahan
+            var id = bahan.master_bahan_id;
+            console.log("cek id",id)
+            var value = "update_"+bahan.id;
+            get_data_bahan(id,"bahan")
+            .then(function(bahanData) {
+                console.log(bahanData);
+                add_to_list(bahanData,value,"bahan",bahan.jumlah_pemakaian)
+                
+            });
+        });
+
+        olahan_used.forEach(function(olahan) {
+            // get the id of the bahan
+            var id = olahan.bahan_olahan_id;
+            console.log("cek id",id)
+            var value = "update_"+olahan.id;
+            get_data_bahan(id,"olahan")
+            .then(function(bahanData) {
+                console.log(bahanData);
+                add_to_list(bahanData,value,"olahan",olahan.jumlah_pemakaian)
+            });
+        });
     }
             
 </script>
