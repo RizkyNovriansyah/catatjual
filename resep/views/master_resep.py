@@ -57,6 +57,7 @@ class MasterResepDetail(DetailView):
         context['bahans'] = bahans
         context['selisih'] = selisih
         return context
+
 def cek_bahan(request, id):
     bahan = MasterBahan.objects.get(id=id)
     print('bahan: ', bahan)
@@ -75,70 +76,51 @@ def cek_bahan(request, id):
         "updated_date": bahan.updated_date
     }
     return JsonResponse(result)
-def master_resep_create(request):
-    bahans = MasterBahan.objects.filter(is_deleted=False)
-    form = ResepForm(request.POST or None)
 
-    if request.method == 'POST':
+class MasterResepCreate(CreateView):
+    model = BarangJadi
+    form_class = BarangJadiForm  # Ganti dengan form class yang sesuai untuk BarangJadi
+    template_name = 'masterResep/master_resep_create.html'  # Sesuaikan dengan template Anda
+    success_url = reverse_lazy('master_resep_list')  # URL redirect setelah sukses membuat
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
         
-        if form.is_valid():
-            
-            nama_roti = request.POST.get('nama_roti')
-            kode_barang = request.POST.get('kode_barang')
-            harga_jual = request.POST.get('harga_jual')
-            hpp = request.POST.get('hpp')
-            
-            id_bahan_list = request.POST.getlist('id_bahan[]')
-            jumlah_satuan_list = request.POST.getlist('jumlah_satuan[]')
-            master_bahan = True
-            print('master_bahan: ', master_bahan)
-            barang_jadi = BarangJadi.objects.create(
-                nama=nama_roti,
-                kode_barang=kode_barang,
-                harga_jual=harga_jual,
-                hpp=hpp,
-                master_roti = master_bahan,
-            )
-            barang_jadi_check = barang_jadi.master_roti
-            print('barang_jadi_check: ', barang_jadi_check)
-            
-            daftar_bahan = []
-            for i in range(len(id_bahan_list)):
-                bahan_id = id_bahan_list[i]
-                bahan_obj = MasterBahan.objects.get(id=bahan_id)
-                
-                """ Mekanisme Kotor
-                bahan = {
-                    'id_bahan': bahan_id,
-                    'nama_bahan': bahan_obj.nama,
-                    'kode_bahan': bahan_obj.kode_bahan,
-                    'harga_jual': harga_jual,
-                    'jumlah_satuan': jumlah_satuan_list[i],                    
-                }
-                daftar_bahan.append(bahan)
-                """
-                
-                resep_create = ResepBahanJadi.objects.create(
-                    master_bahan = bahan_obj,
-                    barang_jadi  = barang_jadi, 
-                    jumlah_pemakaian = jumlah_satuan_list[i],
-                )
-            
-            """ Mekanisme Kotor   
-            daftar_bahan_json = json.dumps(daftar_bahan)
-            barang_jadi.daftar_bahan = daftar_bahan_json
-            barang_jadi.save()
-            """
-          
-            return redirect('resep_detail', pk=barang_jadi.id)
+        # Ambil data dari form
+        nama_roti = form.cleaned_data.get('nama_roti')
+        kode_barang = form.cleaned_data.get('kode_barang')
+        harga_jual = form.cleaned_data.get('harga_jual')
+        hpp = form.cleaned_data.get('hpp')
+        
+        # Simpan ke instance BarangJadi
+        self.object.nama = nama_roti
+        self.object.kode_barang = kode_barang
+        self.object.harga_jual = harga_jual
+        self.object.hpp = hpp
+        self.object.save()
 
-    context = {'bahans': bahans, 'form': form}
-    return render(request, 'masterResep/master_resep_form.html', locals())
+        # Proses bahan-bahan terkait
+        id_bahan_list = self.request.POST.getlist('id_bahan[]')
+        jumlah_satuan_list = self.request.POST.getlist('jumlah_satuan[]')
+
+        for i in range(len(id_bahan_list)):
+            bahan_id = id_bahan_list[i]
+            bahan_obj = MasterBahan.objects.get(id=bahan_id)
+            jumlah_pemakaian = jumlah_satuan_list[i]
+            
+            # Simpan ke instance ResepBahanJadi
+            ResepBahanJadi.objects.create(
+                master_bahan=bahan_obj,
+                barang_jadi=self.object,
+                jumlah_pemakaian=jumlah_pemakaian,
+            )
+
+        return super().form_valid(form)
 
 class MasterResepUpdateView(UpdateView):
     model = BarangJadi
     form_class = BarangJadiForm
-    template_name = 'masterResep/master_resep_update.html'
+    template_name = 'masterResep/master_resep_create.html'
     success_url = '/'
     context_object_name = 'barang_jadi'
     

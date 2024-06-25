@@ -13,7 +13,7 @@ urlpatterns = [
     path('resep/delete/<int:pk>/', ResepDelete.as_view(), name='resep_delete'),
 
     path('master_resep/', MasterResepList.as_view(), name='master_resep_list'),
-    path('master_resep/create/', master_resep_create, name='master_resep_create'),
+    path('master_resep/create/', MasterResepCreate.as_view(), name='master_resep_create'),
     path('master_resep/detail/<int:pk>/', MasterResepDetail.as_view(), name='master_resep_detail'),
     path('master_resep/update/<int:pk>/', MasterResepUpdateView.as_view(), name='master_resep_update'),
     path('master_resep/delete/<int:pk>/', MasterResepDelete.as_view(), name='master_resep_delete'),
