@@ -1,11 +1,20 @@
 # views.py
-from ..models import ResepBahanJadi, MasterBahan, ResepOlahanJadi, BahanOlahan
+from ..models import ResepBahanJadi, MasterBahan, ResepOlahanJadi, BahanOlahan, ResepBahanOlahan
 from django.views.generic.base import TemplateView
 
 class ErrorPageView(TemplateView):
     template_name = 'error_page.html'  # Ganti 'error_page.html' dengan nama template halaman error Anda
 
-
+def add_resep_to_olah(olahan,list_bahans):
+    for bahan in list_bahans:
+        kode_bahan = bahan['id'].split("#")[1]
+        mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
+        rbo = ResepBahanOlahan.objects.create(
+            bahan_olahan = olahan,
+            master_bahan = mb,
+            jumlah_pemakaian = bahan['value']
+        )
+        rbo.save()
 
 def add_resep_to_jadi(barang_jadi, list_bahans):
     for bahan in list_bahans:

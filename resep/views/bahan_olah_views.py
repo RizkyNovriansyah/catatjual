@@ -1,16 +1,15 @@
 
 import json
 
-from django.views import View  
-from ..models import ResepBahanJadi, MasterBahan, BarangJadi,BahanOlahan,ResepOlahanJadi, ResepBahanOlahan
-from ..forms import BarangJadiForm, MasterBahanForm, ResepForm, BahanOlahanForm
+from ..models import MasterBahan, BahanOlahan, ResepBahanOlahan
+from ..forms import BahanOlahanForm
+from .utils_views import add_resep_to_olah
 
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
@@ -26,17 +25,8 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
         form.instance.save()
         list_bahans = self.request.POST.get('list_bahans')
         list_bahans = json.loads(list_bahans)
-        print("list_bahans",list_bahans)
-        for bahan in list_bahans:
-            kode_bahan = bahan['id'].split("#")[1]
-            mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
-            rbo = ResepBahanOlahan.objects.create(
-                bahan_olahan = form.instance,
-                master_bahan = mb,
-                jumlah_pemakaian = bahan['value']
-            )
-            rbo.save()
-            print("rbo",rbo, rbo.bahan_olahan,rbo.master_bahan,rbo.jumlah_pemakaian)
+        
+        add_resep_to_olah(form.instance, list_bahans)
 
         harga = form.cleaned_data['harga_gram']    
         harga_kg = 0
@@ -45,8 +35,7 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
         form.instance.nama = nama
         form.instance.harga_kg = harga_kg
         form.instance.harga_gram = harga
-        
-        print("form.instance",form.instance)
+
         return super(BahanOlahCreate, self).form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -55,7 +44,6 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
         url_get_bahan = reverse('cek_bahan', kwargs={'id': 99999})
         context['url_get_bahan'] = url_get_bahan
         context['bahan_used'] = []
-        print("url_get_bahan",url_get_bahan)
         return context
 
 class BahanOlahList(LoginRequiredMixin, ListView):
@@ -83,8 +71,6 @@ class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
         url_get_bahan = reverse('cek_bahan', kwargs={'id': 99999})
         context['url_get_bahan'] = url_get_bahan
         bahan_used = ResepBahanOlahan.objects.filter(bahan_olahan=self.object)
-        print("bahan_used",bahan_used)
-
         bahan_used_list = []
         for item in bahan_used:
             bahan_used_list.append({
@@ -105,18 +91,9 @@ class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
         # list_bahans
         list_bahans = self.request.POST.get('list_bahans')
         list_bahans = json.loads(list_bahans)
-        print("list_bahans",list_bahans)
-        for bahan in list_bahans:
-            kode_bahan = bahan['id'].split("#")[1]
-            mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
-            rbo = ResepBahanOlahan.objects.create(
-                bahan_olahan = self.object,
-                master_bahan = mb,
-                jumlah_pemakaian = bahan['value']
-            )
-            rbo.save()
-            print("rbo",rbo, rbo.bahan_olahan,rbo.master_bahan,rbo.jumlah_pemakaian)
-
+        
+        add_resep_to_olah(self.object, list_bahans)
+        
         harga = form.cleaned_data['harga_gram']    
         harga_kg = 0
         nama = form.cleaned_data['nama']
