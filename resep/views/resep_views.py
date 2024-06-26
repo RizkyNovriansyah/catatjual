@@ -95,70 +95,6 @@ class ResepDetail(LoginRequiredMixin, DetailView):
         context['selisih'] = selisih
         return context
 
-@login_required(login_url='login')
-# Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
-def cek_bahan(request, id):
-    # Mengambil objek bahan dari database berdasarkan id
-    bahan = MasterBahan.objects.get(id=id)
-    print('bahan: ', bahan)
-    print("nama bahan",bahan.nama)
-    # Menyiapkan data bahan dalam format JSON
-    result = {
-        "kode_bahan": bahan.kode_bahan,
-        "nama": bahan.nama,
-        "total": bahan.total,
-        "qty_keseluruhan": bahan.qty_keseluruhan,
-        "qty_terkecil": bahan.qty_terkecil,
-        "harga": bahan.harga,
-        "harga_jual": bahan.harga_jual,
-        "harga_kg": bahan.harga_kg,
-        "harga_gram": bahan.harga_gram,
-        "created_date": bahan.created_date,
-        "updated_date": bahan.updated_date
-    }
-    # Mengirimkan response dalam format JSON
-    return JsonResponse(result)
-
-
-@login_required(login_url='login')
-# Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
-def cek_bahan_olah(request, id):
-    # Mengambil objek bahan dari database berdasarkan id
-    bahan = BahanOlahan.objects.get(id=id)
-    # Menyiapkan data bahan dalam format JSON
-    result = {
-        "kode_bahan": "olahan_"+str(bahan.id),
-        "nama": bahan.nama,
-        "total": bahan.total,
-        "qty_keseluruhan": bahan.qty_keseluruhan,
-        "qty_terkecil": bahan.qty_terkecil,
-        "harga": bahan.harga,
-        "harga_kg": bahan.harga_kg,
-        "harga_gram": bahan.harga_gram,
-        "created_date": bahan.created_date,
-        "updated_date": bahan.updated_date
-    }
-    # Mengirimkan response dalam format JSON
-    return JsonResponse(result)
-
-@login_required(login_url='login')
-def cek_master(request, id):
-    # Mengambil objek bahan dari database berdasarkan id
-    bahan = BarangJadi.objects.get(id=id)
-    print('bahan: ', bahan)
-    # Menyiapkan data bahan dalam format JSON
-    result = {
-        'nama' : bahan.nama,
-        'kode_master' : bahan.kode_barang, # Perbaiki ini menjadi kode_barang
-        'harga_jual' : bahan.harga_jual,
-        'daftar_bahan' : bahan.daftar_bahan,
-        'hpp' : bahan.hpp,
-        'is_deleted' : bahan.is_deleted,
-        'master_roti' : bahan.master_roti,
-    }
-    # Mengirimkan response dalam format JSON
-    return JsonResponse(result)
-
 # Fungsi untuk membuat resep baru
 class ResepCreate(LoginRequiredMixin, CreateView):
     model = BarangJadi
@@ -185,6 +121,7 @@ class ResepCreate(LoginRequiredMixin, CreateView):
         context['url_get_olahan'] = reverse('cek_bahan_olah', kwargs={'id': 99999})
         context['olahan_used'] = []
         context['bahan_used'] = []
+
         return context
 
 
@@ -204,8 +141,6 @@ class ResepUpdateView(LoginRequiredMixin,  UpdateView):
         context['olahans'] = BahanOlahan.objects.filter(is_deleted=False)
         context['url_get_bahan'] = reverse('cek_bahan', kwargs={'id': 99999})
         context['url_get_olahan'] = reverse('cek_bahan_olah', kwargs={'id': 99999})
-        
-        
         context['bahan_used'] = get_bahan_used(barang_jadi)
         context['olahan_used'] = get_olahan_used(barang_jadi)
         

@@ -12,6 +12,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 #Bahan
 class BahanCreate(LoginRequiredMixin, CreateView):
@@ -108,4 +109,28 @@ class BahanDetail(LoginRequiredMixin, DetailView):
     template_name = 'bahan/masterbahan_detail.html'
     context_object_name = 'bahan'
     login_url = 'login'
-    
+
+
+@login_required(login_url='login')
+# Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
+def cek_bahan(request, id):
+    # Mengambil objek bahan dari database berdasarkan id
+    bahan = MasterBahan.objects.get(id=id)
+    print('bahan: ', bahan)
+    print("nama bahan",bahan.nama)
+    # Menyiapkan data bahan dalam format JSON
+    result = {
+        "kode_bahan": bahan.kode_bahan,
+        "nama": bahan.nama,
+        "total": bahan.total,
+        "qty_keseluruhan": bahan.qty_keseluruhan,
+        "qty_terkecil": bahan.qty_terkecil,
+        "harga": bahan.harga,
+        "harga_jual": bahan.harga_jual,
+        "harga_kg": bahan.harga_kg,
+        "harga_gram": bahan.harga_gram,
+        "created_date": bahan.created_date,
+        "updated_date": bahan.updated_date
+    }
+    # Mengirimkan response dalam format JSON
+    return JsonResponse(result)
