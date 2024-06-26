@@ -1,18 +1,16 @@
 # views.py
 import json
 
-from django.db.models.query import QuerySet
-from django.views import View  
 from ..models import ResepBahanJadi, MasterBahan, BarangJadi,BahanOlahan,ResepOlahanJadi
-from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
+from ..forms import BarangJadiForm
+from .utils_views import add_resep_to_jadi, get_bahan_used, get_olahan_used
 # JsonResponse untuk merespons data dalam format JSON
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 # from import reserve 
 from django.urls import reverse
@@ -32,8 +30,6 @@ class ResepList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-        
-        
             
 # Kelas untuk menghapus data resep.
 class ResepDelete(LoginRequiredMixin, DeleteView):
@@ -176,34 +172,8 @@ class ResepCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         list_bahans = json.loads(self.request.POST.get('list_bahans'))
-        nama_roti = form.cleaned_data.get('nama')
-        kode_barang = form.cleaned_data.get('kode_barang')
-        harga_jual = form.cleaned_data.get('harga_jual')
-        hpp = form.cleaned_data.get('hpp')
         form.instance.save()
-
-        barang_jadi = form.instance
-
-        for bahan in list_bahans:
-            tipe = bahan['id'].split("_")[0]
-            kode_bahan = bahan['id'].split("#")[1]
-            if tipe == "bahan":
-                mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
-                rbo = ResepBahanJadi.objects.create(
-                    barang_jadi=barang_jadi,
-                    master_bahan=mb,
-                    jumlah_pemakaian=bahan['value']
-                )
-                rbo.save()
-            elif tipe == "olahan":
-                id_olahan = kode_bahan.split("_")[1]
-                bo = BahanOlahan.objects.get(id=id_olahan)
-                roj = ResepOlahanJadi.objects.create(
-                    barang_jadi=barang_jadi,
-                    bahan_olahan=bo,
-                    jumlah_pemakaian=bahan['value']
-                )
-                roj.save()
+        add_resep_to_jadi(form.instance, list_bahans)
 
         return super(ResepCreate,self).form_valid(form)
 
@@ -224,6 +194,9 @@ class ResepUpdateView(LoginRequiredMixin,  UpdateView):
     template_name = 'resep/resep_form.html'
     login_url = 'login'
 
+    def get_success_url(self):
+        return reverse_lazy('resep_detail', kwargs={'pk': self.object.id})
+    
     def get_context_data(self, **kwargs):
         barang_jadi = self.object
         context = super().get_context_data(**kwargs)
@@ -232,75 +205,18 @@ class ResepUpdateView(LoginRequiredMixin,  UpdateView):
         context['url_get_bahan'] = reverse('cek_bahan', kwargs={'id': 99999})
         context['url_get_olahan'] = reverse('cek_bahan_olah', kwargs={'id': 99999})
         
-        daftar_resep_bahan = ResepBahanJadi.objects.filter(barang_jadi=barang_jadi)
-        print('daftar_resep: ', daftar_resep_bahan)
-        context['daftar_resep_bahan'] = daftar_resep_bahan
-
-        bahan_used_list = []
-        for item in daftar_resep_bahan:
-            bahan_used_list.append({
-                'id': item.id,
-                'master_bahan_id': item.master_bahan.id,
-                'barang_jadi_id': item.barang_jadi.id,
-                'jumlah_pemakaian': item.jumlah_pemakaian,
-                'is_deleted': str(item.is_deleted).lower()  # Convert boolean to lowercase string
-            })
         
-        context['bahan_used'] = bahan_used_list
-        
-
-        daftar_resep_olahan = ResepOlahanJadi.objects.filter(barang_jadi=barang_jadi)
-        print('daftar_resep_olahan: ', daftar_resep_olahan)
-        context['daftar_resep_olahan'] = daftar_resep_olahan
-
-        olahan_used_list = []
-        for item in daftar_resep_olahan:
-            olahan_used_list.append({
-                'id': item.id,
-                'bahan_olahan_id': item.bahan_olahan.id,
-                'barang_jadi_id': item.barang_jadi.id,
-                'jumlah_pemakaian': item.jumlah_pemakaian,
-                'is_deleted': str(item.is_deleted).lower()  # Convert boolean to lowercase string
-            })
-        
-        context['olahan_used'] = olahan_used_list
+        context['bahan_used'] = get_bahan_used(barang_jadi)
+        context['olahan_used'] = get_olahan_used(barang_jadi)
         
         return context
 
     def form_valid(self, form):
-        ResepBahanJadi.objects.filter(barang_jadi=self.object).delete()
-        ResepOlahanJadi.objects.filter(barang_jadi=self.object).delete()
         self.object = form.save(commit=False)
 
         list_bahans = json.loads(self.request.POST.get('list_bahans'))
-        nama_roti = self.request.POST.get('nama_roti')
-        kode_barang = form.cleaned_data.get('kode_barang')
-        harga_jual = form.cleaned_data.get('harga_jual')
-        hpp = form.cleaned_data.get('hpp')
-        
-        barang_jadi = form.instance
+        ResepBahanJadi.objects.filter(barang_jadi=self.object).delete()
+        ResepOlahanJadi.objects.filter(barang_jadi=self.object).delete()
+        add_resep_to_jadi(form.instance, list_bahans)
 
-        for bahan in list_bahans:
-            tipe = bahan['id'].split("_")[0]
-            kode_bahan = bahan['id'].split("#")[1]
-            if tipe == "bahan":
-                mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
-                rbo = ResepBahanJadi.objects.create(
-                    barang_jadi=barang_jadi,
-                    master_bahan=mb,
-                    jumlah_pemakaian=bahan['value']
-                )
-                rbo.save()
-            elif tipe == "olahan":
-                id_olahan = kode_bahan.split("_")[1]
-                bo = BahanOlahan.objects.get(id=id_olahan)
-                roj = ResepOlahanJadi.objects.create(
-                    barang_jadi=barang_jadi,
-                    bahan_olahan=bo,
-                    jumlah_pemakaian=bahan['value']
-                )
-                roj.save()
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('resep_detail', kwargs={'pk': self.object.id})
