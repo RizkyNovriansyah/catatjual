@@ -37,7 +37,7 @@ class BarangJadiForm(forms.ModelForm):
 
             self.fields['nama'].widget.attrs.update({'class':'form-control','placeholder':"contoh : Roti"})
             self.fields['kode_barang'].widget.attrs.update({'class':'form-control','placeholder':"contoh : RT001"})
-            self.fields['hpp'].widget.attrs.update({'class':'form-control','placeholder':"contoh : 5000", "id":"hpp"})
+            self.fields['hpp'].widget.attrs.update({'class':'form-control d-none','placeholder':"contoh : 5000", "readonly":"readonly"})
             self.fields['harga_jual'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah','placeholder':"contoh : 5000","data-nama-bantuan":"harga-bantuan-rupiah"})
 
     def save(self, commit=True):

@@ -43,6 +43,7 @@
                             
                             <div class="form-group">
                                 <label for="id_kode_bahan">HPP</label>
+                                <input id="hpp" class="form-control" name="hpp" type="text" placeholder="HPP" readonly>
                                 {{ form.hpp }}
                             </div>
                             
@@ -162,6 +163,8 @@
     
         // Display the total HPP
         $('#hpp').val(convertToTitikFormat(hpp_sum.toString()));
+        $('#id_hpp').val(hpp_sum.toString());
+
     }
     
     function add_to_list(bahanData,value,is_thing, jumlah_pemakaian){

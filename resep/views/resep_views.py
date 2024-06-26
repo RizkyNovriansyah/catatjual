@@ -180,8 +180,6 @@ class ResepCreate(LoginRequiredMixin, CreateView):
         kode_barang = form.cleaned_data.get('kode_barang')
         harga_jual = form.cleaned_data.get('harga_jual')
         hpp = form.cleaned_data.get('hpp')
-        hpp = int("".join(self.request.POST.get('hpp').split(".")))
-        form.instance.hpp = hpp
         form.instance.save()
 
         barang_jadi = form.instance
@@ -270,33 +268,38 @@ class ResepUpdateView(LoginRequiredMixin,  UpdateView):
         return context
 
     def form_valid(self, form):
+        ResepBahanJadi.objects.filter(barang_jadi=self.object).delete()
+        ResepOlahanJadi.objects.filter(barang_jadi=self.object).delete()
         self.object = form.save(commit=False)
+
+        list_bahans = json.loads(self.request.POST.get('list_bahans'))
         nama_roti = self.request.POST.get('nama_roti')
         kode_barang = form.cleaned_data.get('kode_barang')
         harga_jual = form.cleaned_data.get('harga_jual')
         hpp = form.cleaned_data.get('hpp')
         
-        # Update data barang jadi
-        self.object.nama = nama_roti
-        self.object.kode_barang = kode_barang
-        self.object.harga_jual = harga_jual
-        self.object.hpp = hpp
-        self.object.save()
+        barang_jadi = form.instance
 
-        # Delete existing resep
-        ResepBahanJadi.objects.filter(barang_jadi=self.object).delete()
-
-        # Simpan data resep ke dalam database
-        for i in range(len(self.request.POST.getlist('id_bahan[]'))):
-            bahan_id = self.request.POST.getlist('id_bahan[]')[i]
-            bahan_obj = MasterBahan.objects.get(id=bahan_id)
-            jumlah_pemakaian = self.request.POST.getlist('jumlah_satuan[]')[i]
-            ResepBahanJadi.objects.create(
-                master_bahan=bahan_obj,
-                barang_jadi=self.object,
-                jumlah_pemakaian=jumlah_pemakaian,
-            )
-
+        for bahan in list_bahans:
+            tipe = bahan['id'].split("_")[0]
+            kode_bahan = bahan['id'].split("#")[1]
+            if tipe == "bahan":
+                mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
+                rbo = ResepBahanJadi.objects.create(
+                    barang_jadi=barang_jadi,
+                    master_bahan=mb,
+                    jumlah_pemakaian=bahan['value']
+                )
+                rbo.save()
+            elif tipe == "olahan":
+                id_olahan = kode_bahan.split("_")[1]
+                bo = BahanOlahan.objects.get(id=id_olahan)
+                roj = ResepOlahanJadi.objects.create(
+                    barang_jadi=barang_jadi,
+                    bahan_olahan=bo,
+                    jumlah_pemakaian=bahan['value']
+                )
+                roj.save()
         return super().form_valid(form)
 
     def get_success_url(self):

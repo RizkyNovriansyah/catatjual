@@ -22,7 +22,20 @@ class BahanOlahCreate(LoginRequiredMixin, CreateView):
     login_url = 'login'
     
     def form_valid(self, form):
-        list_bahans = self.request.POST.getlist('list_bahans')
+        form.instance.save()
+        list_bahans = self.request.POST.get('list_bahans')
+        list_bahans = json.loads(list_bahans)
+        print("list_bahans",list_bahans)
+        for bahan in list_bahans:
+            kode_bahan = bahan['id'].split("#")[1]
+            mb = MasterBahan.objects.get(kode_bahan=kode_bahan)
+            rbo = ResepBahanOlahan.objects.create(
+                bahan_olahan = form.instance,
+                master_bahan = mb,
+                jumlah_pemakaian = bahan['value']
+            )
+            rbo.save()
+            print("rbo",rbo, rbo.bahan_olahan,rbo.master_bahan,rbo.jumlah_pemakaian)
 
         harga = form.cleaned_data['harga_gram']    
         harga_kg = 0
@@ -63,11 +76,13 @@ class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
     login_url = 'login'
 
     def get_context_data(self, **kwargs):
+        print("BAHAN OLAH UPDATE")
         context = super().get_context_data(**kwargs)
         context['bahans'] = MasterBahan.objects.all()
         url_get_bahan = reverse('cek_bahan', kwargs={'id': 99999})
         context['url_get_bahan'] = url_get_bahan
         bahan_used = ResepBahanOlahan.objects.filter(bahan_olahan=self.object)
+        print("bahan_used",bahan_used)
 
         bahan_used_list = []
         for item in bahan_used:
