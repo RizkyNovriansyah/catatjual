@@ -38,3 +38,17 @@
 
 10. Update requirements.txt
     pip freeze > requirements.txt 
+
+# Deploy
+0. persiapan
+ - sudo apt update
+
+1. persiapan venv 
+ - apt-get install python3-venv  nginx 
+ - mkdir venv
+ - python3 -m venv venv
+2. installing nginx
+ - sudo apt install nginx
+ - sudo systemctl status nginx
+ - sudo systemctl enable nginx
+https://www.rumahweb.com/journal/cara-install-django-python-di-vps-ubuntu/
