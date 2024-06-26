@@ -170,3 +170,8 @@ LOGOUT_REDIRECT_URL = 'login'
 
 LOGIN_URL = 'login/'
 GLOBAL_PASSWORD = 'password_catat_dan_jual_123'
+try:
+    # local_settings.py
+    from .local_settings import *
+except ImportError:
+    pass
