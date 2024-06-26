@@ -16,10 +16,17 @@
             
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <form method="post" class="form">
-                                {% csrf_token %}
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h4></h4>
+                                <div class="card-header-action">
+                                    <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
+                                    <button onclick="sumbit_form()" class="btn btn-primary">Simpan Olah</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
                                 <div class="form-group">
                                     <label for="id_nama">Nama</label>
                                     {{ form.nama }}
@@ -41,12 +48,9 @@
                                     </select>
                                     <div onclick="add_bahan()" style="margin-top: 25px" class='btn btn-info'>+</div>
                                 </div>
-                                    
-                                <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
-                                <button onclick="sumbit_form()" class="btn btn-primary">Simpan</button>
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="col-md-6">
                     {% csrf_token %}
