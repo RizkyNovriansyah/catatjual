@@ -134,9 +134,9 @@ class BahanOlahanForm(forms.ModelForm):
 
         # add css in nama
         self.fields['nama'].widget.attrs.update({'class':'form-control','placeholder':"contoh : Gula"})
-        self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : 10000"})
+        self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : 10000", "id":"qty_keseluruhan","name":"qty_keseluruhan","onkeyup":"cekhpp()"})
         self.fields['qty_terkecil'].widget.attrs.update({'class':'form-control','placeholder':"contoh : 100"})
-        self.fields['harga_kg'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah','placeholder':"contoh : 500000","data-nama-bantuan":"harga-bantuan-rupiah"})
+        self.fields['harga_kg'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah d-none','placeholder':"contoh : 500000","data-nama-bantuan":"harga-bantuan-rupiah","name":"harga_kg_input", "id":"harga_kg_input"})
         self.fields['harga_gram'].widget.attrs.update({'class':'form-control check-harga d-none','placeholder':"contoh : ", "name":"hpp_input", "id":"hpp_input"})
 
 
