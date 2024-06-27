@@ -93,9 +93,16 @@
     
 
     function convertToTitikFormat(value) {
+        value = Number(value)
         // Your logic to convert the value to the desired format
         // For example, converting to a comma-separated format
-        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        let [integerPart, decimalPart] = value.toFixed(2).toString().split('.');
+
+        // Insert dots (.) as thousand separators for the integer part
+        integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        // Join the integer and decimal parts with comma (,) as the decimal separator
+        return integerPart + ',' + decimalPart;
     }
 
     function cek_rupiah(this_el){

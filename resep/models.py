@@ -7,7 +7,7 @@ class BarangJadi(models.Model):
     kode_barang = models.CharField(max_length=100, blank=True, null=True)
     harga_jual = models.IntegerField(blank=True, null=True)
     daftar_bahan = models.JSONField(blank=True, null=True)
-    hpp = models.IntegerField(blank=True, null=True, default=0)
+    hpp = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
     is_deleted = models.BooleanField(default=False)
     history = HistoricalRecords()
     
@@ -23,7 +23,7 @@ class MasterBahan(models.Model):
     harga = models.IntegerField(blank=True, null=True, default=0)
     harga_jual = models.IntegerField(blank=True, null=True, default=0)
     harga_kg = models.IntegerField(blank=True, null=True, default=0)
-    harga_gram = models.IntegerField(blank=True, null=True, default=0)
+    harga_gram = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2) # hpp
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
@@ -55,8 +55,8 @@ class BahanOlahan(models.Model):
     qty_keseluruhan = models.IntegerField(blank=True, null=True, default=0)
     qty_terkecil = models.IntegerField(blank=True, null=True, default=0)
     harga_kg = models.IntegerField(blank=True, null=True, default=0)
-    harga_gram = models.IntegerField(blank=True, null=True, default=0)
-    harga = models.IntegerField(blank=True, null=True, default=0)
+    harga_gram = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
+    harga = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
     total = models.CharField(max_length=100, blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

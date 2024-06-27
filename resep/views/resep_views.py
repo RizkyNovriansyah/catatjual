@@ -83,6 +83,9 @@ class ResepDetail(LoginRequiredMixin, DetailView):
         for olahan in resepOlahan:
             nama = olahan.bahan_olahan.nama
             jumlah = olahan.jumlah_pemakaian
+            print("--")
+            print(olahan.bahan_olahan)
+            print(olahan.bahan_olahan.harga_gram)
             total_hpp_single_bahan = olahan.bahan_olahan.harga_gram * jumlah
             olahans.append({'nama' : nama, 
                            'jumlah' : jumlah,

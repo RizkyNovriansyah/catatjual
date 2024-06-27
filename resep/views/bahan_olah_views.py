@@ -93,15 +93,6 @@ class BahanOlahUpdate(LoginRequiredMixin, UpdateView):
         list_bahans = json.loads(list_bahans)
         
         add_resep_to_olah(self.object, list_bahans)
-        
-        harga = form.cleaned_data['harga_gram']    
-        harga_kg = 0
-        nama = form.cleaned_data['nama']
-        
-        form.instance.nama = nama
-        form.instance.harga_kg = harga_kg
-        form.instance.harga_gram = harga
-        
         return super(BahanOlahUpdate, self).form_valid(form)
     
 

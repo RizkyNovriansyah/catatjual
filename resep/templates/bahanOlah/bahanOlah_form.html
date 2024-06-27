@@ -16,13 +16,14 @@
             
             <div class="row">
                 <div class="col-md-6">
-                    <form method="post" class="form">
+                    {{form.errors }}
+                    <form id="myForm" method="post" class="form">
                         {% csrf_token %}
                         <div class="card">
                             <div class="card-header">
                                 <h4></h4>
                                 <div class="card-header-action">
-                                    <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
+                                    {% comment %} <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a> {% endcomment %}
                                     <button onclick="sumbit_form()" class="btn btn-primary">Simpan Olah</button>
                                 </div>
                             </div>
@@ -32,6 +33,18 @@
                                     {{ form.nama }}
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Jumlah Harga</label>
+                                    <input id="harga_kg" class="form-control" name="hpp" type="text" readonly>
+                                    {{ form.harga_kg }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_kode_bahan">Jumlah Bahan Terbuat</label>
+                                    {{ form.qty_keseluruhan }}
+                                </div>
+
+                                
                                 <div class="form-group">
                                     <label for="id_kode_bahan">HPP</label>
                                     <input id="hpp" class="form-control" name="hpp" type="text" readonly>
@@ -127,8 +140,15 @@
         });
     
         // Display the total HPP
-        $('#hpp').val(convertToTitikFormat(hpp_sum.toString()));
-        $('#hpp_input').val(hpp_sum);
+        $('#harga_kg').val(convertToTitikFormat(hpp_sum.toString()));
+        $('#harga_kg_input').val(hpp_sum);
+
+        let qty_keseluruhan = $('#qty_keseluruhan').val();
+        console.log(qty_keseluruhan)
+
+        hpp = hpp_sum / qty_keseluruhan;
+        $('#hpp').val(convertToTitikFormat(hpp.toString()));
+        $('#hpp_input').val(hpp);
     }
 
     function initData(){
@@ -280,7 +300,12 @@
         input.name = 'list_bahans';
         input.value = JSON.stringify(list_bahans);
         form.appendChild(input);
-        form.submit();
+        
+        // Submit the form
+        document.getElementById('myForm').submit();
+
+        // Return true or handle submission result as needed
+        return true;
     }
 </script>
 {% endblock script %}

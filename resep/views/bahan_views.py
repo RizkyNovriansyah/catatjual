@@ -73,16 +73,10 @@ class BahanUpdate(LoginRequiredMixin, UpdateView):
 
         harga = form.cleaned_data['harga']    
         quantity = form.cleaned_data['qty_keseluruhan']    
-        quantity_terkecil = 1
+        quantity_terkecil = quantity
+        harga_gram = float(harga / quantity_terkecil)
+        print(harga,quantity,harga_gram)
 
-        if quantity != 0:
-            harga_kg = harga / quantity
-            harga_gram = harga_kg / quantity_terkecil
-        else:
-            harga_kg = 0
-            harga_gram = 0
-        
-        form.instance.harga_kg = harga_kg
         form.instance.harga_gram = harga_gram
         
         return super(BahanUpdate, self).form_valid(form)
