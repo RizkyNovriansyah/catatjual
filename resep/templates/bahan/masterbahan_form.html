@@ -7,7 +7,7 @@
         <div class="section-body">
             <h2 class="section-title">Bahan Baku Baru</h2>
             <p class="section-lead">Keterangan<br>
-                Satuan Terkecil adalah satuan yang digunakan saat memasukkan bahan pada resep. seperti gr, sdm, pcs
+                Satuan Terkecil adalah satuan yang digunakan saat memasukkan bahan pada resep. seperti gr, ml, pcs
                 <br>
                 Quantity Keseluruhan adalah berat total bahan dalam satuan terkecil saat dilakukan pembelian
                 <br>
@@ -15,7 +15,7 @@
             </p>
             
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <form method="post" class="form">
@@ -51,7 +51,7 @@
                                     <div class="selectgroup w-100">
                                         <label class="selectgroup-item">
                                             <input type="radio" name="satuan-bahan" value="Sendok Makan" class="selectgroup-input satuan-input">
-                                            <span class="selectgroup-button">sdm (Sendok Makan)</span>
+                                            <span class="selectgroup-button">ml (Mili)</span>
                                         </label>
                                         <label class="selectgroup-item">
                                             <input type="radio" name="satuan-bahan" value="Gram" class="selectgroup-input satuan-input">
@@ -79,6 +79,16 @@
                         </div>
                     </div>
                 </div>
+                {% comment %} <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Olahan/Roti yang menggunakan</h5>
+                        </div>
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div> {% endcomment %}
             </div>
         </div>
     </section>
