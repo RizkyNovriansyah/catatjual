@@ -93,7 +93,7 @@ class BahanOlahanForm(forms.ModelForm):
         self.fields['nama'].widget.attrs.update({'class':'form-control','placeholder':"contoh : Gula"})
         self.fields['total'].widget.attrs.update({'class':'form-control','placeholder':"contoh : total"})
         self.fields['harga'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah','placeholder':"contoh : 500000","data-nama-bantuan":"harga-bantuan-rupiah"})
-        self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : 10000"})
+        self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : 10000", "value":"10000"})
         self.fields['qty_terkecil'].widget.attrs.update({'class':'form-control','placeholder':"contoh : 100"})
 
     def save(self, commit=True):
@@ -119,7 +119,7 @@ class BahanOlahanForm(forms.ModelForm):
 class BahanOlahanForm(forms.ModelForm):
 
     class Meta:
-        model = BahanOlahan
+        model = BahanOlahan 
         fields = ['nama', 'qty_keseluruhan', 'qty_terkecil', 'harga_kg', 'harga_gram']
         # add hpp
         
@@ -132,9 +132,14 @@ class BahanOlahanForm(forms.ModelForm):
         self.fields['harga_kg'].label = 'Harga per Kg'
         self.fields['harga_gram'].label = 'Harga per Gram'
 
+        print("2313")
+
         # add css in nama
         self.fields['nama'].widget.attrs.update({'class':'form-control','placeholder':"contoh : Gula"})
         self.fields['qty_keseluruhan'].widget.attrs.update({'class':'form-control check-harga','placeholder':"contoh : 10000", "id":"qty_keseluruhan","name":"qty_keseluruhan","onkeyup":"cekhpp()"})
+        self.fields['qty_keseluruhan'].initial = None
+
+
         self.fields['qty_terkecil'].widget.attrs.update({'class':'form-control','placeholder':"contoh : 100"})
         self.fields['harga_kg'].widget.attrs.update({'class':'form-control check-harga bantuan-rupiah d-none','placeholder':"contoh : 500000","data-nama-bantuan":"harga-bantuan-rupiah","name":"harga_kg_input", "id":"harga_kg_input"})
         self.fields['harga_gram'].widget.attrs.update({'class':'form-control check-harga d-none','placeholder':"contoh : ", "name":"hpp_input", "id":"hpp_input"})
