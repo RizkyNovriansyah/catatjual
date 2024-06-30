@@ -168,6 +168,9 @@
     }
     
     function add_to_list(bahanData,value,is_thing, jumlah_pemakaian){
+        if (jumlah_pemakaian === 0){
+            jumlah_pemakaian = null;
+        }
         var html = `<div class="card card-warning" id='data_${is_thing}${value}'>
             <div class="card-header">
                 <h4>${bahanData.nama_bahan || ''}</h4>
