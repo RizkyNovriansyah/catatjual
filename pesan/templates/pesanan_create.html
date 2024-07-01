@@ -11,6 +11,7 @@
         <form method="post" action="{% url 'pesanan_create' %}">
             <div class="row">
                 <div class="col-md-4">
+                    {{form.errors}}
                     <div class="card">
                         <div class="card-header">
                             <h4></h4>
@@ -22,11 +23,11 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="nama_pembeli">Nama</label>
-                                <input class="form-control" name="nama_pembeli" type="text" placeholder='Masukan Nama pembeli'>    
+                               {{ form.nama }}
                             </div>
                             <div class="form-group">
                                 <label for="alamat_pembeli">Alamat</label>
-                                <input class="form-control" name="alamat_pembeli" type="text" placeholder='Masukan alamat pembeli'>    
+   +                            {{ form.alamat }}
                             </div>
                             <div class="form-group">
                                 <label for="tanggal_pesan">Tanggal Pesanan</label>
@@ -34,15 +35,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="total_bayar">Total Bayar</label>
-                                <input class="form-control" name="total_bayar" type="number" placeholder='Masukan Total Bayar'>    
+   +                            {{ form.total_harga }}
                             </div>
                             <div class="form-group">
                                 <label for="nomor_telp_pembeli">Nomor Telepon</label>
-                                <input class="form-control" name="nomor_telp_pembeli" type="tel" placeholder='Masukan Nomor Telepon pembeli'>    
+   +                            {{ form.nomor_telp }}
                             </div>
                             <div class="form-group">
                                 <label for="catatan_pembeli">Catatan</label>
-                                <input class="form-control" name="catatan_pembeli" type="text" placeholder='Masukan catatan pembeli'>    
+   +                            {{ form.catatan }}
                             </div>
                             <div class="form-group">
                                 <label for="list-pesanan">Tambah Roti</label>
