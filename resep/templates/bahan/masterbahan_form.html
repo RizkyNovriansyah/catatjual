@@ -79,16 +79,57 @@
                         </div>
                     </div>
                 </div>
-                {% comment %} <div class="col-md-6">
-                    <div class="card">
+                <div class="col-md-6" id="data_card">
+                    
+                    {% for data in list_bahan_olahan %}
+                    <div class="card card-warning" id="data_bahanupdate_{{ loop.index0 }}">
                         <div class="card-header">
-                            <h5 class="card-title">Olahan/Roti yang menggunakan</h5>
+                            <h4>{{ data.bahan_olahan__nama }}</h4>
+                            <div class="card-header-action">
+                            </div>
                         </div>
                         <div class="card-body">
-                            
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" style="padding:0">Nama Bahan : {{ data.bahan_olahan__nama }} </li>
+                                <li class="list-group-item" style="padding:0">Jumlah Bahan yang digunakan : <b>{{ data.jumlah_pemakaian }}</b></li>
+                                <li class="list-group-item" style="padding:0">HPP Adonan : <b>{{ data.bahan_olahan__hpp }}</b></li>
+                                <li class="list-group-item" style="padding:0">Estimasi Kenaikan HPP : <b></b></li>
+                            </ul>
+                            <br>
+                            <span>Roti yang menggunakan</span>
+                            <br>
+                            {% for data_olahan in data.resep_olahan_jadi %}
+                            <span><b> ------ {{data_olahan.barang_jadi__nama}}</b></span>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" style="padding:0">Nama Roti : {{ data_olahan.barang_jadi__nama }} </li>
+                                <li class="list-group-item" style="padding:0">Harga Jual : <b>{{ data_olahan.barang_jadi__harga_jual }}</b></li>
+                                <li class="list-group-item" style="padding:0">Jumlah Olahan Bahan yang digunakan : <b>{{ data_olahan.jumlah_pemakaian }}</b></li>
+                                <li class="list-group-item" style="padding:0">HPP Roti : <b>{{ data_olahan.barang_jadi__hpp }}</b></li>
+                                <li class="list-group-item" style="padding:0">Estimasi Kenaikan HPP : <b></b></li>
+                            </ul>
+                            {% endfor %}
                         </div>
                     </div>
-                </div> {% endcomment %}
+                    {% endfor %}
+
+                    {% for data in list_barang_jadi %}
+                    <div class="card card-warning" id="data_bahanupdate2_{{ loop.index0 }}">
+                        <div class="card-header">
+                            <h4>{{ data.barang_jadi__nama }}</h4>
+                            <div class="card-header-action">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" style="padding:0">Nama Roti : {{ data.barang_jadi__nama }} </li>
+                                <li class="list-group-item" style="padding:0">Harga Jual : <b>{{ data.barang_jadi__harga_jual }}</b></li>
+                                <li class="list-group-item" style="padding:0">Jumlah Olahan Bahan yang digunakan : <b>{{ data.jumlah_pemakaian }}</b></li>
+                                <li class="list-group-item" style="padding:0">HPP Roti : <b>{{ data.barang_jadi__hpp }}</b></li>
+                                <li class="list-group-item" style="padding:0">Estimasi Kenaikan HPP : <b></b></li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
             </div>
         </div>
     </section>

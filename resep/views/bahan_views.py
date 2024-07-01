@@ -2,7 +2,7 @@
 import json
 
 from django.views import View  
-from ..models import MasterBahan, BarangJadi
+from ..models import MasterBahan, ResepBahanJadi, ResepBahanOlahan, ResepOlahanJadi
 from ..forms import BarangJadiForm, MasterBahanForm, ResepForm
 
 from django.urls import reverse, reverse_lazy
@@ -66,7 +66,54 @@ class BahanUpdate(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['bahan'] = MasterBahan.objects.get(id=self.kwargs.get('pk'))
+        bahan = MasterBahan.objects.get(id=self.kwargs.get('pk'))
+        context['bahan'] = bahan
+
+        # potensi kenaikan harga olahan
+        list_bahan_olahan = []
+        for resep_bahan_olahan in ResepBahanOlahan.objects.filter(master_bahan=self.object):
+            bahan_olahan = resep_bahan_olahan.bahan_olahan
+            bo = {
+                "bahan_olahan__id": bahan_olahan.id,
+                "bahan_olahan__nama": bahan_olahan.nama,
+                "bahan_olahan__hpp": bahan_olahan.harga_gram,
+                "jumlah_pemakaian": resep_bahan_olahan.jumlah_pemakaian,
+                "resep_olahan_jadi": []
+            }
+
+            print("resep_bahan_olahan.harga_gram",resep_bahan_olahan.jumlah_pemakaian)
+
+            for resep_olahan_jadi in ResepOlahanJadi.objects.filter(bahan_olahan=bahan_olahan):
+                barang_jadi = resep_olahan_jadi.barang_jadi
+                roj = {
+                    "id": resep_olahan_jadi.id,
+                    "barang_jadi__id": resep_olahan_jadi.barang_jadi.id,
+                    "barang_jadi__nama": barang_jadi.nama,
+                    "barang_jadi__hpp": barang_jadi.hpp,
+                    "barang_jadi__harga_jual": barang_jadi.harga_jual,
+                    "jumlah_pemakaian": resep_olahan_jadi.jumlah_pemakaian,   
+                }
+                bo['resep_olahan_jadi'].append(roj)
+
+            list_bahan_olahan.append(bo)
+        
+        context['list_bahan_olahan'] = list_bahan_olahan
+        # print(context['list_bahan_olahan'])
+
+        # potensi kenaikan harga roti
+        list_barang_jadi = []
+        for resep_bahan_jadi in ResepBahanJadi.objects.filter(master_bahan=self.object):
+            barang_jadi = resep_bahan_jadi.barang_jadi
+            bj = {
+                "barang_jadi__id": barang_jadi.id,
+                "barang_jadi__nama": barang_jadi.nama,
+                "barang_jadi__hpp": barang_jadi.hpp,
+                "barang_jadi__harga_jual": barang_jadi.harga_jual,
+                "jumlah_pemakaian": resep_bahan_jadi.jumlah_pemakaian,
+            }
+
+            list_barang_jadi.append(bj)
+        context['list_barang_jadi'] = list_barang_jadi
         return context
     
     def form_valid(self, form):
