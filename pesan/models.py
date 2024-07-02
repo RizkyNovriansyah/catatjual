@@ -30,4 +30,3 @@ class ListPesanan(models.Model):
     is_deleted = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.pesanan.nama} - {self.barang_jadi.nama}"
-    

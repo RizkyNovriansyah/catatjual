@@ -7,8 +7,11 @@ from resep.forms import ResepForm
 from resep.models import BarangJadi, MasterBahan, ResepBahanJadi
 from .models import Pesanan, ListPesanan
 from .forms import PesananForm, ListPesananForm
+from .utils import add_pesanan
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+import json
+from django.utils import formats
 
 @login_required(login_url='login')
 def cek_pesanan(request, id):
@@ -22,71 +25,6 @@ def cek_pesanan(request, id):
     # Mengirimkan response dalam format JSON
     return JsonResponse(result)
 
-# @login_required(login_url='login')
-# def PesananCreate(request):
-#     daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
-
-#     if request.method == 'POST':
-#         nama = request.POST.get('nama_pembeli')
-#         alamat = request.POST.get('alamat_pembeli')
-#         tanggal_pesan = request.POST.get('tanggal_pesan')
-#         total_bayar = int(request.POST.get('total_bayar', 0))
-#         nomor_telp = request.POST.get('nomor_telp_pembeli')
-#         catatan = request.POST.get('catatan_pembeli')
-
-#         id_roti_list = request.POST.getlist('roti_list[]')
-#         jumlah_list = request.POST.getlist('jumlah_list[]')
-
-#         # Initialize total_harga and harga_modal
-#         total_harga = 0
-#         harga_modal = 0
-        
-#         # Calculate total_harga and harga_modal
-#         for i, roti_id in enumerate(id_roti_list):
-#             barang_jadi = BarangJadi.objects.get(id=roti_id)
-#             jumlah = int(jumlah_list[i])
-#             harga = barang_jadi.harga_jual
-#             modal = barang_jadi.hpp
-#             total_harga += harga * jumlah
-#             harga_modal += modal * jumlah
-        
-#         pesanan_list = {}    
-#         for roti_id in id_roti_list:
-#             barang_jadi = BarangJadi.objects.get(id=roti_id)
-#             pesanan_list[roti_id] = {
-#                 'nama' : barang_jadi.nama,
-#                 'kode_barang' : barang_jadi.kode_barang,
-#                 'harga_jual' : barang_jadi.harga_jual,
-#                 'daftar_bahan' : barang_jadi.daftar_bahan,
-#                 'hpp' : barang_jadi.hpp,
-#             }
-            
-#         pesanan = Pesanan.objects.create(
-#             nama=nama,
-#             alamat=alamat,
-#             pesanan=pesanan_list,
-#             tanggal_pesan=tanggal_pesan,
-#             total_harga=total_harga,
-#             total_bayar=total_bayar,
-#             harga_modal=harga_modal,
-#             nomor_telp=nomor_telp,
-#             catatan=catatan
-#         )
-
-#         # Create ListPesanan entries
-#         for i, roti_id in enumerate(id_roti_list):
-#             barang_jadi = BarangJadi.objects.get(id=roti_id)
-#             jumlah = int(jumlah_list[i])
-#             ListPesanan.objects.create(
-#                 pesanan=pesanan,
-#                 barang_jadi=barang_jadi,
-#                 jumlah_barang_jadi=jumlah
-#             )
-
-#         return redirect('pesanan_list')
-
-#     return render(request, 'pesanan_create.html', {'daftar_resep': daftar_resep})
-
 class PesananCreate(CreateView):
     model = Pesanan
     form_class = PesananForm
@@ -96,6 +34,18 @@ class PesananCreate(CreateView):
 
     def form_valid(self, form):
         # Additional processing if needed before saving the form
+        # get list_bahans
+        list_bahans = self.request.POST.get('list_bahans')
+        list_bahans = json.loads(list_bahans)
+        add_pesanan(form.instance, list_bahans)
+
+        # tanggal_pesan
+        tanggal_pesan = form.cleaned_data.get('tanggal_pesan')
+        print(tanggal_pesan)
+        instance = form.instance
+        instance.tanggal_pesan = tanggal_pesan
+        instance.save()
+
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -134,6 +84,20 @@ class PesananUpdate(UpdateView):
     def form_valid(self, form):
         # Additional processing before saving the form
         # Example: Modify form data or perform additional validations
+
+        # get list_bahans
+        list_bahans = self.request.POST.get('list_bahans')
+        list_bahans = json.loads(list_bahans)
+        
+        add_pesanan(form.instance, list_bahans)
+
+        # tanggal_pesan
+        tanggal_pesan = form.cleaned_data.get('tanggal_pesan')
+        print(tanggal_pesan)
+        instance = form.instance
+        instance.tanggal_pesan = tanggal_pesan
+        instance.save()
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -142,7 +106,27 @@ class PesananUpdate(UpdateView):
         daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
         context['daftar_resep'] = daftar_resep
         context['url_get_roti'] = reverse('cek_resep', kwargs={'id': 99999})
+        pesanan_used = ListPesanan.objects.filter(pesanan=self.object)
+
+        pesanan_used_list = []
+        for item in pesanan_used:
+            print(item,item.jumlah_barang_jadi)
+            pesanan_used_list.append({
+                'id': item.id,
+                'barang_jadi': item.barang_jadi.id,
+                'jumlah_pemakaian': item.jumlah_barang_jadi,
+                'is_deleted': str(item.is_deleted).lower()  # Convert boolean to lowercase string
+            })
+        
+        context['pesanan_used'] = pesanan_used_list
         print(context['url_get_roti'])
+        # tanggal_pesan
+        print(self.object.tanggal_pesan)
+        try:
+            context['tanggal_pesan'] = self.object.tanggal_pesan.strftime('%Y-%m-%d')
+        except:
+            context['tanggal_pesan'] = None
+
         return context
 
 @login_required(login_url='login')

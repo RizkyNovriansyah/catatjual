@@ -8,7 +8,7 @@
 
 <section class="section">
     <div class="section-body">
-        <form method="post" action="">
+        <form id="myForm" method="post" action="" class="form">
             <div class="row">
                 <div class="col-md-4">
                     {{form.errors}}
@@ -16,7 +16,7 @@
                         <div class="card-header">
                             <h4></h4>
                             <div class="card-header-action">
-                                <button class='btn btn-primary' type="submit">Buat Pesanan</button>
+                                <span onclick="submit_form()" class="btn btn-primary">Simpan Pesanan</span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -31,7 +31,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="tanggal_pesan">Tanggal Pesanan</label>
-                                <input class="form-control" name="tanggal_pesan" type="date" placeholder='Masukan Tanggal'>    
+                                <input class="form-control" name="tanggal_pesan" type="date" placeholder='Masukan Tanggal' value="{{tanggal_pesan}}">    
                             </div>
                             <div class="form-group">
                                 <label for="total_bayar">Total Bayar</label>
@@ -71,7 +71,9 @@
 <script>
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
+        
     });
+    initData()
 
     function remove_bahan(id) {
         $("#data_bahan" + id).remove();
@@ -81,6 +83,7 @@
         let url_get_bahan = "{{url_get_roti}}"
         // replace 99999 with id
         url_get_bahan = url_get_bahan.replace('99999', id);
+        console.log("url_get_bahan",url_get_bahan)
         let url = url_get_bahan;
         // Menggunakan fetch untuk mengambil data
         return fetch(url)
@@ -136,7 +139,7 @@
         get_data_bahan(value)
         .then(function(bahanData) {
             console.log(bahanData);
-            add_to_list(bahanData,value)
+            add_to_list(bahanData,value,null)
         });
 
         if ($("#data_bahan" + value).length > 0) {
@@ -145,7 +148,24 @@
         }
     }
 
-    function add_to_list(roti,value){
+    function initData(){
+        let bahan_used = {{pesanan_used | safe}};
+        console.log(bahan_used)
+        // loop bahan bahan_used
+        bahan_used.forEach(function(bahan) {
+            // get the id of the bahan
+            var id = bahan.barang_jadi;
+            var value = "update_"+bahan.id;
+            console.log("11",id)
+            get_data_bahan(id)
+            .then(function(bahanData) {
+                console.log("====",bahanData,bahan.jumlah_pemakaian);
+                add_to_list(bahanData,value,bahan.jumlah_pemakaian)
+            });
+        });
+    }
+
+    function add_to_list(roti,value,jumlah_pakai){
         let nama_resep = roti.nama
         
         var html = `
@@ -163,8 +183,8 @@
                         <li class="list-group-item" style="padding:0">Harga Satuan : <b>${roti.harga_jual || ''}</b></li>
                         {% comment %} <li class="list-group-item" style="padding:0">HPP Satuan : <b>${roti.hpp || ''}</b></li> {% endcomment %}
                         <li class="list-group-item" style="padding:0">Harga dibayar : <b id="harga_dibayar-${roti.kode_barang}"></b></li>
-                        <li class="list-group-item" style="padding:0">Harga Jumlah pakai : 
-                            <input class="form-control bahan_added" name="jumlah_list[]" onkeyup='cekhpp()' data-hargapersatuan='${roti.hpp}' type="number" value="1" min="1" id="bahan_added-${roti.kode_barang}">
+                        <li class="list-group-item" style="padding:0">Jumlah Beli : 
+                            <input class="form-control bahan_added" name="jumlah_list[]" onkeyup='cekhpp()' data-hargapersatuan='${roti.hpp}' type="number" value="${jumlah_pakai}" min="1" id="bahan_added-${roti.kode_barang}">
                             <input class='form-control' style='visibility: hidden' name='id_bahan[]' type='number' value='${value}'>
                         </li>
                         <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
@@ -194,6 +214,7 @@
             }
             list_bahans.push(bahan);
         });
+        {% comment %} console.log("list_bahans",list_bahans) {% endcomment %}
         var form = document.querySelector('.form');
         var input = document.createElement('input');
         input.type = 'hidden';
