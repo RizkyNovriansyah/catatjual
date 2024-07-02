@@ -1,7 +1,7 @@
 
 import json
 
-from ..models import MasterBahan, BahanOlahan, ResepBahanOlahan
+from ..models import MasterBahan, BahanOlahan, ResepBahanOlahan, BarangJadi
 from ..forms import BahanOlahanForm
 from .utils_views import add_resep_to_olah
 
@@ -138,6 +138,21 @@ def cek_bahan_olah(request, id):
         "harga_gram": bahan.harga_gram,
         "created_date": bahan.created_date,
         "updated_date": bahan.updated_date
+    }
+    # Mengirimkan response dalam format JSON
+    return JsonResponse(result)
+
+@login_required(login_url='login')
+# Fungsi untuk mengecek detail bahan dan merespons dalam format JSON
+def cek_resep(request, id):
+    # Mengambil objek bahan dari database berdasarkan id
+    barang_jadi = BarangJadi.objects.get(id=id)
+    # Menyiapkan data bahan dalam format JSON
+    result = {
+        "kode_barang": "barang_"+str(barang_jadi.id),
+        "nama": barang_jadi.nama,
+        "harga_jual": barang_jadi.harga_jual,
+        "hpp": barang_jadi.hpp,
     }
     # Mengirimkan response dalam format JSON
     return JsonResponse(result)

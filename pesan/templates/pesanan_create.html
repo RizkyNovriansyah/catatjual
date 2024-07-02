@@ -35,6 +35,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="total_bayar">Total Bayar</label>
+                                <input id="total_harga" class="form-control" name="total_harga" type="text" readonly>
                                 {{ form.total_harga }}
                             </div>
                             <div class="form-group">
@@ -47,7 +48,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="list-pesanan">Tambah Roti</label>
-                                <select id="list-pesanan" class="js-example-basic-single form-control" name="roti_list[]">
+                                <select id="list-roti" class="js-example-basic-single form-control" name="roti_list[]">
                                     {% for resep in daftar_resep %}
                                     <option value="{{ resep.barang_jadi.id }}" data-kode="{{ resep.kode_resep }}"> {{ resep.barang_jadi.nama }}</option>
                                     {% endfor %}
@@ -76,16 +77,77 @@
         $("#data_bahan" + id).remove();
     }
 
+    function get_data_bahan(id) {
+        let url_get_bahan = "{{url_get_roti}}"
+        // replace 99999 with id
+        url_get_bahan = url_get_bahan.replace('99999', id);
+        let url = url_get_bahan;
+        // Menggunakan fetch untuk mengambil data
+        return fetch(url)
+        .then(function(response) {
+            // Mengubah respons menjadi JSON
+            return response.json();
+        })
+        .then(function(roti) {
+            // Memastikan objek bahan memiliki struktur yang benar
+            
+            console.log(url)
+            return {
+                kode_barang: roti.kode_barang,
+                nama: roti.nama,
+                harga_jual: roti.harga_jual,
+                hpp: roti.hpp
+            };
+        })
+        .catch(function(err) {
+            console.log('Kesalahan Fetch :-S', err);
+        });
+    }
+
+    function cekhpp(){
+        let all_bahan = []
+        let hpp_sum = 0;
+        $('.bahan_added').each(function() {
+            var id_current = $(this).attr('id');
+            var kode_bahan = id_current.split('-')[1];
+            var value = $(this).val();
+            var hargapersatuan = $(this).data('hargapersatuan');
+            var hpp_satuan = value * hargapersatuan;
+    
+            // Update the span element with the calculated HPP
+            let id_nya = '#harga_dibayar-' + kode_bahan
+            console.log(id_nya,hpp_satuan.toString())
+            $(id_nya).text(convertToTitikFormat(hpp_satuan.toString()));
+    
+            // Calculate total HPP
+            hpp_sum += hpp_satuan;
+        });
+    
+        // Display the total HPP
+        $('#total_harga').val(convertToTitikFormat(hpp_sum.toString()));
+        $('#total_harga_input').val(hpp_sum);
+    }
+
     function add_bahan() {
-        var value = $("#list-pesanan").val();
-        var nama_resep = $("#list-pesanan option:selected").text();
-        var kode_bahan = $("#list-pesanan option:selected").data('kode');
+        var value = $("#list-roti").val();
+        var nama_resep = $("#list-roti option:selected").text();
+        var kode_bahan = $("#list-roti option:selected").data('kode');
+
+        get_data_bahan(value)
+        .then(function(bahanData) {
+            console.log(bahanData);
+            add_to_list(bahanData,value)
+        });
 
         if ($("#data_bahan" + value).length > 0) {
             alert("Roti sudah ditambahkan.");
             return;
         }
+    }
 
+    function add_to_list(roti,value){
+        let nama_resep = roti.nama
+        
         var html = `
             <div class="card card-warning" id='data_bahan${value}'>
                 <div class="card-header">
@@ -95,14 +157,55 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="jumlah${value}">Jumlah</label>
-                        <input class="form-control" name="jumlah_list[]" type="number" value="1" min="1" id="jumlah${value}">
-                    </div>
+                    <ul class="list-group list-group-flush" >
+                        <li class="list-group-item" style="padding:0">Nama Bahan : ${roti.nama || ''} </li>
+                        <li class="list-group-item" style="padding:0">Kode Bahan : ${roti.kode_barang || ''} </li>
+                        <li class="list-group-item" style="padding:0">Harga Satuan : <b>${roti.harga_jual || ''}</b></li>
+                        {% comment %} <li class="list-group-item" style="padding:0">HPP Satuan : <b>${roti.hpp || ''}</b></li> {% endcomment %}
+                        <li class="list-group-item" style="padding:0">Harga dibayar : <b id="harga_dibayar-${roti.kode_barang}"></b></li>
+                        <li class="list-group-item" style="padding:0">Harga Jumlah pakai : 
+                            <input class="form-control bahan_added" name="jumlah_list[]" onkeyup='cekhpp()' data-hargapersatuan='${roti.hpp}' type="number" value="1" min="1" id="bahan_added-${roti.kode_barang}">
+                            <input class='form-control' style='visibility: hidden' name='id_bahan[]' type='number' value='${value}'>
+                        </li>
+                        <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
+                    </ul>
                 </div>
             </div>`;
         
         $("#data_card").append(html);
+        cekhpp()
+    }
+
+    function submit_form() {
+        // get all .bahan_added
+        let list_bahans = [];
+        let bahan;
+        var bahan_added = document.querySelectorAll('.bahan_added');
+        // loop through all .bahan_added
+        bahan_added.forEach(function(bahan) {
+            // get the id of the bahan
+            var id = bahan.id;
+            // get the value of the bahan
+            var value = bahan.value;
+            // create a hidden input with the value of the bahan
+            bahan = {
+                id: id,
+                value: value
+            }
+            list_bahans.push(bahan);
+        });
+        var form = document.querySelector('.form');
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'list_bahans';
+        input.value = JSON.stringify(list_bahans);
+        form.appendChild(input);
+        
+        // Submit the form
+        document.getElementById('myForm').submit();
+
+        // Return true or handle submission result as needed
+        return true;
     }
 </script>
 {% endblock script %}

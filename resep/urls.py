@@ -34,5 +34,6 @@ urlpatterns = [
     # cek bahan, by id
     path('cek_bahan/<int:id>/', cek_bahan, name='cek_bahan'),
     path('cek_bahan_olah/<int:id>/', cek_bahan_olah, name='cek_bahan_olah'),
+    path('cek_resep/<int:id>/', cek_resep, name='cek_resep'),
     path('error/', ErrorPageView.as_view(), name='error_page'),
 ]

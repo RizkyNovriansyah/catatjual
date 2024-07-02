@@ -7,8 +7,6 @@ urlpatterns = [
     path('pesanan/<int:pk>/', PesananDetailView.as_view(), name='pesanan_detail'),
     path('pesanan/<int:pk>/update/', PesananUpdate.as_view(), name='pesanan_update'),
     path('pesanan/<int:pk>/delete/', PesananDelete, name='pesanan_delete'),
-    
-    
     path('cek_pesanan/<int:id>/', cek_pesanan, name='cek_pesanan'),
-    
+
 ]

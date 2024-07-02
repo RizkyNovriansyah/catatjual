@@ -8,6 +8,8 @@ from resep.models import BarangJadi, MasterBahan, ResepBahanJadi
 from .models import Pesanan, ListPesanan
 from .forms import PesananForm, ListPesananForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+
 @login_required(login_url='login')
 def cek_pesanan(request, id):
     resep = ResepBahanJadi.objects.get(id=id)
@@ -101,7 +103,8 @@ class PesananCreate(CreateView):
         # Additional context data if needed
         daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
         context['daftar_resep'] = daftar_resep
-        print("Dsadas")
+        context['url_get_roti'] = reverse('cek_resep', kwargs={'id': 99999})
+        print(context['url_get_roti'])
         return context
     
 class PesananListView(LoginRequiredMixin, ListView):
@@ -138,6 +141,8 @@ class PesananUpdate(UpdateView):
         # Additional context data if needed
         daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
         context['daftar_resep'] = daftar_resep
+        context['url_get_roti'] = reverse('cek_resep', kwargs={'id': 99999})
+        print(context['url_get_roti'])
         return context
 
 @login_required(login_url='login')

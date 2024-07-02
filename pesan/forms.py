@@ -14,7 +14,7 @@ class PesananForm(forms.ModelForm):
         self.fields['alamat'].widget.attrs.update({'class': 'form-control','placeholder': 'Alamat Pembeli'})
         # self.fields['tanggal_pesan'].widget.attrs.update({'class': 'form-control', 'type': 'date', 'placeholder': 'Masukan Tanggal'})
         
-        self.fields['total_harga'].widget.attrs.update({'class': 'form-control','placeholder': 'Total Harga'})
+        self.fields['total_harga'].widget.attrs.update({'class': 'form-control','placeholder': 'Total Harga', 'id':'total_harga_input'})
         self.fields['total_bayar'].widget.attrs.update({'class': 'form-control','placeholder': 'Total Bayar'}) 
         self.fields['harga_modal'].widget.attrs.update({'class': 'form-control','placeholder': 'Harga Modal'}) 
         self.fields['nomor_telp'].widget.attrs.update({'class': 'form-control','placeholder': 'Nomor Telepon Pembeli'})
