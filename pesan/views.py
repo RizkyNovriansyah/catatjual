@@ -121,57 +121,24 @@ class PesananDetailView(LoginRequiredMixin, DetailView):
     template_name = 'pesanan_detail.html'
     login_url = 'login'
 
-def PesananUpdate(request, pk):
-    pesanan = get_object_or_404(Pesanan, pk=pk)
-    daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
+class PesananUpdate(UpdateView):
+    model = Pesanan
+    form_class = PesananForm
+    template_name = 'pesanan_create.html'
+    success_url = reverse_lazy('pesanan_list')
+    login_url = 'login'  # Optional: Specify login URL if login required for this view
 
-    if request.method == 'POST':
-        nama = request.POST.get('nama_pembeli')
-        alamat = request.POST.get('alamat_pembeli')
-        tanggal_pesan = request.POST.get('tanggal_pesan')
-        total_bayar = int(request.POST.get('total_bayar', 0))
-        nomor_telp = request.POST.get('nomor_telp_pembeli')
-        catatan = request.POST.get('catatan_pembeli')
+    def form_valid(self, form):
+        # Additional processing before saving the form
+        # Example: Modify form data or perform additional validations
+        return super().form_valid(form)
 
-        id_roti_list = request.POST.getlist('roti_list[]')
-        jumlah_list = request.POST.getlist('jumlah_list[]')
-
-        total_harga = 0
-        harga_modal = 0
-
-        for i, roti_id in enumerate(id_roti_list):
-            barang_jadi = BarangJadi.objects.get(id=roti_id)
-            jumlah = int(jumlah_list[i])
-            harga = barang_jadi.harga_jual
-            modal = barang_jadi.hpp
-            total_harga += harga * jumlah
-            harga_modal += modal * jumlah
-
-        # Update pesanan object
-        pesanan.nama = nama
-        pesanan.alamat = alamat
-        pesanan.tanggal_pesan = tanggal_pesan
-        pesanan.total_harga = total_harga
-        pesanan.total_bayar = total_bayar
-        pesanan.harga_modal = harga_modal
-        pesanan.nomor_telp = nomor_telp
-        pesanan.catatan = catatan
-        pesanan.save()
-
-        # Update ListPesanan entries
-        pesanan.list_pesanan.all().delete()  # Remove existing entries
-        for i, roti_id in enumerate(id_roti_list):
-            barang_jadi = BarangJadi.objects.get(id=roti_id)
-            jumlah = int(jumlah_list[i])
-            ListPesanan.objects.create(
-                pesanan=pesanan,
-                barang_jadi=barang_jadi,
-                jumlah_barang_jadi=jumlah
-            )
-
-        return redirect('pesanan_list')
-
-    return render(request, 'pesanan_update.html', {'pesanan': pesanan, 'daftar_resep': daftar_resep})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Additional context data if needed
+        daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
+        context['daftar_resep'] = daftar_resep
+        return context
 
 @login_required(login_url='login')
 def PesananDelete(request, pk):
