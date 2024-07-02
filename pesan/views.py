@@ -33,8 +33,8 @@ class PesananCreate(CreateView):
     login_url = 'login'
 
     def form_valid(self, form):
-        # Additional processing if needed before saving the form
-        # get list_bahans
+        form.instance.save()
+        
         list_bahans = self.request.POST.get('list_bahans')
         list_bahans = json.loads(list_bahans)
         add_pesanan(form.instance, list_bahans)
@@ -54,7 +54,7 @@ class PesananCreate(CreateView):
         daftar_resep = ResepBahanJadi.objects.filter(is_deleted=False)
         context['daftar_resep'] = daftar_resep
         context['url_get_roti'] = reverse('cek_resep', kwargs={'id': 99999})
-        print(context['url_get_roti'])
+        context['pesanan_used'] = []
         return context
     
 class PesananListView(LoginRequiredMixin, ListView):

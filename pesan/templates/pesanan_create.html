@@ -184,7 +184,7 @@
                         {% comment %} <li class="list-group-item" style="padding:0">HPP Satuan : <b>${roti.hpp || ''}</b></li> {% endcomment %}
                         <li class="list-group-item" style="padding:0">Harga dibayar : <b id="harga_dibayar-${roti.kode_barang}"></b></li>
                         <li class="list-group-item" style="padding:0">Jumlah Beli : 
-                            <input class="form-control bahan_added" name="jumlah_list[]" onkeyup='cekhpp()' data-hargapersatuan='${roti.hpp}' type="number" value="${jumlah_pakai}" min="1" id="bahan_added-${roti.kode_barang}">
+                            <input class="form-control bahan_added" name="jumlah_list[]" onkeyup='cekhpp()' data-hargapersatuan='${roti.harga_jual}' type="number" value="${jumlah_pakai}" min="1" id="bahan_added-${roti.kode_barang}">
                             <input class='form-control' style='visibility: hidden' name='id_bahan[]' type='number' value='${value}'>
                         </li>
                         <li class="list-group-item" style="padding:0"><div id='jumlah-bahan-container-${value}'></div></li>
