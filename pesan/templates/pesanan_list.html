@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'pesanan_create' %}" class="btn btn-primary">Tambah Pesanan</a>
-                <table class="table table-striped">
+                <table id="tablePesan" class="display nowrap" style="width:100%">
                     <thead>
                         <tr>
                             <th>Nama</th>
@@ -54,3 +54,16 @@
     </div>
 </section>
 {% endblock content %}
+{% block script %}
+<script>
+    $(document).ready(function () {
+        console.log("added");
+        $('#tablePesan').DataTable({
+            responsive: true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            }
+        });
+    });
+</script>
+{% endblock script %}
