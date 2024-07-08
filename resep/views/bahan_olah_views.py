@@ -119,6 +119,23 @@ class BahanOlahDetail(LoginRequiredMixin, DetailView):
     context_object_name = 'bahan_olah_list'
     login_url = 'login'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        bahan_olah = BahanOlahan.objects.get(id=self.kwargs['pk'])
+        context['bahan_olah'] = bahan_olah
+        # bahans
+        bahans = []
+        for rbo in ResepBahanOlahan.objects.filter(bahan_olahan=bahan_olah):
+            bahan = MasterBahan.objects.get(id=rbo.master_bahan_id)
+            result = {}
+            result['nama'] = bahan.nama
+            result['kode_bahan'] = bahan.kode_bahan
+            result['jumlah'] = rbo.jumlah_pemakaian
+            result['harga_gram'] = bahan.harga_gram
+            result['total_hpp_single_bahan'] = bahan.harga_gram * rbo.jumlah_pemakaian
+            bahans.append(result)
+        context['bahans'] = bahans
+        return context
 
 
 @login_required(login_url='login')

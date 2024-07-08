@@ -1,63 +1,105 @@
 {% extends "base.html" %}
 {% load humanize %}
-
 {% block content %}
-    <style>
-        .container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .container p {
-            margin: 0;
-        }
-
-        .container p strong {
-            display: inline-block;
-            width: 150px; 
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .container-isi {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
-
-    <section class="section">
-        <div class="section-header">
-            <h1>Detail Bahan</h1>
-        </div>
-        <div class="section-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card">
+<style>
+    .table-container {
+        display: flex;
+        justify-content: space-between;
+        width: 40%;
+    }
+    
+    .column {
+        flex: 1;
+        text-align: left;
+    }
+    .column-te {
+        flex: 1;
+        text-align: left;
+        width: 50%;
+    }
+    
+    .smaller {
+        margin-right: -180px;
+    }
+    
+    
+</style>
+<section class="section">
+    <div class="section-header">
+        <h1>Detail Bahan Setengah Jadi</h1>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
                         <div class="card-header">
-                            <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
+                            <a href="{% url 'bahan_olah_list' %}" class="btn btn-primary">
+                                <i class="fas fa-arrow-left"></i> Kembali ke Barang Jadi
+                            </a>
+                            <button onclick="window.location.href='{% url 'bahan_olah_update' pk=bahan_olah.pk %}'" class="btn btn-sm btn-warning mr-2">Update</button>
+    
+    
                         </div>
-                        <div class="card-header">
-                            <h5>{{ bahan.nama }}</h5>
-                        </div>                        
-                        <div class="card-body">
-                            <div class="container-isi">
-                                <div>
-                                    <p><strong>Total</strong>: {{ bahan.total }}</p>
-                                    <p><strong>Qty Keseluruhan</strong>: {{ bahan.qty_keseluruhan }} Kg</p>
-                                    <p><strong>Qty Terkecil</strong>: {{ bahan.qty_terkecil }} Gram</p>
-                                    <p><strong>Harga</strong>: Rp.{{ bahan.harga|intcomma }}</p>
-                                    <p><strong>Dibuat pada</strong>: {{ bahan.created_date|naturaltime }}</p>
-                                    <p><strong>Diperbarui pada</strong>: {{ bahan.updated_date|naturaltime }}</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive"><table class="table"><tbody>
+                            <div class="table-container">
+                                <div class="column">
+                                    <h6>Nama</h6>
+                                    <h6>Total Harga</h6>
+                                    <h6>Hasil Campuran</h6>
+                                    <h6>HPP</h6>
                                 </div>
-                            </div>
+                                <div class="column smaller">
+                                    <h6>:</h6>
+                                    <h6>:</h6>
+                                    <h6>:</h6>
+                                </div>
+                                <div class="column-te">
+                                    <h6>{{ bahan_olah.nama }}</h6>
+                                    <h6>Rp.{{ bahan_olah.harga_kg|intcomma }}</h6>
+                                    <h6>{{ bahan_olah.qty_keseluruhan }}</h6>
+                                    <h6>Rp.{{ bahan_olah.harga_gram|intcomma }}</h6>
+                                </div>
+                            </div>  
+                        </tbody>
+                        
+                            
+                        </div>
+                        <br>
+
+                        <h2>Bahan yang digunakan </h2>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nama Bahan</th>
+                                        <th>Kode Bahan</th>
+                                        <th>Jumlah Pemakaian</th>
+                                        <th>Harga per Gram</th>
+                                        <th>Total HPP per Bahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for bahan in bahans %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ bahan.nama }}</td>
+                                            <td>{{ bahan.kode_bahan }}</td>
+                                            <td>{{ bahan.jumlah }} Gram</td>
+                                            <td>Rp.{{ bahan.harga_gram|intcomma }} </td>
+                                            <td>Rp.{{ bahan.total_hpp_single_bahan|intcomma }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 {% endblock content %}
